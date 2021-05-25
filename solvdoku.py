@@ -1,5 +1,8 @@
 import numpy as np
+
+#use colors for accessibility
 from termcolor import colored as color
+
 
 class digit:
     def __init__(self, value=0):
