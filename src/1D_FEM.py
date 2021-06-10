@@ -9,6 +9,18 @@ def generate_nodes(dimension_x, num_of_elements):
         dim_increment += dim_increment
     return node_coordinates
 
+def generate_elements(node_array):
+    pass
+
+def generate_basis_functions(element_array):
+    pass
+
+def linear_interpolation(x_1, x_2, y_1, y_2):
+    pass
+
+def solve_PDE(basis_function_array):
+    pass
+
 def print_solution(solution_array):
     for i in solution_array:
         for j in i:
