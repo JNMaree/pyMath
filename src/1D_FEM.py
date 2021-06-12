@@ -10,13 +10,18 @@ def generate_nodes(dimension_x, num_of_elements):
     return node_coordinates
 
 def generate_elements(node_array):
-    pass
+    node_end = node_array.size - 1
+    element_array = numpy.array((node_end, 2))
+    for i in range(0, node_end):
+        element_array[i, 0] = node_array[i]
+        element_array[i, 1] = node_array[i + 1]
+    return element_array
 
 def generate_basis_functions(element_array):
     pass
 
-def linear_interpolation(x_1, x_2, y_1, y_2):
-    pass
+def linear_interpolationY(x_0, x_1, y_0, y_1, X):
+    return y_0 + (X - x_0)*(y_1 - y_0)/(x_1 - x_0)
 
 def solve_PDE(basis_function_array):
     pass
@@ -33,9 +38,10 @@ def main():
     #test
     X_dimension = 10    # distance in meters
     N_nodes = 8         # number of nodes in domain
-       
-    displacement_field = numpy.array((N_nodes, 3))
-    generate_nodes(X_dimension, N_nodes)
+    
+    nodes = generate_nodes(X_dimension, N_nodes)
+    elements = generate_elements(nodes)
+    
     
     
 
