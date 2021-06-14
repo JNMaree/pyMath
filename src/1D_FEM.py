@@ -20,6 +20,14 @@ def generate_elements(node_array):
 def generate_basis_functions(element_array):
     pass
 
+def generate_gauss_legendre_points(amount_of_points):
+    gaussian_points_weights = numpy.array((amount_of_points, 2))
+    if amount_of_points == 1:
+       gaussian_points_weights[0, 0] = 0
+       gaussian_points_weights[0, 1] = 2
+    return gaussian_points_weights
+    
+
 def linear_interpolationY(x_0, x_1, y_0, y_1, X):
     return y_0 + (X - x_0)*(y_1 - y_0)/(x_1 - x_0)
 
