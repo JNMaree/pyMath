@@ -20,6 +20,14 @@ def generate_elements(node_array):
 def generate_basis_functions(element_array):
     pass
 
+def generate_gauss_legendre_points(amount_of_points):
+    gaussian_points_weights = numpy.array((amount_of_points, 2))
+    if amount_of_points == 1:
+       gaussian_points_weights[0, 0] = 0
+       gaussian_points_weights[0, 1] = 2
+    return gaussian_points_weights
+    
+
 def linear_interpolationY(x_0, x_1, y_0, y_1, X):
     return y_0 + (X - x_0)*(y_1 - y_0)/(x_1 - x_0)
 
@@ -35,10 +43,20 @@ def print_solution(solution_array):
 
 def main():
     
-    #test
+    # 'Mesh' parameters
     X_dimension = 10    # distance in meters
     N_nodes = 8         # number of nodes in domain
     
+    # Analysis conditions
+    BC_type1 = 40       # Type 1 (Dirichlet) boundary condition
+    Node_Type1 = 0      # Node subject to Type 1 BC
+    
+    BC_type2 = 10       # Type 2 (Neumann) boundary condition
+    Node_Type2 = 8      # Node subject to Type 2 BC
+    
+    K_ = 20             # Stiffness Coefficient (Material Property)
+    
+    # Code execution:
     nodes = generate_nodes(X_dimension, N_nodes)
     elements = generate_elements(nodes)
     
