@@ -20,11 +20,8 @@ def generate_elements(node_array):
 def generate_basis_functions(element_array):
     pass
 
-def generate_gauss_legendre_points(amount_of_points):
-    gaussian_points_weights = numpy.array((amount_of_points, 2))
-    if amount_of_points == 1:
-       gaussian_points_weights[0, 0] = 0
-       gaussian_points_weights[0, 1] = 2
+
+    
     return gaussian_points_weights
     
 
@@ -49,10 +46,10 @@ def main():
     
     # Analysis conditions
     BC_type1 = 40       # Type 1 (Dirichlet) boundary condition
-    Node_Type1 = 0      # Node subject to Type 1 BC
+    Node_Type1 = 0      # Node position subject to Type 1 BC
     
     BC_type2 = 10       # Type 2 (Neumann) boundary condition
-    Node_Type2 = 8      # Node subject to Type 2 BC
+    Node_Type2 = 8      # Node position subject to Type 2 BC
     
     K_ = 20             # Stiffness Coefficient (Material Property)
     
