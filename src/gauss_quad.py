@@ -1,4 +1,5 @@
 import numpy
+import math
 
 def generate_gauss_legendre_points(point_order):
     gaussian_points_weights = numpy.array((point_order*2 - 1, 2))
@@ -7,8 +8,10 @@ def generate_gauss_legendre_points(point_order):
         gaussian_points_weights[0, 1] = 2
     elif point_order == 2:
         gaussian_points_weights[0, 0] =  
-           
-           
+     
+def binomial_coefficient(n, k):
+	return (math.factorial(n))/(math.factorial(k)*math.factorial(n - k))
+
 def legendre_polynomial(n):
 	leg_polynom = numpy.array((n + 1))
 	if n == 0:
@@ -16,12 +19,9 @@ def legendre_polynomial(n):
 	else:
 		for k in range(0, n):
 			binom_coeff = binomial_coefficient(n, k)
+			binom_coeff *= binomial_coefficient((n + k - 1)/2, n)
 			leg_polynom[k] = 2**(n) * binom_coeff
 	return leg_polynom
-
-def binomial_coefficient(n, k):
-	
-
  
 def main():
     #test
