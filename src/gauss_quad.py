@@ -7,7 +7,10 @@ def generate_gauss_legendre_points(point_order):
         gaussian_points_weights[0, 0] = 0
         gaussian_points_weights[0, 1] = 2
     elif point_order == 2:
-        gaussian_points_weights[0, 0] =  
+        gaussian_points_weights[0, 0] = -1/math.sqrt(3)
+        gaussian_points_weights[0, 1] = 1
+        gaussian_points_weights[1, 0] = 1/math.sqrt(3)
+        gaussian_points_weights[1, 1] = 1
      
 def binomial_coefficient(n, k):
 	return (math.factorial(n))/(math.factorial(k)*math.factorial(n - k))
