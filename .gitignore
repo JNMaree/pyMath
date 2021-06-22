@@ -3,9 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
-*.so
-
 # Distribution / packaging
 .Python
 build/
@@ -86,6 +83,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.vscode/
 
 # Rope project settings
 .ropeproject

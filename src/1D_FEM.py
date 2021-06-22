@@ -20,11 +20,6 @@ def generate_elements(node_array):
 def generate_basis_functions(element_array):
     pass
 
-
-    
-    return gaussian_points_weights
-    
-
 def linear_interpolationY(x_0, x_1, y_0, y_1, X):
     return y_0 + (X - x_0)*(y_1 - y_0)/(x_1 - x_0)
 
