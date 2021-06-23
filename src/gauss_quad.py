@@ -1,6 +1,8 @@
 import numpy
 import math
 
+from polynomial import *
+from newton import *
 
 def generate_gauss_legendre_points(point_order):
     gaussian_points_weights = numpy.array((point_order*2 - 1, 2))
@@ -29,14 +31,6 @@ def legendre_polynomial_recursive(n):
         Pn_minTwo = -(n - 1)/n * legendre_polynomial_recursive(n - 2)
         coefficient_array += numpy.append(Pn_minOne, 0.) + numpy.concatenate(([0], [0], Pn_minTwo))
     return coefficient_array
-
-#Calculate x in a homogenous polynomial function represented by an array of coefficents where the index
-# represents the degree (power) of x.
-def calculate_polynomial(coefficient_array, x):
-    poly = 0
-    for i in range(coefficient_array):
-        poly += coefficient_array[i] * (x**i)
-    return poly
 
 def main():
     # test function for legendre_polynomial + binomial_coefficient
