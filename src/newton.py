@@ -1,6 +1,7 @@
 import math
 import numpy
 
+from polynomial import *
 # |-----------|
 # |           |
 # |-----------|
@@ -12,7 +13,7 @@ StefanBoltzmann = 5.670374419e-8
 
 def NewtonMethod(arrCoefficients, estimate = 1):
     x = estimate
-    derCoefficients = derivePolynomial(arrCoefficients)
+    derCoefficients = derive_Polynomial(arrCoefficients)
     error = 1
     x_ = 0
     iTerate = 0
@@ -28,29 +29,17 @@ def NewtonMethod(arrCoefficients, estimate = 1):
     else:
         print("Maximum Iterations Reached without convergence @ specified error tolerance")
 
-def calculatePolynomial(arrCoefficients, x):
-    sum = 0
-    for i in range(arrCoefficients.size):
-        sum += arrCoefficients[i]*(x**i)
-    return sum
-
-def derivePolynomial(arrCoefficients, degree = 1):
-    deriv = numpy.empty(arrCoefficients.size - 1)
-    for i in range(deriv.size):
-        deriv[i] = arrCoefficients[i+1]*(i+1)
-    return deriv
-
 def funcFraction(x, functionCoeff, functionPrimeCoeff):
-    return x - calculatePolynomial(functionCoeff, x)/calculatePolynomial(functionPrimeCoeff, x)
+    return x - calculate_Polynomial(functionCoeff, x)/calculate_Polynomial(functionPrimeCoeff, x)
 
 #main function
 def main():
     polynom = numpy.array([-3,8,-7,1])
-    polyder = derivePolynomial(polynom)
+    polyder = derive_Polynomial(polynom)
     print("poly:", polynom, "\npolyder:" , polyder)
     x = 5
-    fx = calculatePolynomial(polynom, x)
-    fpx = calculatePolynomial(polyder, x)
+    fx = calculate_Polynomial(polynom, x)
+    fpx = calculate_Polynomial(polyder, x)
     print("x:", x, ", f(x):", fx, ", f'(x):", fpx)
     print("Frac:", funcFraction(x, polynom, polyder))
     
