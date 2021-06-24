@@ -1,7 +1,7 @@
 import numpy
 import math
 
-from polynomial import *
+from polynomial import calculate_polynomial, derive_polynomial
 from newton import Newton_Method
 
 #global array of legendre polynomials
@@ -35,7 +35,7 @@ def legendre_polynomial_recursive(n):
 def calculate_weight_function(x_i, n):
     # w_i = 2/(1 - (x_i)^2) * 2/(P'n(x_i)^2)
     #see https://en.wikipedia.org/wiki/Gaussian_quadrature for details on formula.
-    return 2/(1-x_i**2) * 2/(calculate_Polynomial()**2)
+    return 2/(1-x_i**2) * 2/(calculate_Polynomial(derive_Polynomial(legendre_polynomials[n]))**2)
 
 def main(degree_n):
     # test function for legendre_polynomial + binomial_coefficient

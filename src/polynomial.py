@@ -5,21 +5,21 @@ import numpy
 #   - x powers are equivalent to array position: [0,  1,  2,  3]
 
 # Calculate a polynomial function f(x) by providing x and a co-array
-def calculate_Polynomial(arrCoefficients, x):
+def calculate_polynomial(arrCoefficients, x):
     sum = 0
     for i in range(arrCoefficients.size):
         sum += arrCoefficients[i]*(x**i)
     return sum
 
 # Calculate a function's derivative from a co-array
-def derive_Polynomial(arrCoefficients):
+def derive_polynomial(arrCoefficients):
     derivative_poly = numpy.empty(arrCoefficients.size - 1)
     for i in range(arrCoefficients.size - 1):
         derivative_poly[i] = arrCoefficients[i+1]*(i+1)
     return derivative_poly
 
 # Add polynomial co-arrays of equal or different sizes
-def add_Polynomial(poly_a, poly_b):
+def add_polynomial(poly_a, poly_b):
     added = []
     add_list = []
     a_size = poly_a.size
