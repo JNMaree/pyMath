@@ -11,7 +11,7 @@ maxIterate = 20
 
 StefanBoltzmann = 5.670374419e-8
 
-def NewtonMethod(arrCoefficients, estimate = 1):
+def Newton_Method(arrCoefficients, estimate = 1):
     x = estimate
     derCoefficients = derive_Polynomial(arrCoefficients)
     error = 1
