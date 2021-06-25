@@ -45,4 +45,4 @@ def main(degree_n):
 
 
 if __name__ == "__main__":
-    main()
+    main(3)
