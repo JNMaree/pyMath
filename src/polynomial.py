@@ -83,9 +83,12 @@ class Polynomial:
         return sum
 
     # Calculate a function's derivative from a co-array
-    def derivative(self, degree):
-        derivative_poly = Polynomial(degree)
+    def derivative(self, derivative_order = 1):
+        derivative_poly = Polynomial(derivative_order)
         for i in range(self.co_array.size - 1):
             derivative_poly[i] = self.co_array[i+1]*(i+1)
-        return derivative_poly
+        if derivative_order > 1:
+            derivative_poly.derivative(derivative_order - 1)
+        else:
+            return derivative_poly
 
