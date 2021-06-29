@@ -1,7 +1,7 @@
 import numpy
 import math
 
-from polynomial import calculate_polynomial, derive_polynomial
+from polynomial import * 
 from newton import Newton_Method
 
 #global array of legendre polynomials
