@@ -1,18 +1,36 @@
 import numpy
 
 class Polynomial:
-# Homogenous, single-variable (x) polynomials are treated as coefficient arrays (co-arrays).
-#   x^3 -3x^2 + 5x + 10 equates to a co-array of [10, 5, -3,  1]
-#   - x powers are equivalent to array position: [0,  1,  2,  3]
-#   - the degree of the polynomial is therefore equivalent to the length of the coefficient array
+    '''
+    Homogenous, single-variable (x) polynomials are treated as coefficient arrays (co-arrays).
+    x^3 -3x^2 + 5x + 10 equates to a co-array of [10, 5, -3,  1]
+    - x powers are equivalent to array position: [0,  1,  2,  3]
+    - the degree of the polynomial is therefore equivalent to the length of the coefficient array
+    '''
 
     # coefficient array
-    co_array = numpy.array([])
     degree = 0
+    co_array = numpy.zeros(degree)
 
-    def __init__(self, coefficient_array):
-        self.co_array = numpy.array(coefficient_array)
-        self.degree = len(coefficient_array)
+    def __init__(self, param):
+        if isinstance(param, int):
+            self.degree = param
+            self.co_array = numpy.zeros(param)
+        elif isinstance(param, numpy.ndarray):
+            self.co_array = param
+            self.degree = param.size
+        elif isinstance(param, (list)):
+            self.co_array = numpy.array(param)
+            self.degree = len(param)
+        else:
+            raise TypeError
+
+    # Overload the array position('[]') operator
+    def __getitem__(self, key):
+        return self.co_array[key]
+
+    def __setitem__(self, key, value):
+        self.co_array[key] = value
 
     # represent polynomial in format: ax^i + bx^(i-1) + cx^(i-2) + ...
     def __str__(self):
@@ -27,6 +45,7 @@ class Polynomial:
             ret += " + "
         return ret
 
+    # overload the addition('+') arithmetic operator
     def __add__(self, b):
         a_size = self.degree
         b_size = b.degree
@@ -36,13 +55,13 @@ class Polynomial:
         # equal degree equations
         if a_size == b_size:        
             for i in range(a_size):
-                add_list.append(self.co_array[i] + poly_b[i])
+                add_list.append(self.co_array[i] + b[i])
             added = numpy.array(add_list)
         # self degree > poly_b degree
         elif a_size > b_size:
             for i in range(a_size):
                 if i < b_size:
-                    add_list.append(self.co_array[i] + poly_b[i])
+                    add_list.append(self.co_array[i] + b[i])
                 else:
                     add_list.append(self.co_array[i])
             added = numpy.array(add_list)
@@ -50,9 +69,9 @@ class Polynomial:
         else:
             for i in range(b_size):
                 if i < a_size:
-                    add_list.append(self.co_array[i] + poly_b[i])
+                    add_list.append(self.co_array[i] + b[i])
                 else:
-                    add_list.append(poly_b[i])
+                    add_list.append(b[i])
             added = numpy.array(add_list)
         return added
 
@@ -65,13 +84,8 @@ class Polynomial:
 
     # Calculate a function's derivative from a co-array
     def derivative(self, degree):
-        derivative_poly = numpy.empty(self.co_array.size - 1)
+        derivative_poly = Polynomial(degree)
         for i in range(self.co_array.size - 1):
             derivative_poly[i] = self.co_array[i+1]*(i+1)
         return derivative_poly
 
-
-# Add polynomial co-arrays of equal or different sizes
-def polynomials_add(poly_a, poly_b):
-    
-    
