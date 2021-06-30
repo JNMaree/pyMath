@@ -130,9 +130,8 @@ class Polynomial:
         for i in range(self.co_array.size - 1):
             derivative_poly[i] = self.co_array[i+1]*(i+1)
         if derivative_order > 1:
-            derivative_poly.derivative(derivative_order - 1)
-        else:
-            return derivative_poly
+            derivative_poly = derivative_poly.derivative(derivative_order - 1)
+        return derivative_poly
 
 
 def main():
@@ -140,24 +139,28 @@ def main():
     poly1 = Polynomial(numpy.array([8, -2, 1]))
     poly2 = Polynomial(numpy.array([16, 4, 2]))
 
-    print("PolynomialTest:")
+    print("Polynomial_Test:")
     print("Poly1:", poly1, ", degree:", poly1.degree)
     print("Poly2:", poly2, ", degree:", poly2.degree)
 
-    print("PolynomialAddition:")
+    print("Polynomial_Addition:")
     print("Poly1 + Poly2:", poly1 + poly2)
     print("Poly2 + Poly1:", poly2 + poly1)
     
-    print("PolynomialSubtraction:")
+    print("Polynomial_Subtraction:")
     print("Poly1 - Poly2:", poly1 - poly2)
     print("Poly2 - Poly1:", poly2 - poly1)
     
-    print("polynomialDifferentiation:")
+    print("Polynomial_Differentiation:")
     print("Poly1:", poly1.derivative())
     print("Poly2:", poly2.derivative())
-    
-    
 
+    print("Polynomial_2ndDifferentiation:")
+    print("Poly1:", poly1.derivative(2))
+    print("Poly2:", poly2.derivative(2))
+
+    
+    
 if __name__ == "__main__":
     main()
 
