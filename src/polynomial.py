@@ -126,7 +126,7 @@ class Polynomial:
 
     # Calculate a function's derivative from a co-array
     def derivative(self, derivative_order = 1):
-        derivative_poly = Polynomial(derivative_order)
+        derivative_poly = Polynomial(self.degree - 1)
         for i in range(self.co_array.size - 1):
             derivative_poly[i] = self.co_array[i+1]*(i+1)
         if derivative_order > 1:
@@ -140,9 +140,22 @@ def main():
     poly1 = Polynomial(numpy.array([8, -2, 1]))
     poly2 = Polynomial(numpy.array([16, 4, 2]))
 
-    print("PolynomimalTest:")
-    print("Poly1:", poly1)
-    print("Poly2:", poly2)
+    print("PolynomialTest:")
+    print("Poly1:", poly1, ", degree:", poly1.degree)
+    print("Poly2:", poly2, ", degree:", poly2.degree)
+
+    print("PolynomialAddition:")
+    print("Poly1 + Poly2:", poly1 + poly2)
+    print("Poly2 + Poly1:", poly2 + poly1)
+    
+    print("PolynomialSubtraction:")
+    print("Poly1 - Poly2:", poly1 - poly2)
+    print("Poly2 - Poly1:", poly2 - poly1)
+    
+    print("polynomialDifferentiation:")
+    print("Poly1:", poly1.derivative())
+    print("Poly2:", poly2.derivative())
+    
     
 
 if __name__ == "__main__":
