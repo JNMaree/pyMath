@@ -1,7 +1,7 @@
 import math
 import numpy
 
-from polynomial import *
+from polynomial import Polynomial
 # |-----------|
 # |           |
 # |-----------|
@@ -9,10 +9,7 @@ from polynomial import *
 errorTolerance = 1e-6
 maxIterate = 20
 
-StefanBoltzmann = 5.670374419e-8
-
-#
-
+# Newton's Method: An iterative method for finding roots to polynomials
 def Newton_Method(polynomi, estimate = 1):
     x = estimate
     error = 1
@@ -36,7 +33,7 @@ def funcFraction(x, polynom):
 
 #main function
 def main():
-    polynom = numpy.array([-3,8,-7,1])
+    polynom = Polynomial(numpy.array([-3,8,-7,1]))
     polynomPrime = polynom.derivative(1)
     print("poly:", polynom, "\npolyder:" , polynomPrime)
     x = 5
