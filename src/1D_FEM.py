@@ -17,9 +17,17 @@ def generate_elements(node_array):
         element_array[i, 1] = node_array[i + 1]
     return element_array
 
-def generate_basis_functions(element_array):
-    pass
-
+def generate_basis_functions(element_array, function_order = 1):
+    if function_order == 1:
+        # linear elements
+        pass    
+    elif function_order == 2:
+        # quadratic elements
+        pass
+    elif function_order == 3:
+        # cubic elements
+        pass
+    
 def linear_interpolationY(x_0, x_1, y_0, y_1, X):
     return y_0 + (X - x_0)*(y_1 - y_0)/(x_1 - x_0)
 
