@@ -16,10 +16,8 @@ class Mesh_1D:
         if mesh_order == 1:
             self.n_nodes = num_of_elements + 1
         self.mesh_order = mesh_order
-        self.generate_nodes()
-        self.generate_elements()
     
-    def generate_nodes(self):
+    def generate_equidistant_nodes(self):
         self.nodes_array = numpy.array((self.n_nodes))
         dim_increment = self.dimension_x/self.n_elements
         self.nodes_array[0] = 0
@@ -35,6 +33,7 @@ class Mesh_1D:
             element_array[i, 1] = self.nodes_array[i + 1]
         return element_array
 
+# 
 def generate_basis_functions(element_array, function_order = 1):
     if function_order == 1:
         # linear elements
@@ -75,9 +74,9 @@ def main():
     K_ = 20             # Stiffness Coefficient (Material Property)
     
     # Code execution:
-    mesh_test = Mesh_1D(X_dimension, N_elements)
-    
-    
+    mesh1 = Mesh_1D(X_dimension, N_elements)
+    mesh1.generate_equidistant_nodes()
+    mesh1.generate_elements()
     
 
 if __name__ == "__main__":
