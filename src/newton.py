@@ -33,7 +33,7 @@ def funcFraction(x, polynomial):
 
 #main function
 def main():
-    polynom = Polynomial(numpy.array([-3,8,-7,1]))
+    polynom = Polynomial([-3,8,-7,1])
     print("poly:", polynom, "\npolyder:" , polynom.derivative())
     x = 5
     fx = polynom.calculate(x)

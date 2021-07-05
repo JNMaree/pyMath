@@ -48,7 +48,7 @@ def main(degree_n):
     legendre_polynomials = numpy.zeros((degree_n, degree_n))
     for i in range(degree_n):
         legendre_polynomials += legendre_polynomial_recursive(degree_n)
-
+        
 
 if __name__ == "__main__":
     main(3)
