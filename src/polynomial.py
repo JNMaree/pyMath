@@ -135,6 +135,7 @@ class Polynomial:
 
 
 def main():
+    
     #testfunction
     poly1 = Polynomial(numpy.array([8, -2, 1]))
     poly2 = Polynomial(numpy.array([16, 4, 2]))
