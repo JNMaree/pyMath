@@ -28,17 +28,16 @@ def Newton_Method(polynomi, estimate = 1):
         print("Maximum Iterations Reached without convergence @ specified error tolerance")
 
 # 
-def funcFraction(x, polynom):
-    return x - polynom.calculate(x)/polynom.derivative.calculate(x)
+def funcFraction(x, polynomial):
+    return x - polynomial.calculate(x)/polynomial.derivative.calculate(x)
 
 #main function
 def main():
     polynom = Polynomial(numpy.array([-3,8,-7,1]))
-    polynomPrime = polynom.derivative(1)
-    print("poly:", polynom, "\npolyder:" , polynomPrime)
+    print("poly:", polynom, "\npolyder:" , polynom.derivative())
     x = 5
     fx = polynom.calculate(x)
-    fpx = polynomPrime.calculate(x)
+    fpx = polynom.derivative().calculate(x)
     print("x:", x, ", f(x):", fx, ", f'(x):", fpx)
     print("Frac:", funcFraction(x, polynom))
     
