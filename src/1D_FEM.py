@@ -7,8 +7,8 @@ class Mesh_1D:
     n_nodes = 0
     mesh_order = 1
     
-    nodes_array = numpy.array([])
-    elements_array = numpy.array([])
+    node_array = numpy.array([])
+    element_array = numpy.array([])
     
     def __init__(self, x_dimension, num_of_elements, mesh_order = 1):
         self.dimension_x = x_dimension
@@ -66,13 +66,13 @@ def main():
     N_elements = 8      # number of elements in domain
     
     # Analysis conditions
-    BC_type1 = 40       # Type 1 (Dirichlet) boundary condition
-    Node_Type1 = 0      # Node position subject to Type 1 BC
+    Type1_BC = 40       # Type 1 (Dirichlet) boundary condition
+    Type1_Node = 0      # Node position subject to Type 1 BC
     
-    BC_type2 = 10       # Type 2 (Neumann) boundary condition
-    Node_Type2 = 8      # Node position subject to Type 2 BC
+    Type2_BC = 10       # Type 2 (Neumann) boundary condition
+    Type2_Node = 8      # Node position subject to Type 2 BC
     
-    K_ = 20             # Stiffness Coefficient (Material Property)
+    K_1 = 20            # Stiffness Coefficient (Material Property)
     
     # Code execution:
     mesh1 = Mesh_1D(X_dimension, N_elements)
