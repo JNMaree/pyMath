@@ -2,7 +2,7 @@ import numpy
 
 class Polynomial:
     '''
-    Homogenous, single-variable (x) polynomials are treated as coefficient arrays (co-arrays).
+    Homogenous, single-variable (x - univariate) polynomials are treated as coefficient arrays (co-arrays).
     Coefficients are stored in ascending order of degree:
         x^3 -3x^2 + 5x + 10 equates to a co-array of [10, 5, -3,  1]
          - x powers are equivalent to array position: [0,  1,  2,  3]
@@ -133,6 +133,27 @@ class Polynomial:
             derivative_poly = derivative_poly.derivative(derivative_order - 1)
         return derivative_poly
 
+    # Calculate the number of real roots using Sturm's theorem
+    def sturms_roots(self):
+        q, r = euclidean_division(self, self.derivative)
+        while r.degree > 1:
+            
+        
+
+# Given two univariate polynomials a(x) and b(x) (a,b != 0),
+#  there exists another two polynomials (q, r) such that:
+#       a = bq + r
+#   where q = quotient and r = remainder
+#   and deg(r) < deg(b)
+# see https://en.wikipedia.org/wiki/Polynomial_greatest_common_divisor#Euclidean_division
+def euclidean_division(polynomi_a, polynomi_b):
+    q = Polynomial([0])
+    r = polynomi_a
+    while r.degree > polynomi_b.degree:
+        s = ( r[r.degree - 1]/polynomi_b[polynomi_b.degree - 1] )*r.degree - polynomi_b.degree
+        q += s
+        r -= s*polynomi_b
+    return q, r
 
 def main():
     
