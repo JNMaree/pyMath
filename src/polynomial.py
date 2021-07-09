@@ -137,9 +137,9 @@ class Polynomial:
     def sturms_roots(self):
         q, r = euclidean_division(self, self.derivative)
         while r.degree > 1:
-            
+            pass
         
-
+        
 # Given two univariate polynomials a(x) and b(x) (a,b != 0),
 #  there exists another two polynomials (q, r) such that:
 #       a = bq + r

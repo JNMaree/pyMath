@@ -1,7 +1,6 @@
 import numpy
 
 def setupSieve(max):
-    pcount = 0
     if max%2 == 0:
         elements = max
     else:
@@ -37,11 +36,11 @@ def runSieve(arrPrimePotentials):
             
 def printPrimes(sieve):
     out = ""
-    primeCount = 0
+    prime_count = 0
     for i in range(0, sieve.shape[0]):
         if sieve[i,1] == 1:
             out += str(sieve[i,0]) + ", "
-            primeCount += 1
+            prime_count += 1
     print(out)
 
 def main():
