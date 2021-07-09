@@ -2,7 +2,7 @@ import numpy
 import math
 
 from polynomial import Polynomial
-from newton import Newton_Method
+from newtons_method import Newtons_Method
 
 #global array of legendre polynomials
 legendre_polynomials = []
