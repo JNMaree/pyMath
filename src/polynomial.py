@@ -138,7 +138,33 @@ class Polynomial:
         q, r = euclidean_division(self, self.derivative)
         while r.degree > 1:
             pass
-        
+
+    # Estimate the number of positive real roots by getting the number of sign changes
+    def descartes_rule_of_signs(self):
+        # set first sign
+        j = 0
+        first_nonZero = 0
+        while first_nonZero == 0 and j < self.degree:
+            first_nonZero = self.co_array[j]
+            j += 1
+
+        recent_sign = False # False = Negative first sign
+        if first_nonZero > 0:
+            recent_sign = True # True = Positive first sign
+
+        # count number of subsequent sign changes
+        sign_changes = 0
+        for i in range(self.degree):
+            if self.co_array[i] != 0:
+                if self.co_array[i] > 0:
+                    if ~recent_sign:
+                        sign_changes += 1
+                        recent_sign = True
+                else:
+                    if recent_sign:
+                        sign_changes += 1
+                        recent_sign = False
+        return sign_changes
         
 # Given two univariate polynomials a(x) and b(x) (a,b != 0),
 #  there exists another two polynomials (q, r) such that:
