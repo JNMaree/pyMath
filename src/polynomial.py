@@ -117,13 +117,20 @@ class Polynomial:
             added = numpy.array(add_list)
         return added
 
-    # Calculate a polynomial function f(x) by providing x and a co-array
+    # Evaluate a polynomial f(x) by degrees of powers
     def calculate(self, x):
         sum = 0
         for i in range(self.co_array.size):
             sum += self.co_array[i]*(x**i)
         return sum
 
+    # Evaluate a polynomial using Horner's method (recursive multiplication)
+    def calculate_horners(self, x, degree=0):
+        calc = 0
+        if degree < self.degree:
+            calc += self.co_array[degree] + x*(self.calculate_horners(x, degree + 1))
+        return calc
+        
     # Calculate a function's derivative from a co-array
     def derivative(self, derivative_order = 1):
         derivative_poly = Polynomial(self.degree - 1)
@@ -165,6 +172,8 @@ class Polynomial:
                         sign_changes += 1
                         recent_sign = False
         return sign_changes
+
+        
         
 # Given two univariate polynomials a(x) and b(x) (a,b != 0),
 #  there exists another two polynomials (q, r) such that:
