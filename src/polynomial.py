@@ -216,7 +216,15 @@ def main():
     print("Poly1:", poly1.derivative(2))
     print("Poly2:", poly2.derivative(2))
 
-    
+    x = 10
+    print("Polynomial_Evaluation(Exponent_method: x=",x,"):")
+    print("Poly1:", poly1.calculate(x))
+    print("Poly2:", poly2.calculate(x))
+
+    print("Polynomial_Evaluation(Horners_method: x=",x,"):")
+    print("Poly1:", poly1.calculate_horners(x))
+    print("Poly2:", poly2.calculate_horners(x))
+
     
 if __name__ == "__main__":
     main()
