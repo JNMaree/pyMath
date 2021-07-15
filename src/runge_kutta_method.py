@@ -2,7 +2,7 @@ import numpy
 from Polynomial import Polynomial
 
 class TimePolynomial(Polynomial):
-
+    
     
     
 
@@ -10,6 +10,7 @@ def runge_kutta_method():
     
 
 def step(time_poly, y_n, t_n, h):
+    # Classic Runge-Kutta step method (RK4)
     k_1 = time_poly.calculate(y_n, t_n)
     k_2 = time_poly.calculate(y_n + h*k_1/2, t_n + h/2)
     k_3 = time_poly.calculate(y_n + h*k_2/2, t_n + h/2)

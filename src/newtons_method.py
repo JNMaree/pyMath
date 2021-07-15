@@ -53,11 +53,11 @@ def is_approximately_equal(a, b):
 
 #main function
 def main():
-    polynom = Polynomial([-3,8,-7,1])
-    print("poly:", polynom, "\npolyder:" , polynom.derivative())
+    polynom = Polynomial([-3,8,-7,1]) # -3 + 8x -7x^2 + x^3
+    print("poly:", polynom, "\npolyder:" , polynom.derive())
     x = 5
-    fx = polynom.calculate(x)
-    fpx = polynom.derivative().calculate(x)
+    fx = polynom.evaluate(x)
+    fpx = polynom.derive().evaluate(x)
     print("x:", x, ", f(x):", fx, ", f'(x):", fpx)
     print("Frac:", approximate_function(x, polynom))
     

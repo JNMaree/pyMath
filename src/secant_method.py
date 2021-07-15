@@ -10,7 +10,7 @@ def secant_method(polynomi, x0_estimate, x1_estimate, iterations = max_iteration
     x0 = x0_estimate
     x1 = x1_estimate
     while i < iterations and diff > error_tolerance:
-        x2 = x1 - polynomi.calculate(x1) * (x1 - x0) / (polynomi.calculate(x1) - polynomi.calculate(x0))
+        x2 = x1 - polynomi.evaluate(x1) * (x1 - x0) / (polynomi.evaluate(x1) - polynomi.evaluate(x0))
         x0 = x1
         x1 = x2
         diff = abs(x1 - x0)
