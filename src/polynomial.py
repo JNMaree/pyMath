@@ -2,7 +2,7 @@ import numpy
 
 class Polynomial:
     '''
-    Homogenous, single-variable (x - univariate) polynomials are treated as coefficient arrays (co-arrays).
+    Univariate (x - single variable) polynomials are treated as coefficient arrays (co-arrays).
     Coefficients are stored in ascending order of degree:
         x^3 -3x^2 + 5x + 10 equates to a co-array of [10, 5, -3,  1]
          - x powers are equivalent to array position: [0,  1,  2,  3]
@@ -13,16 +13,16 @@ class Polynomial:
     degree = 0
     co_array = numpy.zeros(degree)
 
-    def __init__(self, param):
-        if isinstance(param, int):
-            self.degree = param
-            self.co_array = numpy.zeros(param)
-        elif isinstance(param, numpy.ndarray):
-            self.co_array = param
-            self.degree = param.size
-        elif isinstance(param, (list)):
-            self.co_array = numpy.array(param)
-            self.degree = len(param)
+    def __init__(self, parameter):
+        if isinstance(parameter, int):
+            self.degree = parameter
+            self.co_array = numpy.zeros(parameter)
+        elif isinstance(parameter, numpy.ndarray):
+            self.co_array = parameter
+            self.degree =   parameter.size
+        elif isinstance(parameter, (list)):
+            self.co_array = numpy.array(parameter)
+            self.degree = len(parameter)
         else:
             raise TypeError
 
@@ -118,21 +118,21 @@ class Polynomial:
         return added
 
     # Evaluate a polynomial f(x) by degrees of powers
-    def calculate(self, x):
+    def evaluate(self, x):
         sum = 0
         for i in range(self.co_array.size):
             sum += self.co_array[i]*(x**i)
         return sum
 
     # Evaluate a polynomial using Horner's method (recursive multiplication)
-    def calculate_horners(self, x, degree=0):
+    def evaluate_horners(self, x, degree=0):
         calc = 0
         if degree < self.degree:
-            calc += self.co_array[degree] + x*(self.calculate_horners(x, degree + 1))
+            calc += self.co_array[degree] + x*(self.evaluate_horners(x, degree + 1))
         return calc
         
     # Calculate a function's derivative from a co-array
-    def derivative(self, derivative_order = 1):
+    def derive(self, derivative_order = 1):
         derivative_poly = Polynomial(self.degree - 1)
         for i in range(self.co_array.size - 1):
             derivative_poly[i] = self.co_array[i+1]*(i+1)
@@ -173,8 +173,9 @@ class Polynomial:
                         recent_sign = False
         return sign_changes
 
-        
-        
+class MultivariatePolynomial(Polynomial):
+    pass
+ 
 # Given two univariate polynomials a(x) and b(x) (a,b != 0),
 #  there exists another two polynomials (q, r) such that:
 #       a = bq + r
@@ -209,21 +210,21 @@ def main():
     print("Poly2 - Poly1:", poly2 - poly1)
     
     print("Polynomial_Differentiation:")
-    print("Poly1:", poly1.derivative())
-    print("Poly2:", poly2.derivative())
+    print("Poly1:", poly1.derive())
+    print("Poly2:", poly2.derive())
 
     print("Polynomial_2ndDifferentiation:")
-    print("Poly1:", poly1.derivative(2))
-    print("Poly2:", poly2.derivative(2))
+    print("Poly1:", poly1.derive(2))
+    print("Poly2:", poly2.derive(2))
 
     x = 10
     print("Polynomial_Evaluation(Exponent_method: x=",x,"):")
-    print("Poly1:", poly1.calculate(x))
-    print("Poly2:", poly2.calculate(x))
+    print("Poly1:", poly1.evaluate(x))
+    print("Poly2:", poly2.evaluate(x))
 
     print("Polynomial_Evaluation(Horners_method: x=",x,"):")
-    print("Poly1:", poly1.calculate_horners(x))
-    print("Poly2:", poly2.calculate_horners(x))
+    print("Poly1:", poly1.evaluate_horners(x))
+    print("Poly2:", poly2.evaluate_horners(x))
 
     
 if __name__ == "__main__":
