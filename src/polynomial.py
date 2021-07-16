@@ -142,7 +142,7 @@ class Polynomial:
 
     # Calculate the number of real roots using Sturm's theorem
     def sturms_roots(self):
-        q, r = euclidean_division(self, self.derivative)
+        q, r = euclidean_division(self, self.derive)
         while r.degree > 1:
             pass
 
@@ -173,8 +173,29 @@ class Polynomial:
                         recent_sign = False
         return sign_changes
 
-class MultivariatePolynomial(Polynomial):
-    pass
+class MultivariatePolynomial:
+
+    unique_variables = 0
+    polynomials = []
+
+    def __init__(self, parameters):
+        if isinstance(parameters, numpy.ndarray):
+            for i in range(numpy.size(parameters, 0)):
+                self.polynomials.append(Polynomial(parameters[:,i]))
+                self.unique_variables += 1
+            
+        elif isinstance(parameters, (list)):
+            for i in parameters:
+                self.polynomials.append(i)
+                self.unique_variables += 1
+        else:
+            raise TypeError
+
+    def evaluate(self, variables):
+        for i in self.polynomials:
+            i.evaluate(variables[i])
+
+    
  
 # Given two univariate polynomials a(x) and b(x) (a,b != 0),
 #  there exists another two polynomials (q, r) such that:
