@@ -1,10 +1,10 @@
 import numpy
+from polynomial import MultivariatePolynomial
 
-class ODE:
+class ODE(MultivariatePolynomial):
 
-    independent_variables = 0
-    derivative_order = 1
-    derivative_array = numpy.zeros((derivative_order, independent_variables))
+    max_derivative_order = 1
+    derivative_array = numpy.zeros((max_derivative_order, MultivariatePolynomial.unique_variables))
 
     def __init__(self, parameter):
         if isinstance(parameter, int):
@@ -12,4 +12,4 @@ class ODE:
             self.derivative_order = 1
             self.derivative_array = numpy.zeros((self.derivative_order, parameter))
         
-        
+    
