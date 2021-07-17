@@ -6,7 +6,7 @@ class Mesh1Dimension:
     n_elements = 0
     n_nodes = 0
     mesh_order = 1
-    
+ 
     node_array = numpy.array([])
     element_array = numpy.array([])
     
