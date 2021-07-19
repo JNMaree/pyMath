@@ -1,5 +1,7 @@
 import numpy
-from mesh_1D import Mesh1Dimension
+import matplotlib.pyplot as plt
+
+from mesh_1D import Mesh1Dimension, MeshBC
 
 class FiniteElementMethod:
 
@@ -34,20 +36,27 @@ class FiniteElementMethod:
 
 
 def main():
+    # Heat transfer test method:
     
-    # Create mesh using 'Mesh' parameters:
-    X_dimension = 10    # distance in meters
-    N_elements = 8      # number of elements in domain
+    # Create mesh using parameters:
+    X_dimension = 10    # Distance in meters
+    N_elements = 8      # Number of finite elements in domain
     Mesh = Mesh1Dimension(X_dimension, N_elements)
     
-    # Create Analysis using the following conditions:
-    Type1_BC = 40       # Type 1 (Dirichlet) boundary condition
-    Type1_Node = 0      # Node position subject to Type 1 BC
+    # Analysis Conditions:
     
-    Type2_BC = 10       # Type 2 (Neumann) boundary condition
-    Type2_Node = 8      # Node position subject to Type 2 BC
+    # Material Properties:
+    K = 20      # Stiffness Coefficient (Material Property)
+
+    # Type 1 (Dirichlet) boundary conditions:
+    Type1_BC = 24       # Temperature specification
+    Type1_Nodes = [0]   # Node indices subject to Type 1 BC
+
+    # Type 2 (Neumann) boundary condition:
+    Type2_BC = 16                   # Heat Flux Specification
+    Type2_Nodes = [N_elements - 1]  # Node indices subject to Type 2 BC
     
-    K_1 = 20            # Stiffness Coefficient (Material Property)
+    
     
     
 
