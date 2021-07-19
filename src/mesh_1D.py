@@ -33,3 +33,16 @@ class Mesh1Dimension:
         for i in range(0, node_end):
             for j in range(0, nodes_per_element):
                 self.element_array[i, j] = j
+
+class MeshBC:
+
+    n_elements = 0
+    values = numpy.zeros(n_elements)
+
+    def __init__(self, n_elements, bc_value, index_array):
+        self.n_elements = n_elements
+        self.values = numpy.zeros(self.n_elements)
+        for x in index_array:
+            for i in range(self.n_elements):
+                if i == x:
+                    self.values[i] += bc_value
