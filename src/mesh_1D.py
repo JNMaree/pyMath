@@ -1,6 +1,6 @@
 import numpy
 
-class Mesh1Dimension:
+class Mesh1D:
 
     dimension_x = 0
     n_elements = 0
@@ -34,15 +34,18 @@ class Mesh1Dimension:
             for j in range(0, nodes_per_element):
                 self.element_array[i, j] = j
 
-class MeshBC:
-
-    n_elements = 0
-    values = numpy.zeros(n_elements)
+class BoundaryCondition1D:
 
     def __init__(self, n_elements, bc_value, index_array):
-        self.n_elements = n_elements
-        self.values = numpy.zeros(self.n_elements)
+        if isinstance(n_elements, int):
+            self.n_elements = elements
+        elif isinstance(n_elements, Mesh1Dimension):
+            self.n_elements = n_elements.n_elements
+        
+        self.node_array = numpy.zeros(self.n_elements)
         for x in index_array:
-            for i in range(self.n_elements):
-                if i == x:
-                    self.values[i] += bc_value
+            self.node_array[x] = bc_value
+
+class SolutionSpace1D(Mesh1D):
+
+    def __init__(self):
