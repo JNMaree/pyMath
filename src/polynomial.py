@@ -8,9 +8,10 @@ class Polynomial:
          - x powers are equivalent to array position: [0,  1,  2,  3]
          - the degree of the polynomial is therefore equivalent to the length of the coefficient array
     '''
+    # highest order
+    degree = 0
 
     # coefficient array
-    degree = 0
     co_array = numpy.zeros(degree)
 
     def __init__(self, parameter):

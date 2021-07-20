@@ -1,5 +1,6 @@
-from polynomial import Polynomial
 import numpy
+
+from polynomial import Polynomial
 
 error_tolerance = 1e-6
 max_iterations = 30

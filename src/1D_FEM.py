@@ -1,15 +1,13 @@
 import numpy
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plot
 
-from mesh_1D import Mesh1Dimension, MeshBC
+from mesh_1D import Mesh1D, BoundaryCondition1D, SolutionSpace1D
 
 class FiniteElementMethod:
 
-    dirichlet_bc = 0
-    neumann_bc = 0
-
     def __init__(self, mesh, boundary_conditions, material_properties):
-
+        pass
+        
     # 
     def generate_basis_functions(element_array, function_order = 1):
         if function_order == 1:
@@ -51,11 +49,12 @@ def main():
     # Type 1 (Dirichlet) boundary conditions:
     Type1_BC = 24       # Temperature specification
     Type1_Nodes = [0]   # Node indices subject to Type 1 BC
+    BC_Type1 = BoundaryCondition1D(Type1_BC, Type1_Nodes)
 
     # Type 2 (Neumann) boundary condition:
     Type2_BC = 16                   # Heat Flux Specification
     Type2_Nodes = [N_elements - 1]  # Node indices subject to Type 2 BC
-    
+    BC_Type2 = BoundaryCondition1D(Type2_BC, Type2_Nodes)
     
     
     

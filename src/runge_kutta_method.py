@@ -1,28 +1,24 @@
 import numpy
+
 from Polynomial import Polynomial
-
-class TimePolynomial(Polynomial):
-    
-    
     
 
-def runge_kutta_method():
+def runge_kutta_method(multiVarPolynom, y0, h, time_steps):
+    y_n = y0
+    y_m = 0
     
-
-def step(time_poly, y_n, t_n, h):
+    for i in time_steps:
     # Classic Runge-Kutta step method (RK4)
-    k_1 = time_poly.calculate(y_n, t_n)
-    k_2 = time_poly.calculate(y_n + h*k_1/2, t_n + h/2)
-    k_3 = time_poly.calculate(y_n + h*k_2/2, t_n + h/2)
-    k_4 = time_poly.calculate(y_n + h*k_3, t_n + h)
+        k_1 = multiVarPolynom.calculate(y_n, i)
+        k_2 = multiVarPolynom.calculate(y_n + h*k_1/2, i + h/2)
+        k_3 = multiVarPolynom.calculate(y_n + h*k_2/2, i + h/2)
+        k_4 = multiVarPolynom.calculate(y_n + h*k_3, i + h)
 
-    y_m = y_n + (1/6) * h * (k_1 + 2*k_2 + 2*k_3 + k_4)
-    t_m = t_n + h
-    return y_m, t_m
+        y_m = y_n + (1/6) * h * (k_1 + 2*k_2 + 2*k_3 + k_4)
+        
+    return y_m
 
-def main():
-    #test function
-    pass
 
 if __name__ == "__main__":
-    main()
+    # test function
+    pass
