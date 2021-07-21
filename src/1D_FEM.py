@@ -1,9 +1,9 @@
 import numpy
 import matplotlib.pyplot as plot
 
-from mesh_1D import Mesh1D, BoundaryCondition1D, SolutionSpace1D
+from mesh_1D import Mesh1D, NodeSpace1D, ElementSpace1D
 
-class FiniteElementMethod:
+class FiniteElementMethod(Mesh1D):
 
     def __init__(self, mesh, boundary_conditions, material_properties):
         pass
@@ -39,7 +39,7 @@ def main():
     # Create mesh using parameters:
     X_dimension = 10    # Distance in meters
     N_elements = 8      # Number of finite elements in domain
-    Mesh = Mesh1Dimension(X_dimension, N_elements)
+    fMesh = Mesh1D(X_dimension, N_elements)
     
     # Analysis Conditions:
     
@@ -49,14 +49,14 @@ def main():
     # Type 1 (Dirichlet) boundary conditions:
     Type1_BC = 24       # Temperature specification
     Type1_Nodes = [0]   # Node indices subject to Type 1 BC
-    BC_Type1 = BoundaryCondition1D(Type1_BC, Type1_Nodes)
+    BC_Type1 = NodeSpace1D(fMesh.n_nodes)
+    BC_Type1.assign_values(Type1_BC, Type1_Nodes)
 
     # Type 2 (Neumann) boundary condition:
     Type2_BC = 16                   # Heat Flux Specification
-    Type2_Nodes = [N_elements - 1]  # Node indices subject to Type 2 BC
-    BC_Type2 = BoundaryCondition1D(Type2_BC, Type2_Nodes)
-    
-    
+    Type2_Nodes = [N_elements]      # Node indices subject to Type 2 BC
+    BC_Type2 = NodeSpace1D(fMesh.n_nodes)
+    BC_Type2.assign_values(Type2_BC, Type2_Nodes)
     
 
 if __name__ == "__main__":
