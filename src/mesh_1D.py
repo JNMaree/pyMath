@@ -1,14 +1,64 @@
 import numpy
 
-class Mesh1D:
+class NodeSpace1D:
+    
+    # Node array:
+    nodes = []
+
+    # Number of Nodes:
+    n_nodes = 0
+
+    def __init__(self, nodes):
+        if isinstance(nodes, int):
+            self.nodes = numpy.zeros(nodes)
+            self.n_nodes = nodes
+        elif isinstance(nodes, list):
+            self.nodes = numpy.array(nodes)
+            self.n_nodes = len(nodes)
+        elif isinstance(nodes, numpy.ndarray):
+            self.nodes = nodes
+            self.n_nodes = nodes.size()
+
+    # Assign numerical values to nodes at specified indices
+    def assign_values(self, num_value, node_indices):
+        for i in node_indices:
+            self.nodes[i] = num_value
+
+class ElementSpace1D:
+
+    # Element array:
+    elements = numpy.array([])
+
+    # Number of Elements:
+    n_elements = 0
+
+    # Number of Nodes per Element:
+    nodes_per_element = 2
+
+    def __init__(self, n_elements, nodes_per_element=2):
+        if isinstance(n_elements, int):
+            self.elements = numpy.zeros((n_elements, nodes_per_element))
+            self.n_elements = n_elements
+            self.nodes_per_element = nodes_per_element
+
+    @classmethod
+    def withNodeSpace(self, nodespace, nodes_per_element=2):
+        self.elements = numpy.array((nodespace.n_nodes, nodes_per_element));
+        for i in range(nodespace.n_nodes):
+            for j in range(nodes_per_element):
+                self.elements[i, j] = nodespace.nodes[i + j]
+    
+class Mesh1D(NodeSpace1D, ElementSpace1D):
 
     dimension_x = 0
-    n_elements = 0
-    n_nodes = 0
     mesh_order = 1
- 
-    node_array = numpy.array([])
-    element_array = numpy.array([])
+
+    # Node array [i] = X_co-ordinate
+    node_array = []
+
+    # Element array [j, 0] = First Node index
+    # Element array [j, 1] = Second Node index
+    element_array = []
     
     def __init__(self, x_dimension, num_of_elements, mesh_order = 1):
         self.dimension_x = x_dimension
@@ -34,18 +84,5 @@ class Mesh1D:
             for j in range(0, nodes_per_element):
                 self.element_array[i, j] = j
 
-class BoundaryCondition1D:
 
-    def __init__(self, n_elements, bc_value, index_array):
-        if isinstance(n_elements, int):
-            self.n_elements = elements
-        elif isinstance(n_elements, Mesh1Dimension):
-            self.n_elements = n_elements.n_elements
         
-        self.node_array = numpy.zeros(self.n_elements)
-        for x in index_array:
-            self.node_array[x] = bc_value
-
-class SolutionSpace1D(Mesh1D):
-
-    def __init__(self):
