@@ -1,5 +1,5 @@
 # pyMath
-A set of mathematical approximation methods implemented from first principles in python.
+A set of mathematical methods implemented from first principles in python.
 
 ## Base math modules:
 [//]: =========================
@@ -12,14 +12,17 @@ Includes methods for derivation, integration, multiplication, division, addition
 Newton's Method(or Newton-Raphson method) for finding roots to higher order polynomials.
 
 
-## FEM modules:
+## Numerical method modules:
 [//]: ==========================
 
 #### gauss_quad 
 A method for generating Gaussian-Legendre quadrature points for numerical integration
 
 #### 1D_FEM 
-A Finite Element Method (FEM) approach to solving Partial Differential Equations (PDEs) over a 1-dimensional domain.
+A Finite Element Method (FEM) approach to solving Partial Differential Equations (PDEs) over a 1-Dimensional domain.
+
+#### 1D_FDM
+A Finite Difference Method (FDM) implemented on a 1-Dimensional domain.
 
 #### MSH 
 Create a mesh array from a .msh format file
