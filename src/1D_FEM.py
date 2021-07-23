@@ -33,9 +33,11 @@ class FiniteElementMethod(Mesh1D):
     def linear_interpolationY(self, x_0, x_1, y_0, y_1, X):
         return y_0 + (X - x_0)*(y_1 - y_0)/(x_1 - x_0)
 
+    # The Partial Differential Equations are solved using ...
     def solve(self):
         pass
 
+    # Plot the solution_space on the node coordinates
     def plot(self):
         pyplot.plot(self.mesh1D.nodes, self.solution_space)
 

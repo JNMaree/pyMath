@@ -19,7 +19,9 @@ class FiniteDifferenceMethod(Mesh1D):
         self.type1BC = bc_type1
         self.type2BC = bc_type2
 
-    # Solve the differential equations using a Forward-Time, Centred-Space (FTCS) scheme
+    # The partial differential equations (PDEs) are solved using a Centred-Space, 
+    # finite difference scheme:
+    # f'(x) = f(x + 1/2*h) - f(x-1/2*h)
     def solve(self):
         temp_solution_space = self.solution_space
         for i in range(self.n_nodes):
