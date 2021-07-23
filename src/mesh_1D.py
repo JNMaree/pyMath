@@ -55,7 +55,10 @@ class ElementSpace1D:
     
 class Mesh1D(NodeSpace1D, ElementSpace1D):
 
-    dimension_x = 0
+    # Total length (m)
+    dimension = 0
+
+    # Order (Number of nodes per element) of mesh elements
     mesh_order = 1
 
     # Node array [i] = X_co-ordinate
@@ -65,8 +68,8 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
     # Element array [j, 1] = Second Node index
     element_array = []
     
-    def __init__(self, x_dimension, num_of_elements, mesh_order = 1):
-        self.dimension_x = x_dimension
+    def __init__(self, dimensions, num_of_elements, mesh_order = 1):
+        self.dimension = dimensions
         self.n_elements = num_of_elements
         if mesh_order == 1:
             self.n_nodes = num_of_elements + 1
@@ -74,13 +77,14 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
 
         # generate nodes to be equal distances apart, spanning total length of x
         self.node_array = numpy.array((self.n_nodes))
-        dim_increment = self.dimension_x/self.n_elements
+        dim_increment = self.dimension/self.n_elements
         self.node_array[0] = 0
         for i in range (1, self.n_nodes):
             self.node_array[i] = dim_increment
             dim_increment += dim_increment
 
-    # generate elements to contain a specified number of nodes
+    # generate uniform elements to contain a specified number of nodes
+    # - governed by mesh_order
     def generate_elements(self, nodes_per_element = 2):
         node_end = self.n_nodes - 1
         self.element_array = numpy.array((node_end, nodes_per_element))
