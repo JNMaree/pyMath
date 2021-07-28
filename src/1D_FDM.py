@@ -2,32 +2,60 @@ import numpy
 import matplotlib.pyplot as pyplot
 
 from mesh_1D import Mesh1D, NodeSpace1D, ElementSpace1D
+from polynomial import Polynomial
 
 class FiniteDifferenceMethod(Mesh1D):
 
+    n = 0
     solution_space = []
-
-    material_property = 0
+    material_matrix = [0, 0]
+    material_function = Polynomial()
 
     type1BC = []
     type2BC = []
     
     def __init__(self, mesh, material_properties, bc_type1, bc_type2):
         self.mesh1D = mesh
-        self.solution_space = NodeSpace1D(mesh)
-        self.material_property = material_properties
+        self.n = mesh.n_nodes
+        self.material_matrix = numpy.zeros((self.n, self.n))
+        self.material_function = Polynomial(material_properties)
+        self.solution_space = bc_type1
         self.type1BC = bc_type1
         self.type2BC = bc_type2
+        
 
     # The partial differential equations (PDEs) are solved using a Centred-Space, 
     # finite difference scheme:
-    # f'(x) = f(x + 1/2*h) - f(x-1/2*h)
-    def solve(self):
-        temp_solution_space = self.solution_space
-        for i in range(self.n_nodes):
-            self.solution_space[i] = temp_solution_space[i] + self.material_property
-            temp_solution_space[i] = self.solution_space[i]
+    #       f'(x) = f(x + 1/2*h)/h - f(x-1/2*h)/h
+    #
+    # When this method is applied to the following differential equation:
+    #   -d/dx(K(x) * dU(x)/dx) = F(X)               (Diffusion equation)
+    # this results in:
+    #
+    #   -1/DX * ( K(x_i + DX/2) * ( U(x_i+1) - U(x_i) )/DX
+    #           + K(x_i - DX/2) * ( U(x_i) - U(x_i-1) )/DX ) = F(x_i)
+    # 
+    # Rewriting the above equation in terms of U(x) results in the creation
+    # of the matrices required to solve the problem:
+    def setup(self):
+        material_matrix[0,0] = 1.0;
+        for i in range(1, self.n_nodes - 1):
+            x_i = self.mesh1D.nodes[i]
+            DX = x_i - self.mesh1D.nodes[i - 1]
+            DXdiv2 = DX/2
+            DXDX = DX*DX
+            self.material_matrix[i, i - 1] += -self.material_function.evaluate(x_i - DXdiv2)/DXDX
+            self.material_matrix[i, i] += self.material_function.evaluate(x_i - DXdiv2)/DXDX
+            self.material_matrix[i, i] += self.material_function.evaluate(x_i + DXdiv2)/DXDX
+            self.material_matrix[i, i + 1] += -self.material_function.evaluate(x_i + DXdiv2)/DXDX
+            
+        material_matrix[self.n - 1,self.n - 1] = 1.0
         
+    # Solve the matrix equations to generate the solution_space:
+    def solve(self):
+        
+
+    # Plot the nodes at their respective coordinates vs their respective solution values. 
     def plot(self):
         pyplot.plot(self.nodes, self.solution_space)
 
@@ -58,6 +86,7 @@ def main():
     BC_Type2.assign_values(Type2_BC, Type2_Nodes)
     
     FDM = FiniteDifferenceMethod(fdm_mesh, K, BC_Type1, BC_Type2)
+    FDM.setup()
     FDM.solve()
     FDM.plot()
 
