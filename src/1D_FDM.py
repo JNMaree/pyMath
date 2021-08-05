@@ -40,7 +40,7 @@ class FiniteDifferenceMethod(Mesh1D):
     # Rewriting the above equation in terms of U(x) results in the creation
     # of the matrices required to solve the problem:
     def setup(self):
-        self.material_matrix[0,0] = 1.0;
+        self.material_matrix[0,0] = 1.0
         for i in range(1, self.n_nodes - 1):
             x_i = self.mesh1D.nodes[i]
             DX = x_i - self.mesh1D.nodes[i - 1]
