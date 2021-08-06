@@ -16,7 +16,11 @@ class Matrix:
     def __setitem__(self, key, value):
         self.matrix[key] = value
 
-    # Reduce a matrix to its reduced row echelon form
+    # Reduce to Row Echelon Form (REF)
+    def row_echelon_form(self):
+        pass
+
+    # Reduce a matrix to its reduced row echelon form (RREF)
     def reduced_row_echelon(self):
         lead = 0
         stopCondition = False
@@ -24,19 +28,22 @@ class Matrix:
 
         # matrix loop
         for r in range(self.matrix.shape[0]):
-            if self.matrix.shape[1] <= lead:
+            if ret_matrix.shape[1] <= lead:
                 break
-            while self.matrix[r, lead] == 0 and not stopCondition:
+            while ret_matrix[r, lead] == 0 and not stopCondition:
                 i = r + 1
-                if self.matrix.shape[0] == i:
+                if ret_matrix.shape[0] == i:
                     i = r
                     lead += 1
-                    if self.matrix.shape[1] == lead:
+                    if ret_matrix.shape[1] == lead:
                         stopCondition = True
             if i != r:
-                self.matrix[[i, r],:] = self.matrix[[r, i], :]
-            self.matrix[r, :] /= self.matrix[r, lead]
-
+                ret_matrix[[i, r],:] = ret_matrix[[r, i], :]
+            ret_matrix[r, :] /= ret_matrix[r, lead]
+            for i in range(self.matrix.shape[0]):
+                if i != r:
+                    
+                
         return ret_matrix
             
         
