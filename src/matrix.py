@@ -21,88 +21,157 @@ class Matrix:
         return self.matrix[key]
     def __setitem__(self, key, value):
         self.matrix[key] = value
+        
     # Overload 'string' method
     def __str__(self):
-        ret = ""
-        for r in self.matrix:
-            ret += "["
-            for c in range(len(r)):
-                if c < (self.cols - 1):
-                    ret += format(r[c]) + ", "
-                else:
-                    ret += format(r[c])
-            ret += "]\n"
-        return ret
+        return format(self.matrix)
+    
+    """
+    Class Methods:
+        Basic Matrix Algebra:
+            - Append Rows to matrix
+            - Append Columns to matrix
+                
+        Matrix Transformations:
+            - Row Echelon form
+            - Reduced Row Echelon form
+    """
 
-    # Reduce to Row Echelon Form (REF)
-    def row_echelon(self):
-        ret_matrix = self.matrix
+    # Add rows to matrix
+    def addRows(self, rows, pos =None):
+        if isinstance(rows, numpy.ndarray):
+            addRows = rows
+        elif isinstance(rows, list):
+            addRows = numpy.array(rows)
+        else: #not isinstance(rows, numpy.ndarray):
+            raise TypeError("list or numpy.ndarray types supported")
+
+        if pos == None:
+            # If position not specified, append row to end of matrix
+            rowPos = self.rows
+        else:
+            rowPos = pos
+
+        if addRows.ndim > 1:
+            self.rows += addRows.shape[0]
+        else:
+            self.rows += 1
         
-        for r in range(ret_matrix.shape[0]):
+        self.matrix = numpy.insert(self.matrix, rowPos, addRows, axis=0)
+
+    # Add columns to matrix
+    def addCols(self, cols, pos =None):
+        if isinstance(cols, numpy.ndarray):
+            addCols = cols
+        elif isinstance(cols, list):
+            addCols = numpy.array(cols)
+        else:
+            raise TypeError("list or numpy.ndarray types supported")
+
+        if pos == None:
+            # If position not specified, append col to end of matrix
+            colPos = self.cols
+        else:
+            colPos = pos
+
+        if addCols.ndim == 1:
+            self.cols += 1
+        else:
+            self.cols += addCols.shape[0]
+        
+        self.matrix = numpy.insert(self.matrix, colPos, addCols, axis=1)
+        
+    # Reduce matrix to Row Echelon Form (REF)
+    def to_row_echelon(self):
+        for r in range(self.rows):
             zeros = True
-            for c in range(ret_matrix.shape[1]):
+            for c in range(self.cols):
                 pass
 
-    # Reduce a matrix to its reduced row echelon form (RREF)
-    def reduced_row_echelon(self):
+    # Reduce matrix to reduced row echelon form (RREF)
+    def to_reduced_row_echelon(self):
         lead = 0
         r = 0
         stopCondition = False
-        ret_matrix = self.matrix
-
+        self.matrix
         # matrix loop
         while r <= self.rows and not stopCondition:
-            if ret_matrix.shape[1] <= lead:
+            if self.cols <= lead:
                 stopCondition = True
-            while ret_matrix[r, lead] == 0 and not stopCondition:
+            while self.matrix[r, lead] == 0 and not stopCondition:
                 i = r + 1
-                if ret_matrix.shape[0] == i:
+                if self.rows == i:
                     i = r
                     lead += 1
-                    if ret_matrix.shape[1] == lead:
+                    if self.rows == lead:
                         stopCondition = True
             if i != r:
-                ret_matrix[[i, r],:] = ret_matrix[[r, i], :]
-            ret_matrix[r, :] /= ret_matrix[r, lead]
+                self.matrix[[i, r],:] = self.matrix[[r, i], :]
+            self.matrix[r, :] /= self.matrix[r, lead]
             for i in range(self.rows):
                 if i != r:
-                    ret_matrix[i] -= ret_matrix[i, lead]*ret_matrix[r]
+                    self.matrix[i] -= self.matrix[i, lead]*self.matrix[r]
             lead += 1
             r += 1
-        return ret_matrix
-            
-        
-    def inverse(self):
+
+
+    # Return the inverse of the matrix
+    def get_inverse(self):
         # Check if 2D and nxn (square)
-        if self.matrix.ndim == 2 and self.matrix.shape[0] == self.matrix.shape[1]:
+        if self.matrix.ndim == 2 and self.rows == self.cols:
             # Using a numpy function
-            ret_matrix = numpy.linalg.inv(self.matrix)
-            return ret_matrix
+            return numpy.linalg.inv(self.matrix)
         else:
-            raise ArithmeticError    
-                
+            raise ArithmeticError
+
+    # Return an identity matrix for the same size
+    def get_identity(self, size=0):
+        # Check if 2D and square (nxn)
+        if self.matrix.ndim >= 2:
+            return numpy.eye(self.rows, self.cols)
+        elif size > 0:
+            return numpy.eye(size)
+        else:
+            return numpy.eye(self.matrix.shape[0])
+            
 # Test function
 def main():
-    test_matrix = numpy.array(([1, 1, 3], [0, 2, 4], [-1, 1, 0], [0, 0, 1]))
-    #test_matrix = numpy.array(([1, 1, 3], [0, 2, 4]))
+    #test_matrix = numpy.array(([1, 1, 3], [0, 2, 4], [1, 1, 0], [0, 1, 1]))
+    test_matrix = numpy.array(([1, 1, 3], [0, 2, 4]))
     m = Matrix(test_matrix)
+
     print("Test_Matrix:")
     print(m)
     print("rows:", m.rows)
     print("cols:", m.cols)
 
+    print("Test Add Rows:")
+    m_plusRows = [[1, 1, 0], [0, 1, 1]]
+    m.addRows(m_plusRows)
+    print(m)
+    print("rows:", m.rows)
+    print("cols:", m.cols)
+
+    print("Test Add Cols:")
+    m_plusCols = numpy.array([[4, 3, 2, 1], [1, 2, 3, 5], [3, 6, 9, 12]])
+    m.addCols(m_plusCols)
+    print(m)
+    print("rows:", m.rows)
+    print("cols:", m.cols)
+
+    """
     # Test Row Echelon form
     print("R_Echelon Form:")
     print(m.row_echelon)
-
+    
     # Test Reduced Row Echelon method
     print("RR_Echelon Form:")
     print(m.reduced_row_echelon)
-
+    
     # Test Inverse method
     print("Inv_Matrix:")
     print(m.inverse)
-    
+    """
 
 if __name__ == "__main__":
     main()

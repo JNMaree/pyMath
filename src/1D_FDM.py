@@ -3,14 +3,14 @@ import matplotlib.pyplot as pyplot
 
 from mesh_1D import Mesh1D, NodeSpace1D, ElementSpace1D
 from polynomial import Polynomial
-from matrix import inverse_of
+from matrix import Matrix
 
 class FiniteDifferenceMethod(Mesh1D):
 
     n = 0
     solution_space = []
-    material_matrix = [0, 0]
-    force_matrix = []
+    material_matrix = []
+    force_vector = []
     material_function = Polynomial([0, 0])
 
     type1BC = []
@@ -19,7 +19,7 @@ class FiniteDifferenceMethod(Mesh1D):
     def __init__(self, mesh, material_properties, bc_type1, bc_type2):
         self.mesh1D = mesh
         self.n = mesh.n_nodes
-        self.material_matrix = numpy.zeros((self.n, self.n))
+        self.material_matrix = Matrix(numpy.zeros((self.n, self.n)))
         self.material_function = Polynomial(material_properties)
         self.solution_space = bc_type1
         self.type1BC = bc_type1
@@ -55,7 +55,7 @@ class FiniteDifferenceMethod(Mesh1D):
         
     # Solve the matrix equations to generate the solution_space:
     def solve(self):
-        self.solution_space = inverse_of(self.material_matrix) * self.force_matrix
+        self.solution_space = self.material_matrix.get_inverse * self.force_vector
 
     # Plot the nodes at their respective coordinates vs their respective solution values. 
     def plot(self):
