@@ -36,7 +36,7 @@ class Matrix:
             - Row Echelon form
             - Reduced Row Echelon form
     """
-
+    # ROW METHODS:
     # Add rows to matrix
     def addRows(self, rows, pos =None):
         if isinstance(rows, numpy.ndarray):
@@ -58,7 +58,12 @@ class Matrix:
             self.rows += 1
         
         self.matrix = numpy.insert(self.matrix, rowPos, addRows, axis=0)
+    def swapRows(self, row_A_index, row_B_index):
+        temp_row = self.matrix[row_A_index, :]
+        self.matrix[row_A_index, :] = self.matrix[row_B_index, :]
+        self.matrix[row_B_index, :] = temp_row
 
+    # COL METHODS:
     # Add columns to matrix
     def addCols(self, cols, pos =None):
         if isinstance(cols, numpy.ndarray):
@@ -80,13 +85,23 @@ class Matrix:
             self.cols += addCols.shape[0]
         
         self.matrix = numpy.insert(self.matrix, colPos, addCols, axis=1)
-        
+    def swapCols(self, col_A_index, col_B_index):
+        temp_row = self.matrix[:, col_A_index]
+        self.matrix[:, col_A_index] = self.matrix[:, col_B_index]
+        self.matrix[:, col_B_index] = temp_row
+
     # Reduce matrix to Row Echelon Form (REF)
     def to_row_echelon(self):
         for r in range(self.rows):
             zeros = True
             for c in range(self.cols):
+                if self.matrix[r, c] != 0:
+                    zeros = False
+                    break
+
+            if zeros:
                 pass
+                
 
     # Reduce matrix to reduced row echelon form (RREF)
     def to_reduced_row_echelon(self):
@@ -159,6 +174,15 @@ def main():
     print("rows:", m.rows)
     print("cols:", m.cols)
 
+    Aindex = 1
+    Bindex = 2
+    print("Test Swap Rows(", Aindex, "&", Bindex, "):")
+    m.swapRows(Aindex, Bindex)
+    print(m)
+    print("Test Swap Cols(", Aindex, "&", Bindex, "):")
+    m.swapCols(Aindex, Bindex)
+    print(m)
+    
     """
     # Test Row Echelon form
     print("R_Echelon Form:")
