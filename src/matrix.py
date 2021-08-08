@@ -59,7 +59,7 @@ class Matrix:
         
         self.matrix = numpy.insert(self.matrix, rowPos, addRows, axis=0)
     def swapRows(self, row_A_index, row_B_index):
-        temp_row = self.matrix[row_A_index, :]
+        temp_row = numpy.array(self.matrix[row_A_index, :])
         self.matrix[row_A_index, :] = self.matrix[row_B_index, :]
         self.matrix[row_B_index, :] = temp_row
 
@@ -86,7 +86,7 @@ class Matrix:
         
         self.matrix = numpy.insert(self.matrix, colPos, addCols, axis=1)
     def swapCols(self, col_A_index, col_B_index):
-        temp_row = self.matrix[:, col_A_index]
+        temp_row = numpy.array(self.matrix[:, col_A_index])
         self.matrix[:, col_A_index] = self.matrix[:, col_B_index]
         self.matrix[:, col_B_index] = temp_row
 
