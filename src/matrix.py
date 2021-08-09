@@ -38,7 +38,7 @@ class Matrix:
     """
     # ROW METHODS:
     # Add rows to matrix
-    def addRows(self, rows, pos =None):
+    def add_rows(self, rows, pos =None):
         if isinstance(rows, numpy.ndarray):
             addRows = rows
         elif isinstance(rows, list):
@@ -58,14 +58,14 @@ class Matrix:
             self.rows += 1
         
         self.matrix = numpy.insert(self.matrix, rowPos, addRows, axis=0)
-    def swapRows(self, row_A_index, row_B_index):
-        temp_row = self.matrix[row_A_index, :]
+    def swap_rows(self, row_A_index, row_B_index):
+        temp_row = numpy.array(self.matrix[row_A_index, :])
         self.matrix[row_A_index, :] = self.matrix[row_B_index, :]
         self.matrix[row_B_index, :] = temp_row
 
     # COL METHODS:
     # Add columns to matrix
-    def addCols(self, cols, pos =None):
+    def add_cols(self, cols, pos =None):
         if isinstance(cols, numpy.ndarray):
             addCols = cols
         elif isinstance(cols, list):
@@ -85,22 +85,28 @@ class Matrix:
             self.cols += addCols.shape[0]
         
         self.matrix = numpy.insert(self.matrix, colPos, addCols, axis=1)
-    def swapCols(self, col_A_index, col_B_index):
-        temp_row = self.matrix[:, col_A_index]
+    def swap_cols(self, col_A_index, col_B_index):
+        temp_row = numpy.array(self.matrix[:, col_A_index])
         self.matrix[:, col_A_index] = self.matrix[:, col_B_index]
         self.matrix[:, col_B_index] = temp_row
 
-    # Reduce matrix to Row Echelon Form (REF)
-    def to_row_echelon(self):
+    # Remove Full Zero rows from Matrix
+    def remove_full_zero_rows(self):
         for r in range(self.rows):
-            zeros = True
+            nonZero = False
             for c in range(self.cols):
                 if self.matrix[r, c] != 0:
-                    zeros = False
+                    nonZero = True
                     break
 
-            if zeros:
-                pass
+            if not nonZero:
+                self.swapRows(r, self.rows - 1)
+                self.matrix = numpy.delete(self.matrix, self.rows - 1, axis=0)
+                self.rows -= 1
+
+    # Reduce matrix to Row Echelon Form (REF)
+    def to_row_echelon(self):
+        self.removeFullZeroRows
                 
 
     # Reduce matrix to reduced row echelon form (RREF)
