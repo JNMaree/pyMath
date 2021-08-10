@@ -6,6 +6,10 @@ class Matrix:
     rows = 0
     cols = 0
 
+    # Error Tolerance for floats:
+    # if abs( matrix[i, j] ) < epsilon then value = zero 
+    epsilon = 1e-14
+
     def __init__(self, array):
         if isinstance(array, numpy.ndarray):
             self.matrix = array
@@ -59,6 +63,10 @@ class Matrix:
         
         self.matrix = numpy.insert(self.matrix, rowPos, addRows, axis=0)
     def swap_rows(self, row_A_index, row_B_index):
+        if row_A_index > (self.rows - 1):
+            raise IndexError("row_A_index:", row_A_index, " out of bounds of row_count:", self.rows)
+        if row_B_index > (self.rows - 1):
+            raise IndexError("row_B_index:", row_B_index, " out of bounds of row_count:", self.rows)
         temp_row = numpy.array(self.matrix[row_A_index, :])
         self.matrix[row_A_index, :] = self.matrix[row_B_index, :]
         self.matrix[row_B_index, :] = temp_row
@@ -86,28 +94,48 @@ class Matrix:
         
         self.matrix = numpy.insert(self.matrix, colPos, addCols, axis=1)
     def swap_cols(self, col_A_index, col_B_index):
+        if col_A_index > (self.cols - 1):
+            raise IndexError("col_A_index:", col_A_index, " out of bounds of row_count:", self.cols)
+        if col_B_index > (self.cols - 1):
+            raise IndexError("col_B_index:", col_B_index, " out of bounds of row_count:", self.cols)
+        
         temp_row = numpy.array(self.matrix[:, col_A_index])
         self.matrix[:, col_A_index] = self.matrix[:, col_B_index]
         self.matrix[:, col_B_index] = temp_row
 
     # Remove Full Zero rows from Matrix
     def remove_full_zero_rows(self):
-        for r in range(self.rows):
-            nonZero = False
-            for c in range(self.cols):
-                if self.matrix[r, c] != 0:
-                    nonZero = True
-                    break
-
-            if not nonZero:
-                self.swapRows(r, self.rows - 1)
-                self.matrix = numpy.delete(self.matrix, self.rows - 1, axis=0)
-                self.rows -= 1
-
+        self.matrix = self.matrix[~(abs(self.matrix)<self.epsilon).all(1)]
+        self.rows = self.matrix.shape[0]
+        
     # Reduce matrix to Row Echelon Form (REF)
+    # see https://en.wikipedia.org/wiki/Row_echelon_form#Reduced_row_echelon_form
     def to_row_echelon(self):
-        self.removeFullZeroRows
-                
+        # Condense Array
+        self.remove_full_zero_rows()
+
+        pivot = 0
+        while pivot < self.rows and pivot < self.cols:
+            row = 1
+            restart_pivot = False
+            while self.matrix[pivot, pivot] == 0:
+                if (pivot + row) <= self.rows:
+                    pivot += 1
+                    restart_pivot = True
+                if ~restart_pivot:
+                    self.swap_rows(row, (row + pivot - 1))
+                    row += 1
+            
+            if ~restart_pivot:
+                for r in range(1, self.rows - pivot):
+                    if self.matrix[pivot + r, pivot] != 0:
+                        X = -self.matrix[pivot + r, pivot]/self.matrix[pivot, pivot]
+                        for c in range(pivot, self.cols):
+                            self.matrix[pivot + r, c] = self.matrix[pivot, c] * X
+                            self.matrix[pivot + r, c] += self.matrix[pivot + r, c]
+
+                pivot += 1
+        
 
     # Reduce matrix to reduced row echelon form (RREF)
     def to_reduced_row_echelon(self):
@@ -116,10 +144,10 @@ class Matrix:
         stopCondition = False
         self.matrix
         # matrix loop
-        while r <= self.rows and not stopCondition:
+        while r <= self.rows and ~stopCondition:
             if self.cols <= lead:
                 stopCondition = True
-            while self.matrix[r, lead] == 0 and not stopCondition:
+            while self.matrix[r, lead] == 0 and ~stopCondition:
                 i = r + 1
                 if self.rows == i:
                     i = r
@@ -158,7 +186,7 @@ class Matrix:
 # Test function
 def main():
     #test_matrix = numpy.array(([1, 1, 3], [0, 2, 4], [1, 1, 0], [0, 1, 1]))
-    test_matrix = numpy.array(([1, 1, 3], [0, 2, 4]))
+    test_matrix = numpy.array(([1, 1, 3], [0, 4, 2]))
     m = Matrix(test_matrix)
 
     print("Test_Matrix:")
@@ -167,15 +195,15 @@ def main():
     print("cols:", m.cols)
 
     print("Test Add Rows:")
-    m_plusRows = [[1, 1, 0], [0, 1, 1]]
-    m.addRows(m_plusRows)
+    m_plusRows = [[1, 2, 3], [0, 0, 0]]
+    m.add_rows(m_plusRows)
     print(m)
     print("rows:", m.rows)
     print("cols:", m.cols)
 
     print("Test Add Cols:")
-    m_plusCols = numpy.array([[4, 3, 2, 1], [1, 2, 3, 5], [3, 6, 9, 12]])
-    m.addCols(m_plusCols)
+    m_plusCols = numpy.array([[4, 4, 2, 0], [1, 2, 3, 0], [5, 0, 1, 0]])
+    m.add_cols(m_plusCols)
     print(m)
     print("rows:", m.rows)
     print("cols:", m.cols)
@@ -183,17 +211,18 @@ def main():
     Aindex = 1
     Bindex = 2
     print("Test Swap Rows(", Aindex, "&", Bindex, "):")
-    m.swapRows(Aindex, Bindex)
+    m.swap_rows(Aindex, Bindex)
     print(m)
     print("Test Swap Cols(", Aindex, "&", Bindex, "):")
-    m.swapCols(Aindex, Bindex)
+    m.swap_cols(Aindex, Bindex)
     print(m)
     
-    """
-    # Test Row Echelon form
-    print("R_Echelon Form:")
-    print(m.row_echelon)
+    print("Test Row Echelon Form:")
+    mre = m
+    mre.to_row_echelon()
+    print(mre)
     
+    """
     # Test Reduced Row Echelon method
     print("RR_Echelon Form:")
     print(m.reduced_row_echelon)
