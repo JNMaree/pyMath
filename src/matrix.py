@@ -111,15 +111,12 @@ class Matrix:
     # Reduce matrix to Row Echelon Form (REF)
     # see https://en.wikipedia.org/wiki/Row_echelon_form#Reduced_row_echelon_form
     def to_row_echelon(self):
-        # Condense Array
-        self.remove_full_zero_rows()
-
         pivot = 0
         while pivot < self.rows and pivot < self.cols:
             row = 1
             restart_pivot = False
             while self.matrix[pivot, pivot] == 0:
-                if (pivot + row) <= self.rows:
+                if (pivot + row) < self.rows:
                     pivot += 1
                     restart_pivot = True
                 if ~restart_pivot:
@@ -217,6 +214,10 @@ def main():
     m.swap_cols(Aindex, Bindex)
     print(m)
     
+    print("Test Remove Full Zero Rows:")
+    m.remove_full_zero_rows
+    print(m)
+
     print("Test Row Echelon Form:")
     mre = m
     mre.to_row_echelon()
