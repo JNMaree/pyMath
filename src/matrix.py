@@ -105,8 +105,20 @@ class Matrix:
 
     # Remove Full Zero rows from Matrix
     def remove_full_zero_rows(self):
-        self.matrix = self.matrix[~(abs(self.matrix)<self.epsilon).all(1)]
+        self.matrix = self.matrix[~numpy.all(self.matrix==0, axis=1)]
         self.rows = self.matrix.shape[0]
+
+    # Return the points at which the matrix's largest absolute value occurs
+    def argmax(self, row_index=None, col_index=None):
+        if row_index == None and col_index == None:
+            # If row or col not specified, return arg max of matrix
+            return numpy.argmax(self.matrix)
+        elif col_index == None:
+            # Return argmax of row_index
+            return numpy.argmax(self.matrix, axis=1)
+        else:
+            # Return argmax of col_index
+            return numpy.argmax(self.matrix, axis=0)
         
     # Reduce matrix to Row Echelon Form (REF)
     # see https://en.wikipedia.org/wiki/Row_echelon_form#Reduced_row_echelon_form
@@ -120,7 +132,7 @@ class Matrix:
                     pivot += 1
                     restart_pivot = True
                 if ~restart_pivot:
-                    self.swap_rows(row, (row + pivot - 1))
+                    self.swap_rows(row, (row + pivot) - 1)
                     row += 1
             
             if ~restart_pivot:
@@ -215,8 +227,12 @@ def main():
     print(m)
     
     print("Test Remove Full Zero Rows:")
-    m.remove_full_zero_rows
+    print("rows:", m.rows)
+    print("cols:", m.cols)
+    m.remove_full_zero_rows()
     print(m)
+    print("rows:", m.rows)
+    print("cols:", m.cols)
 
     print("Test Row Echelon Form:")
     mre = m
