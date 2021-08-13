@@ -109,7 +109,7 @@ class Matrix:
         self.rows = self.matrix.shape[0]
 
     # Return the points at which the matrix's largest absolute value occurs
-    def argmax(self, row_index=None, col_index=None):
+    def abs_argmax(self, row_index=None, col_index=None):
         if row_index == None and col_index == None:
             # If row or col not specified, return arg max of matrix
             return numpy.argmax(self.matrix)
@@ -123,27 +123,21 @@ class Matrix:
     # Reduce matrix to Row Echelon Form (REF)
     # see https://en.wikipedia.org/wiki/Row_echelon_form#Reduced_row_echelon_form
     def to_row_echelon(self):
-        pivot = 0
-        while pivot < self.rows and pivot < self.cols:
-            row = 1
-            restart_pivot = False
-            while self.matrix[pivot, pivot] == 0:
-                if (pivot + row) < self.rows:
-                    pivot += 1
-                    restart_pivot = True
-                if ~restart_pivot:
-                    self.swap_rows(row, (row + pivot) - 1)
-                    row += 1
-            
-            if ~restart_pivot:
-                for r in range(1, self.rows - pivot):
-                    if self.matrix[pivot + r, pivot] != 0:
-                        X = -self.matrix[pivot + r, pivot]/self.matrix[pivot, pivot]
-                        for c in range(pivot, self.cols):
-                            self.matrix[pivot + r, c] = self.matrix[pivot, c] * X
-                            self.matrix[pivot + r, c] += self.matrix[pivot + r, c]
-
-                pivot += 1
+        rowJ = 0
+        colK = 0
+        while rowJ < self.rows and colK < self.cols:
+            rowMax = self.abs_argmax(row_index=rowJ)
+            if self.matrix[rowMax, colK] == 0:
+                colK += 1
+            else:
+                self.swap_rows(rowJ, rowMax)
+                for i in range(rowJ + 1, self.rows):
+                    f = self.matrix[i, colK] / self.matrix[rowJ, colK]
+                    self.matrix[i, colK] = 0
+                    for j in range(colK, self.cols):
+                        self.matrix[i, j] = self.matrix[i, j] - self.matrix[rowJ, j]*f
+                rowJ += 1
+                colK += 1
         
 
     # Reduce matrix to reduced row echelon form (RREF)
