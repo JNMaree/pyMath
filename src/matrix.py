@@ -103,11 +103,16 @@ class Matrix:
         self.matrix[:, col_A_index] = self.matrix[:, col_B_index]
         self.matrix[:, col_B_index] = temp_row
 
-    # Remove Full Zero rows from Matrix
-    def remove_full_zero_rows(self):
-        self.matrix = self.matrix[~numpy.all(self.matrix==0, axis=1)]
-        self.rows = self.matrix.shape[0]
+    # Move Full Zero rows to Bottom of Matrix
+    def move_full_zero_rows(self):
+        zeroRows = numpy.all(self.matrix==0, axis=1)
+        anyZeroRows = numpy.any(zeroRows)
+    
+        if anyZeroRows:
+            self.matrix = self.matrix[]
+            self.rows = self.matrix.shape[0]
 
+        
     # Return the points at which the matrix's largest absolute value occurs
     def abs_argmax(self, row_index=None, col_index=None):
         if row_index == None and col_index == None:
@@ -115,10 +120,10 @@ class Matrix:
             return numpy.argmax(self.matrix)
         elif col_index == None:
             # Return argmax of row_index
-            return numpy.argmax(self.matrix, axis=1)
+            return numpy.argmax(self.matrix, axis=0)
         else:
             # Return argmax of col_index
-            return numpy.argmax(self.matrix, axis=0)
+            return numpy.argmax(self.matrix, axis=1)
         
     # Reduce matrix to Row Echelon Form (REF)
     # see https://en.wikipedia.org/wiki/Row_echelon_form#Reduced_row_echelon_form
@@ -127,6 +132,8 @@ class Matrix:
         colK = 0
         while rowJ < self.rows and colK < self.cols:
             rowMax = self.abs_argmax(row_index=rowJ)
+            if rowMax.size > 1: # Catch argmax returning an array
+                rowMax = rowMax[0]
             if self.matrix[rowMax, colK] == 0:
                 colK += 1
             else:
@@ -150,8 +157,9 @@ class Matrix:
         while r <= self.rows and ~stopCondition:
             if self.cols <= lead:
                 stopCondition = True
+            i = r
             while self.matrix[r, lead] == 0 and ~stopCondition:
-                i = r + 1
+                i += 1
                 if self.rows == i:
                     i = r
                     lead += 1
@@ -219,11 +227,14 @@ def main():
     print("Test Swap Cols(", Aindex, "&", Bindex, "):")
     m.swap_cols(Aindex, Bindex)
     print(m)
+    print("Test Swap Rows(", m.rows-1, "&", m.rows-2, "):")
+    m.swap_rows(m.rows-1, m.rows-2)
+    print(m)
     
-    print("Test Remove Full Zero Rows:")
+    print("Test Move Full Zero Rows to Bottom:")
     print("rows:", m.rows)
     print("cols:", m.cols)
-    m.remove_full_zero_rows()
+    m.move_full_zero_rows()
     print(m)
     print("rows:", m.rows)
     print("cols:", m.cols)
@@ -232,15 +243,16 @@ def main():
     mre = m
     mre.to_row_echelon()
     print(mre)
-    
+
     """
-    # Test Reduced Row Echelon method
-    print("RR_Echelon Form:")
-    print(m.reduced_row_echelon)
+    print("Test Reduced Row Echelon Form:")
+    mrre = m
+    mrre.to_reduced_row_echelon()
+    print(mrre)
     
-    # Test Inverse method
-    print("Inv_Matrix:")
-    print(m.inverse)
+    print("Test Inverse Matrix:")
+    minv = m.get_inverse()
+    print(minv)
     """
 
 if __name__ == "__main__":
