@@ -115,10 +115,10 @@ class Matrix:
             return numpy.argmax(self.matrix)
         elif col_index == None:
             # Return argmax of row_index
-            return numpy.argmax(self.matrix, axis=1)
+            return numpy.argmax(self.matrix, axis=0)
         else:
             # Return argmax of col_index
-            return numpy.argmax(self.matrix, axis=0)
+            return numpy.argmax(self.matrix, axis=1)
         
     # Reduce matrix to Row Echelon Form (REF)
     # see https://en.wikipedia.org/wiki/Row_echelon_form#Reduced_row_echelon_form
@@ -127,6 +127,8 @@ class Matrix:
         colK = 0
         while rowJ < self.rows and colK < self.cols:
             rowMax = self.abs_argmax(row_index=rowJ)
+            if rowMax.size > 1: # Catch argmax returning an array
+                rowMax = rowMax[0]
             if self.matrix[rowMax, colK] == 0:
                 colK += 1
             else:
