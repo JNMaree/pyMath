@@ -70,6 +70,8 @@ class Matrix:
         temp_row = numpy.array(self.matrix[row_A_index, :])
         self.matrix[row_A_index, :] = self.matrix[row_B_index, :]
         self.matrix[row_B_index, :] = temp_row
+    def shift_rows(self, to_row_index):
+        
 
     # COL METHODS:
     # Add columns to matrix
@@ -102,6 +104,8 @@ class Matrix:
         temp_row = numpy.array(self.matrix[:, col_A_index])
         self.matrix[:, col_A_index] = self.matrix[:, col_B_index]
         self.matrix[:, col_B_index] = temp_row
+    def shift_cols(self, to_col_index):
+        
 
     # Move Full Zero rows to Bottom of Matrix
     def move_full_zero_rows(self):
@@ -109,8 +113,9 @@ class Matrix:
         anyZeroRows = numpy.any(zeroRows)
     
         if anyZeroRows:
-            self.matrix = self.matrix[]
-            self.rows = self.matrix.shape[0]
+            for i in range(zeroRows.size - 1):
+                if zeroRows[i]:
+                    self.swap_rows(i, self.rows - 1)
 
         
     # Return the points at which the matrix's largest absolute value occurs
@@ -227,17 +232,13 @@ def main():
     print("Test Swap Cols(", Aindex, "&", Bindex, "):")
     m.swap_cols(Aindex, Bindex)
     print(m)
-    print("Test Swap Rows(", m.rows-1, "&", m.rows-2, "):")
-    m.swap_rows(m.rows-1, m.rows-2)
+    print("Test Swap Rows(", m.rows-1, "&", m.rows, "):")
+    m.swap_rows(m.rows-1, m.rows)
     print(m)
     
     print("Test Move Full Zero Rows to Bottom:")
-    print("rows:", m.rows)
-    print("cols:", m.cols)
     m.move_full_zero_rows()
     print(m)
-    print("rows:", m.rows)
-    print("cols:", m.cols)
 
     print("Test Row Echelon Form:")
     mre = m
