@@ -70,8 +70,16 @@ class Matrix:
         temp_row = numpy.array(self.matrix[row_A_index, :])
         self.matrix[row_A_index, :] = self.matrix[row_B_index, :]
         self.matrix[row_B_index, :] = temp_row
-    def shift_rows(self, to_row_index):
+    def shift_row(self, row_index, to_index=None):
+        new_order = numpy.arange(0, self.rows)
+        if to_index > 0:  # if to_index specified
+            new_order[row_index]
+        else:
+            new_order[row_index]
         
+        self.matrix = self.matrix[new_order, :]
+        
+            
 
     # COL METHODS:
     # Add columns to matrix
@@ -104,8 +112,9 @@ class Matrix:
         temp_row = numpy.array(self.matrix[:, col_A_index])
         self.matrix[:, col_A_index] = self.matrix[:, col_B_index]
         self.matrix[:, col_B_index] = temp_row
-    def shift_cols(self, to_col_index):
-        
+    def shift_col(self, col_index, to_index):
+        new_order = numpy.arange(0, self.cols)
+        print(new_order)
 
     # Move Full Zero rows to Bottom of Matrix
     def move_full_zero_rows(self):
@@ -232,20 +241,27 @@ def main():
     print("Test Swap Cols(", Aindex, "&", Bindex, "):")
     m.swap_cols(Aindex, Bindex)
     print(m)
-    print("Test Swap Rows(", m.rows-1, "&", m.rows, "):")
-    m.swap_rows(m.rows-1, m.rows)
+    print("Test Swap Rows(", m.rows-1, "&", m.rows-2, "):")
+    m.swap_rows(m.rows - 1, m.rows - 2)
     print(m)
     
     print("Test Move Full Zero Rows to Bottom:")
     m.move_full_zero_rows()
     print(m)
 
+    print("Test ShiftRow")
+    print(m.shift_row(1, 2))
+
+    print("Test ShifCol")
+    print(m.shift_col(0))
+
+    """
     print("Test Row Echelon Form:")
     mre = m
     mre.to_row_echelon()
     print(mre)
 
-    """
+    
     print("Test Reduced Row Echelon Form:")
     mrre = m
     mrre.to_reduced_row_echelon()
