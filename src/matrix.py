@@ -29,7 +29,30 @@ class Matrix:
     # Overload 'string' method
     def __str__(self):
         return format(self.matrix)
+
+    def is_equal_size(self, other):
+        if self.cols != other.cols:
+            return False
+        elif self.rows != other.rows:
+            raise False
+        else:
+            return True
     
+    # Overload mathematical operators
+    def __mul__(self, other):
+        if self.cols != other.rows:
+            raise ArithmeticError()
+        else:
+            pass
+                    
+    def __add__(self, other):
+        if is_equal_size(self, other):
+            pass
+
+    def __sub__(self, other):
+        if is_equal_size(self, other):
+            pass       
+
     """
     Class Methods:
         Basic Matrix Algebra:
@@ -76,7 +99,7 @@ class Matrix:
             new_order[row_index]
         else:
             new_order[row_index]
-        
+
         self.matrix = self.matrix[new_order, :]
         
             
