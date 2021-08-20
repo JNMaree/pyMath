@@ -46,11 +46,11 @@ class Matrix:
             pass
                     
     def __add__(self, other):
-        if is_equal_size(self, other):
+        if self.is_equal_size(other):
             pass
 
     def __sub__(self, other):
-        if is_equal_size(self, other):
+        if self.is_equal_size(other):
             pass       
 
     """
