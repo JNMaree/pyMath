@@ -30,29 +30,35 @@ class Matrix:
     def __str__(self):
         return format(self.matrix)
 
+    # Return if specified matrix is equal in size
     def is_equal_size(self, other):
         if self.cols != other.cols:
             return False
         elif self.rows != other.rows:
-            raise False
+            return False
         else:
             return True
     
     # Overload mathematical operators
+    # Matrix multiplication
     def __mul__(self, other):
         if self.cols != other.rows:
-            raise ArithmeticError()
+            raise ArithmeticError("Product Matrix AB not defined for A:cols=", self.cols, " and B:rows=")
         else:
-            pass
-                    
+            return numpy.matmul(self.matrix, other.matrix)
+                            
     def __add__(self, other):
         if self.is_equal_size(other):
-            pass
+            return numpy.add(self.matrix, other.matrix)
+        else:
+            raise ArithmeticError("Sum Matrix not defined for matrices of inequal size")
 
     def __sub__(self, other):
         if self.is_equal_size(other):
-            pass       
-
+            return numpy.subtract(self.matrix, other.matrix)      
+        else:
+            raise ArithmeticError("Difference Matrix not defined for matrices of inequal size")
+            
     """
     Class Methods:
         Basic Matrix Algebra:
