@@ -45,12 +45,8 @@ class Matrix:
         if self.cols != other.rows:
             raise ArithmeticError("Product Matrix AB not defined for A:cols=", self.cols, " and B:rows=")
         else:
-            ret_matrix = numpy.zeros((self.rows, other.cols))
-            for i in range(other.cols):
-                for j in range(self.rows):
-                    for selfi in range(self.cols):
-                        ret_matrix[i, j] += self.matrix[selfi, j]*other[i, selfi]
-                    
+            return numpy.matmul(self.matrix, other.matrix)
+                            
     def __add__(self, other):
         if self.is_equal_size(other):
             return numpy.add(self.matrix, other.matrix)
