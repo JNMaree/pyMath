@@ -46,13 +46,14 @@ class Matrix:
             raise ArithmeticError("Product Matrix AB not defined for A:cols=", self.cols, " and B:rows=")
         else:
             return numpy.matmul(self.matrix, other.matrix)
-                            
+    # Matrix 1-to-1 addition             
     def __add__(self, other):
         if self.is_equal_size(other):
             return numpy.add(self.matrix, other.matrix)
         else:
             raise ArithmeticError("Sum Matrix not defined for matrices of inequal size")
 
+    # Matrix 1-to-1 substraction
     def __sub__(self, other):
         if self.is_equal_size(other):
             return numpy.subtract(self.matrix, other.matrix)      
@@ -69,7 +70,7 @@ class Matrix:
             - Row Echelon form
             - Reduced Row Echelon form
     """
-    # ROW METHODS:
+    # ROW OPERATIONS:
     # Add rows to matrix
     def add_rows(self, rows, pos =None):
         if isinstance(rows, numpy.ndarray):
@@ -107,10 +108,10 @@ class Matrix:
             new_order[row_index]
 
         self.matrix = self.matrix[new_order, :]
-        
+
             
 
-    # COL METHODS:
+    # COL OPERATIONS:
     # Add columns to matrix
     def add_cols(self, cols, pos =None):
         if isinstance(cols, numpy.ndarray):
@@ -146,6 +147,7 @@ class Matrix:
         print(new_order)
 
     # Move Full Zero rows to Bottom of Matrix
+    #   - Used for Reduced row echelon form
     def move_full_zero_rows(self):
         zeroRows = numpy.all(self.matrix==0, axis=1)
         anyZeroRows = numpy.any(zeroRows)
@@ -188,7 +190,7 @@ class Matrix:
                         self.matrix[i, j] = self.matrix[i, j] - self.matrix[rowJ, j]*f
                 rowJ += 1
                 colK += 1
-        
+
 
     # Reduce matrix to reduced row echelon form (RREF)
     def to_reduced_row_echelon(self):
@@ -221,11 +223,15 @@ class Matrix:
     # Return the inverse of the matrix
     def get_inverse(self):
         # Check if 2D and nxn (square)
-        if self.matrix.ndim == 2 and self.rows == self.cols:
+        if self.matrix.ndim == 2:
+            if self.rows == self.cols:
             # Using a numpy function
-            return numpy.linalg.inv(self.matrix)
+                return numpy.linalg.inv(self.matrix)
+            else:
+                raise ArithmeticError(self.rows, " rows, ", self.cols, " cols. Matrix not square")
         else:
-            raise ArithmeticError
+            raise ArithmeticError("Matrix ndim:", self.matrix.ndim)
+
 
     # Return an identity matrix for the same size
     def get_identity(self, size=0):
@@ -236,7 +242,8 @@ class Matrix:
             return numpy.eye(size)
         else:
             return numpy.eye(self.matrix.shape[0])
-            
+
+
 # Test function
 def main():
     #test_matrix = numpy.array(([1, 1, 3], [0, 2, 4], [1, 1, 0], [0, 1, 1]))
