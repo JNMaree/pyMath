@@ -8,6 +8,10 @@ A set of mathematical methods implemented from first principles in python.
 Homogenous polynomial functions of a single variable are coded as arrays of coefficients. 
 Includes methods for derivation, integration, multiplication, division, addition and subtraction.
 
+#### matrix
+Wrapper for numpy arrays to primitively deal with scalar & vector space and matrix algebra.
+Includes methods for matrix inverse, echelon form, multiplication.
+
 #### newton
 Newton's Method(or Newton-Raphson method) for finding roots to higher order polynomials.
 
