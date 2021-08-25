@@ -102,14 +102,15 @@ class Matrix:
         self.matrix[row_B_index, :] = temp_row
     def shift_row(self, row_index, to_index=None):
         new_order = numpy.arange(0, self.rows)
-        if to_index > 0:  # if to_index specified
-            new_order[row_index]
-        else:
-            new_order[row_index]
+        if to_index > 0:  # if to_index specified, move row@row_index to row@to_index
+            new_order[to_index] = row_index
+        else: # Else move row@row_index to end
+            for i in range(row_index, self.rows - 1):
+                new_order[i] = i
+            new_order[self.rows - 1] = row_index
 
         self.matrix = self.matrix[new_order, :]
 
-            
 
     # COL OPERATIONS:
     # Add columns to matrix
@@ -144,18 +145,26 @@ class Matrix:
         self.matrix[:, col_B_index] = temp_row
     def shift_col(self, col_index, to_index):
         new_order = numpy.arange(0, self.cols)
-        print(new_order)
+        if to_index > 0:  # if to_index specified, move row@row_index to row@to_index
+            new_order[to_index] = col_index
+        else: # Else move row@row_index to end
+            for i in range(col_index, self.cols - 1):
+                new_order[i] = i
+            new_order[self.cols - 1] = col_index
+
+        self.matrix = self.matrix[:, new_order]
+
+
 
     # Move Full Zero rows to Bottom of Matrix
     #   - Used for Reduced row echelon form
     def move_full_zero_rows(self):
         zeroRows = numpy.all(self.matrix==0, axis=1)
         anyZeroRows = numpy.any(zeroRows)
-    
         if anyZeroRows:
             for i in range(zeroRows.size - 1):
                 if zeroRows[i]:
-                    self.swap_rows(i, self.rows - 1)
+                    self.shift_row(i)
 
         
     # Return the points at which the matrix's largest absolute value occurs
