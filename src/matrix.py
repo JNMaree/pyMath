@@ -102,7 +102,8 @@ class Matrix:
         self.matrix[row_B_index, :] = temp_row
     def shift_row(self, row_index, to_index=None):
         new_order = numpy.arange(0, self.rows)
-        if to_index > 0:  # if to_index specified, move row@row_index to row@to_index
+        if to_index is not None:  
+            # if to_index specified, move row@row_index to row@to_index
             new_order[to_index] = row_index
         else: # Else move row@row_index to end
             for i in range(row_index, self.rows - 1):
@@ -143,11 +144,12 @@ class Matrix:
         temp_row = numpy.array(self.matrix[:, col_A_index])
         self.matrix[:, col_A_index] = self.matrix[:, col_B_index]
         self.matrix[:, col_B_index] = temp_row
-    def shift_col(self, col_index, to_index):
+    def shift_col(self, col_index, to_index=None):
         new_order = numpy.arange(0, self.cols)
-        if to_index > 0:  # if to_index specified, move row@row_index to row@to_index
+        if to_index is not None:  
+            # if to_index specified, move col@col_index to col@to_index
             new_order[to_index] = col_index
-        else: # Else move row@row_index to end
+        else: # Else move col@col_index to end
             for i in range(col_index, self.cols - 1):
                 new_order[i] = i
             new_order[self.cols - 1] = col_index
@@ -295,10 +297,12 @@ def main():
     print(m)
 
     print("Test ShiftRow")
-    print(m.shift_row(1, 2))
+    m.shift_row(1, 2)
+    print(m)
 
     print("Test ShifCol")
-    print(m.shift_col(0))
+    m.shift_col(2)
+    print(m)
 
     """
     print("Test Row Echelon Form:")
@@ -306,7 +310,6 @@ def main():
     mre.to_row_echelon()
     print(mre)
 
-    
     print("Test Reduced Row Echelon Form:")
     mrre = m
     mrre.to_reduced_row_echelon()
