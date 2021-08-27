@@ -191,7 +191,11 @@ class Matrix:
         else:
             # Return argmax of col_index
             return numpy.argmax(self.matrix, axis=1)
-        
+
+    # MATRIX TRANSFORMATIONS (in_place):
+    def to_abs(self):
+        self.matrix = numpy.absolute(self.matrix)
+    
     # Reduce matrix to Row Echelon Form (REF)
     # see https://en.wikipedia.org/wiki/Row_echelon_form#Reduced_row_echelon_form
     def to_row_echelon(self):
