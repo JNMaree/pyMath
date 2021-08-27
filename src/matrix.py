@@ -30,6 +30,7 @@ class Matrix:
     def __str__(self):
         return format(self.matrix)
 
+    # BOOLEAN MATRIX CHECK METHODS:
     # Return if matrix is square (n = rows = cols)
     def is_square(self):
         if self.rows == self.cols:
@@ -48,15 +49,18 @@ class Matrix:
 
     # Return if matrix is a diagonal matrix
     def is_diagonal(self):
-        
+        pass
     
     # Overload mathematical operators
     # Matrix multiplication
     def __mul__(self, other):
-        if self.cols != other.rows:
-            raise ArithmeticError("Product Matrix AB not defined for A:cols=", self.cols, " and B:rows=")
+        if isinstance(other, int):
+            self.matrix *= other
         else:
-            return numpy.matmul(self.matrix, other.matrix)
+            if self.cols != other.rows:
+                raise ArithmeticError("Product Matrix AB not defined for A:cols=", self.cols, " and B:rows=")
+            else:
+                return numpy.matmul(self.matrix, other.matrix)
     # Matrix 1-to-1 addition             
     def __add__(self, other):
         if self.is_equal_size(other):
@@ -193,6 +197,7 @@ class Matrix:
             return numpy.argmax(self.matrix, axis=1)
 
     # MATRIX TRANSFORMATIONS (in_place):
+    # Absolute value of whole matrix
     def to_abs(self):
         self.matrix = numpy.absolute(self.matrix)
     
@@ -216,7 +221,6 @@ class Matrix:
                         self.matrix[i, j] = self.matrix[i, j] - self.matrix[rowJ, j]*f
                 rowJ += 1
                 colK += 1
-
 
     # Reduce matrix to reduced row echelon form (RREF)
     def to_reduced_row_echelon(self):
@@ -245,6 +249,10 @@ class Matrix:
             lead += 1
             r += 1
 
+    # Transform matrix to its own transpose
+    def to_transpose(self):
+        self.matrix = numpy.transpose(self.matrix)
+        
     # GET METHODS:
     # Return the inverse of the matrix
     def get_inverse(self):
