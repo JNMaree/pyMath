@@ -40,10 +40,14 @@ class ElementSpace1D:
     # Number of Nodes per Element:
     nodes_per_element = 2
 
-    def __init__(self, n_elements, nodes_per_element=2):
-        if isinstance(n_elements, int):
-            self.elements = numpy.zeros((n_elements, nodes_per_element))
-            self.n_elements = n_elements
+    def __init__(self, nodes, nodes_per_element=2):
+        if isinstance(nodes, int):
+            self.elements = numpy.zeros((nodes, nodes_per_element))
+            self.n_elements = nodes
+            self.nodes_per_element = nodes_per_element
+        elif isinstance(nodes, NodeSpace1D):
+            self.elements = numpy.array((nodes.n_nodes, nodes_per_element))
+            self.n_elements = nodes.n_nodes
             self.nodes_per_element = nodes_per_element
 
     @classmethod
@@ -93,4 +97,12 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
                 self.element_array[i, j] = j
 
 
-        
+def main():
+    # Test mesh
+    narray = numpy.arange(8)
+    nspace = NodeSpace1D(narray)
+    espace = ElementSpace1D(nspace)
+    
+    
+if __name__ == "__main__":
+    main() 
