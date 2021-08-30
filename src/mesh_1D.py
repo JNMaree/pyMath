@@ -8,17 +8,29 @@ class NodeSpace1D:
     # Number of Nodes:
     n_nodes = 0
 
+    # Node Start & End
+    node_start = 0
+    node_end = 0
+
+    node_distance = 0
+
     def __init__(self, nodes):
         if isinstance(nodes, int):
             self.nodes = numpy.zeros(nodes)
             self.n_nodes = nodes
+            
         elif isinstance(nodes, list):
-            self.nodes = numpy.array(nodes)
+            self.nodes = numpy.array(nodes.sort())
             self.n_nodes = len(nodes)
+
         elif isinstance(nodes, numpy.ndarray):
-            self.nodes = nodes
+            self.nodes = numpy.sort(nodes)
             self.n_nodes = nodes.size()
 
+        self.node_start = self.nodes[0]
+        self.node_end = self.nodes[self.n_nodes - 1]
+        self.node_distance = self.node_end - self.node_start
+        
     # Assign numerical values to nodes at specified indices
     def assign_values(self, num_value, node_indices):
         for i in node_indices:
@@ -60,7 +72,7 @@ class ElementSpace1D:
 class Mesh1D(NodeSpace1D, ElementSpace1D):
 
     # Total length (m)
-    dimension = 0
+    dimension_length = 0
 
     # Order (Number of nodes per element) of mesh elements
     mesh_order = 1
@@ -72,21 +84,34 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
     # Element array [j, 1] = Second Node index
     element_array = []
     
-    def __init__(self, dimensions, num_of_elements, mesh_order = 1):
-        self.dimension = dimensions
-        self.n_elements = num_of_elements
-        if mesh_order == 1:
-            self.n_nodes = num_of_elements + 1
-        self.mesh_order = mesh_order
+    def __init__(self, dimension_nodes, dimension_elements, mesh_order = 1):
+        # Manage the Nodes of the mesh
+        if isinstance(dimension_nodes, (int, float)):
+            self.dimension_length = dimension_nodes
+            self.n_elements = dimension_elements
+            
 
-        # generate nodes to be equal distances apart, spanning total length of x
-        self.node_array = numpy.array((self.n_nodes))
-        dim_increment = self.dimension/self.n_elements
-        self.node_array[0] = 0
-        for i in range (1, self.n_nodes):
-            self.node_array[i] = dim_increment
-            dim_increment += dim_increment
+            # generate nodes to be equal distances apart, spanning total length of x
+            self.node_array = numpy.array((self.n_nodes))
+            dim_increment = self.dimension/self.n_elements
+            self.node_array[-1] = 0
+            for i in range (0, self.n_nodes):
+                self.node_array[i] = dim_increment
+                dim_increment += dim_increment
+            
+        elif isinstance(dimension_nodes, NodeSpace1D):
+            NodeSpace1D.__init__(dimension_nodes)
 
+        # Manage the elements of the mesh
+        if isinstance(dimension_elements, (int, float)):
+            self.n_elements = dimension_elements
+            if mesh_order == 0:
+                self.n_nodes = dimension_elements + 0
+            self.mesh_order = mesh_order
+        elif isinstance(dimension_elements, ElementSpace1D):
+            ElementSpace1D.__init__(dimension_elements)
+        
+        
     # generate uniform elements to contain a specified number of nodes
     # - governed by mesh_order
     def generate_elements(self, nodes_per_element = 2):
@@ -102,7 +127,8 @@ def main():
     narray = numpy.arange(8)
     nspace = NodeSpace1D(narray)
     espace = ElementSpace1D(nspace)
-    
+
+    mesh = Mesh1D(nspace, espace)
     
 if __name__ == "__main__":
     main() 
