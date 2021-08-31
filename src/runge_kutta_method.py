@@ -1,7 +1,7 @@
 import numpy
 
-from Polynomial import Polynomial
-    
+from polynomial import Polynomial
+
 
 def runge_kutta_method(multiVarPolynom, y0, h, time_steps):
     y_n = y0

@@ -1,8 +1,5 @@
 import numpy as np
 
-#use colors for accessibility
-from termcolor import colored as color
-
 
 class digit:
     def __init__(self, value=0):
@@ -44,7 +41,7 @@ class grid:
                 if j == 3 or j == 6:
                     print('| ', end = '')
                 if y == 0:
-                    print(color('-', 'red'), end = " ")
+                    print('-', 'red', end = " ")
                 else:
                     print(y.val, end = " ")
             if i == 2 or i == 5:
@@ -123,7 +120,7 @@ class grid:
             rc = self.getBlocRC(b)
             for i, x  in enumerate(rc): #Loop through digits in bloc
                 for j, y in enumerate(x):
-                    
+                    pass
         
 
     def solve(self):
