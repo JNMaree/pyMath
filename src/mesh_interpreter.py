@@ -1,3 +1,4 @@
+import numpy
 
 class mesh:
 
@@ -8,7 +9,8 @@ class mesh:
     element_array = 
     
     def __init__(self, filename):
-
+        pass
+    
 class element:
     element_type = 0
 

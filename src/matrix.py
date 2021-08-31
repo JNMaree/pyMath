@@ -179,7 +179,7 @@ class Matrix:
         zeroRows = numpy.all(self.matrix==0, axis=1)
         anyZeroRows = numpy.any(zeroRows)
         if anyZeroRows:
-            for i in ange(zeroRows.size - 1):
+            for i in range(zeroRows.size - 1):
                 if zeroRows[i]:
                     self.shift_row(i)
 
