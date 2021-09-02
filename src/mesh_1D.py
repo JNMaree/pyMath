@@ -9,14 +9,7 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
     dimension_length = 0
 
     # Order (Number of nodes per element) of mesh elements
-    mesh_order = 1
-
-    # Node array [i] = X_co-ordinate
-    node_array = []
-
-    # Element array [j, 0] = First Node index
-    # Element array [j, 1] = Second Node index
-    element_array = []
+    mesh_order = 0
     
     def __init__(self, dim_nodes, dim_elements, mesh_order = 1):
         # Manage the Nodes of the mesh

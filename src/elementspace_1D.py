@@ -1,4 +1,5 @@
 import numpy
+from numpy.lib.arraysetops import isin
 
 from nodespace_1D import NodeSpace1D
 
@@ -29,8 +30,11 @@ class ElementSpace1D:
             self.elements = numpy.zeros((nodes, nodes_per_element))
             self.n_elements = nodes
             self.nodes_per_element = nodes_per_element
+        
         elif isinstance(nodes, NodeSpace1D):
             self.elements = numpy.array((nodes.n_nodes, nodes_per_element))
             self.nodes_per_element = nodes_per_element
             self.n_elements = nodes.n_nodes - (self.nodes_per_element - 1)
-    
+        
+        elif isinstance(nodes, ElementSpace1D):
+            self = nodes
