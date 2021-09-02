@@ -48,7 +48,9 @@ class NodeSpace1D:
             self.node_start = self.nodes[0]
             self.node_end = self.nodes[self.n_nodes - 1]
             self.node_distance = self.node_end - self.node_start
-
+        
+        elif isinstance(nodes, NodeSpace1D):
+            self = nodes
     
     def __getitem__(self, key):
         return self.nodes[key]
