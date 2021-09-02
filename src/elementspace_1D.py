@@ -1,5 +1,7 @@
 import numpy
 
+from nodespace_1D import NodeSpace1D
+
 """
     An Element space is a collection of elements in a single dimension, X.
     The data is stored in a 2-dimensional array.
@@ -29,13 +31,6 @@ class ElementSpace1D:
             self.nodes_per_element = nodes_per_element
         elif isinstance(nodes, NodeSpace1D):
             self.elements = numpy.array((nodes.n_nodes, nodes_per_element))
-            self.n_elements = nodes.n_nodes
             self.nodes_per_element = nodes_per_element
-
-    @classmethod
-    def withNodeSpace(self, nodespace, nodes_per_element=2):
-        self.elements = numpy.array((nodespace.n_nodes, nodes_per_element));
-        for i in range(nodespace.n_nodes):
-            for j in range(nodes_per_element):
-                self.elements[i, j] = nodespace.nodes[i + j]
+            self.n_elements = nodes.n_nodes - (self.nodes_per_element - 1)
     
