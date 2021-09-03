@@ -12,7 +12,8 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
     mesh_order = 0
     
     def __init__(self, dim_nodes, dim_elements, mesh_order = 1):
-        # Manage the Nodes of the mesh
+        """Manage Nodes of the Mesh"""
+        # If dim_nodes is a number, dim_nodes represents the dimension length
         if isinstance(dim_nodes, (int, float)):
             self.dimension_length = dim_nodes
 
@@ -23,11 +24,13 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
             for i in range (0, self.n_nodes):
                 self.node_array[i] = dim_increment
                 dim_increment += dim_increment
-            
+        
+        # If dim_nodes is a NodeSpace
         elif isinstance(dim_nodes, NodeSpace1D):
             NodeSpace1D.__init__(dim_nodes)
 
-        # Manage the elements of the mesh
+        """Manage Elements of the Mesh"""
+        # If dim_elements is a number, dim_elements equals 
         if isinstance(dim_elements, (int, float)):
             self.n_elements = dim_elements
             if mesh_order == 0:
@@ -35,7 +38,11 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
             self.mesh_order = mesh_order
         elif isinstance(dim_elements, ElementSpace1D):
             ElementSpace1D.__init__(dim_elements)
-        
+
+    def __str__(self) -> str:
+        ret_str = "Mesh of "
+        ret_str += super().__str__() 
+        return ret_str
         
     # generate uniform elements to contain a specified number of nodes
     # - governed by mesh_order

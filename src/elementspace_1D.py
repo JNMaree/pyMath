@@ -40,11 +40,11 @@ class ElementSpace1D:
             self = nodes
 
     def __str__(self) -> str:
-        retString = "ElementSpace1D of "
-        retString += self.n_elements
-        retString += " elements:"
-        retString += self.elements
-        return retString
+        ret_str = "ElementSpace1D of "
+        ret_str += self.n_elements
+        ret_str += " elements:"
+        ret_str += self.elements
+        return ret_str
 
     def __getitem__(self, key):
         return self.elements[key]

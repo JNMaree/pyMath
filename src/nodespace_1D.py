@@ -53,11 +53,11 @@ class NodeSpace1D:
             self = nodes
     
     def __str__(self) -> str:
-        retString = "NodeSpace1D of "
-        retString += self.n_nodes
-        retString += " nodes:"
-        retString += self.nodes
-        return retString
+        ret_str = "NodeSpace1D of "
+        ret_str += self.n_nodes
+        ret_str += " nodes:"
+        ret_str += self.nodes
+        return ret_str
     
     def __getitem__(self, key):
         return self.nodes[key]
