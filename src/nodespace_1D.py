@@ -52,6 +52,13 @@ class NodeSpace1D:
         elif isinstance(nodes, NodeSpace1D):
             self = nodes
     
+    def __str__(self) -> str:
+        retString = "NodeSpace1D of "
+        retString += self.n_nodes
+        retString += " nodes:"
+        retString += self.nodes
+        return retString
+    
     def __getitem__(self, key):
         return self.nodes[key]
     def __setitem__(self, key, value):

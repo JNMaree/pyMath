@@ -38,3 +38,15 @@ class ElementSpace1D:
         
         elif isinstance(nodes, ElementSpace1D):
             self = nodes
+
+    def __str__(self) -> str:
+        retString = "ElementSpace1D of "
+        retString += self.n_elements
+        retString += " elements:"
+        retString += self.elements
+        return retString
+
+    def __getitem__(self, key):
+        return self.elements[key]
+    def __setitem__(self, key, value):
+        self.elements[key] = value
