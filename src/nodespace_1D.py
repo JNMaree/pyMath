@@ -22,11 +22,11 @@ class NodeSpace1D:
     node_start = 0
     node_end = 0
 
-    node_dimension = 0
+    node_distance = 0
 
-    def __init__(self, nodes, dimension=1):
+    def __init__(self, nodes, dimension_size=1):
         if isinstance(nodes, int):
-            self.nodes = numpy.linspace(0, dimension, nodes)
+            self.nodes = numpy.linspace(0, dimension_size, nodes)
             self.n_nodes = nodes
             
             self.node_start = self.nodes[0]
@@ -70,5 +70,18 @@ class NodeSpace1D:
             self.nodes[i] = num_value
 
     # Set the overall dimension for a node space
-    def set_dimension(self, dimension):
-        self.node_dimension = dimension
+    def set_distance(self, dimension_size):
+        self.set_distance = dimension_size
+
+def main():
+    print("Test NodeSpace:")
+    # - create a NodeSpace of 16 Nodes over a size of 4 length
+    n_space = NodeSpace1D(16, 4)
+    print(n_space)
+
+    print("Node_Start:", n_space.node_start)
+    print("Node_End:", n_space.node_end)
+    print("Node_Distance:", n_space.node_distance)
+
+if __name__ == "__main__":
+    main()

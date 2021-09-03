@@ -30,7 +30,7 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
             NodeSpace1D.__init__(dim_nodes)
 
         """Manage Elements of the Mesh"""
-        # If dim_elements is a number, dim_elements equals 
+        # If dim_elements is a number, dim_elements equals
         if isinstance(dim_elements, (int, float)):
             self.n_elements = dim_elements
             if mesh_order == 0:
@@ -55,7 +55,7 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
 
 
 def main():
-    # Test mesh
+    print("Test Mesh:")
     narray = numpy.arange(8)
     nspace = NodeSpace1D(narray)
     espace = ElementSpace1D(nspace)

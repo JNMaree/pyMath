@@ -25,19 +25,19 @@ class ElementSpace1D:
     # Number of Nodes per Element:
     nodes_per_element = 2
 
-    def __init__(self, nodes, nodes_per_element=2):
-        if isinstance(nodes, int):
-            self.elements = numpy.zeros((nodes, nodes_per_element))
-            self.n_elements = nodes
+    def __init__(self, elements, nodes_per_element=2):
+        if isinstance(elements, int):
+            self.elements = numpy.zeros((elements, nodes_per_element))
+            self.n_elements = elements
             self.nodes_per_element = nodes_per_element
         
-        elif isinstance(nodes, NodeSpace1D):
-            self.elements = numpy.array((nodes.n_nodes, nodes_per_element))
+        elif isinstance(elements, NodeSpace1D):
+            self.elements = numpy.array((elements.n_nodes, nodes_per_element))
             self.nodes_per_element = nodes_per_element
-            self.n_elements = nodes.n_nodes - (self.nodes_per_element - 1)
+            self.n_elements = elements.n_nodes - (self.nodes_per_element - 1)
         
-        elif isinstance(nodes, ElementSpace1D):
-            self = nodes
+        elif isinstance(elements, ElementSpace1D):
+            self = elements
 
     def __str__(self) -> str:
         ret_str = "ElementSpace1D of "
@@ -50,3 +50,14 @@ class ElementSpace1D:
         return self.elements[key]
     def __setitem__(self, key, value):
         self.elements[key] = value
+
+def main():
+    print("Test ElementSpace:")
+    # - create a NodeSpace of 16 Nodes over a size of 4 length
+    e_space = ElementSpace1D(16)
+    print(e_space)
+
+    print("Nodes_Per_Element:", e_space.nodes_per_element)
+
+if __name__ == "__main__":
+    main()
