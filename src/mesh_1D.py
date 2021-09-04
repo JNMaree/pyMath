@@ -12,6 +12,7 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
     mesh_order = 0
     
     def __init__(self, dim_nodes, dim_elements, mesh_order = 1):
+        
         """Manage Nodes of the Mesh"""
         # If dim_nodes is a number, dim_nodes represents the dimension length
         if isinstance(dim_nodes, (int, float)):
@@ -23,8 +24,7 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
             self.node_array[-1] = 0
             for i in range (0, self.n_nodes):
                 self.node_array[i] = dim_increment
-                dim_increment += dim_increment
-        
+                dim_increment += dim_increment        
         # If dim_nodes is a NodeSpace
         elif isinstance(dim_nodes, NodeSpace1D):
             NodeSpace1D.__init__(dim_nodes)

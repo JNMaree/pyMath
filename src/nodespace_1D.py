@@ -24,15 +24,15 @@ class NodeSpace1D:
 
     node_distance = 0
 
-    def __init__(self, nodes, dimension_size=1):
+    def __init__(self, nodes, dimension_size=1, start=0):
         if isinstance(nodes, int):
-            self.nodes = numpy.linspace(0, dimension_size, nodes)
+            self.nodes = numpy.linspace(start, start + dimension_size, nodes)
             self.n_nodes = nodes
             
-            self.node_start = self.nodes[0]
-            self.node_end = self.nodes[self.n_nodes - 1]
-            self.node_distance = self.node_end - self.node_start
-            
+            self.node_start = start
+            self.node_distance = dimension_size
+            self.node_end = start + dimension_size
+
         elif isinstance(nodes, list):
             self.nodes = numpy.array(nodes.sort())
             self.n_nodes = len(nodes)
@@ -53,11 +53,7 @@ class NodeSpace1D:
             self = nodes
     
     def __str__(self) -> str:
-        ret_str = "NodeSpace1D of "
-        ret_str += self.n_nodes
-        ret_str += " nodes:"
-        ret_str += self.nodes
-        return ret_str
+        return format(self.nodes)
     
     def __getitem__(self, key):
         return self.nodes[key]
@@ -71,17 +67,23 @@ class NodeSpace1D:
 
     # Set the overall dimension for a node space
     def set_distance(self, dimension_size):
-        self.set_distance = dimension_size
+        self.__init__(self.nodes, dimension_size)
+
+    # Set the start position for the node
+    def set_start(self, start_pos):
+        self.__init__(self.nodes, self.node_distance, start_pos)
+
 
 def main():
     print("Test NodeSpace:")
     # - create a NodeSpace of 16 Nodes over a size of 4 length
-    n_space = NodeSpace1D(16, 4)
+    n_space = NodeSpace1D(16, 4, 1)
+    print("n Nodes:", n_space.n_nodes)
     print(n_space)
 
     print("Node_Start:", n_space.node_start)
-    print("Node_End:", n_space.node_end)
     print("Node_Distance:", n_space.node_distance)
+    print("Node_End:", n_space.node_end)
 
 if __name__ == "__main__":
     main()
