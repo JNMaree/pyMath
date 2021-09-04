@@ -40,11 +40,7 @@ class ElementSpace1D:
             self = elements
 
     def __str__(self) -> str:
-        ret_str = "ElementSpace1D of "
-        ret_str += self.n_elements
-        ret_str += " elements:"
-        ret_str += self.elements
-        return ret_str
+        return format(self.elements)
 
     def __getitem__(self, key):
         return self.elements[key]
@@ -55,6 +51,7 @@ def main():
     print("Test ElementSpace:")
     # - create a NodeSpace of 16 Nodes over a size of 4 length
     e_space = ElementSpace1D(16)
+    print("n Elements:", e_space.n_elements)
     print(e_space)
 
     print("Nodes_Per_Element:", e_space.nodes_per_element)
