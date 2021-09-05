@@ -16,32 +16,26 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
         """Manage Nodes of the Mesh"""
         # If dim_nodes is a number, dim_nodes represents the dimension length
         if isinstance(dim_nodes, (int, float)):
-            self.dimension_length = dim_nodes
+            super().node_distance = dim_nodes
 
-            # generate nodes to be equal distances apart, spanning total length of x
-            self.node_array = numpy.array((self.n_nodes))
-            dim_increment = self.dimension/self.n_elements
-            self.node_array[-1] = 0
-            for i in range (0, self.n_nodes):
-                self.node_array[i] = dim_increment
-                dim_increment += dim_increment        
         # If dim_nodes is a NodeSpace
         elif isinstance(dim_nodes, NodeSpace1D):
             NodeSpace1D.__init__(dim_nodes)
 
         """Manage Elements of the Mesh"""
-        # If dim_elements is a number, dim_elements equals
+        # If dim_elements is a number, dim_elements equals number of elements
         if isinstance(dim_elements, (int, float)):
             self.n_elements = dim_elements
             if mesh_order == 0:
                 self.n_nodes = dim_elements + 0
             self.mesh_order = mesh_order
+        
+        # If dim_elements is an ElementSpace
         elif isinstance(dim_elements, ElementSpace1D):
             ElementSpace1D.__init__(dim_elements)
 
     def __str__(self) -> str:
-        ret_str = "Mesh of "
-        ret_str += super().__str__() 
+        ret_str = super().__str__() 
         return ret_str
         
     # generate uniform elements to contain a specified number of nodes
@@ -55,12 +49,14 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
 
 
 def main():
-    print("Test Mesh:")
+    print("Test Match:")
     narray = numpy.arange(8)
     nspace = NodeSpace1D(narray)
     espace = ElementSpace1D(nspace)
 
     mesh = Mesh1D(nspace, espace)
-    
+    print(mesh)
+
+
 if __name__ == "__main__":
     main() 
