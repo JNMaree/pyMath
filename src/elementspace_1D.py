@@ -26,6 +26,7 @@ class ElementSpace1D:
     nodes_per_element = 2
 
     def __init__(self, elements, nodes_per_element=2):
+        # If elements is a number, it represents the number of elements
         if isinstance(elements, int):
             self.elements = numpy.zeros((elements, nodes_per_element))
             self.n_elements = elements

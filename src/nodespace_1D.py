@@ -43,7 +43,7 @@ class NodeSpace1D:
         
         elif isinstance(nodes, numpy.ndarray):
             self.nodes = numpy.sort(nodes)
-            self.n_nodes = nodes.size()
+            self.n_nodes = nodes.size
         
             self.node_start = self.nodes[0]
             self.node_end = self.nodes[self.n_nodes - 1]

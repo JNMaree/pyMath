@@ -16,26 +16,27 @@ class Mesh1D(NodeSpace1D, ElementSpace1D):
         """Manage Nodes of the Mesh"""
         # If dim_nodes is a number, dim_nodes represents the dimension length
         if isinstance(dim_nodes, (int, float)):
-            super().node_distance = dim_nodes
+            self.dimension_length = dim_nodes
 
         # If dim_nodes is a NodeSpace
         elif isinstance(dim_nodes, NodeSpace1D):
-            NodeSpace1D.__init__(dim_nodes)
+            NodeSpace1D.__init__(self, dim_nodes)
 
         """Manage Elements of the Mesh"""
         # If dim_elements is a number, dim_elements equals number of elements
         if isinstance(dim_elements, (int, float)):
             self.n_elements = dim_elements
-            if mesh_order == 0:
-                self.n_nodes = dim_elements + 0
+            if mesh_order == 1:
+                n_nodes = dim_elements + 0
             self.mesh_order = mesh_order
         
         # If dim_elements is an ElementSpace
         elif isinstance(dim_elements, ElementSpace1D):
-            ElementSpace1D.__init__(dim_elements)
+            ElementSpace1D.__init__(self, dim_elements)
 
     def __str__(self) -> str:
-        ret_str = super().__str__() 
+        ret_str = NodeSpace1D.__str__(self)
+        ret_str += ElementSpace1D.__str__(self) 
         return ret_str
         
     # generate uniform elements to contain a specified number of nodes
