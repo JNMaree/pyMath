@@ -53,7 +53,9 @@ class NodeSpace1D:
             self = nodes
     
     def __str__(self) -> str:
-        return format(self.nodes)
+        ret_str = format(self.n_nodes) + "\n"
+        ret_str += format(self.nodes)
+        return ret_str
     
     def __getitem__(self, key):
         return self.nodes[key]

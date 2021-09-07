@@ -5,7 +5,7 @@ from elementspace_1D import ElementSpace1D
 
 class Mesh1D:
 
-    def __init__(self, nodes, elements, mesh_order = 1):
+    def __init__(self, nodes, elements):
         self.node_space = nodes
         self.element_space = elements
 
