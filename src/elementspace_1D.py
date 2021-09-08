@@ -51,7 +51,9 @@ class ElementSpace1D(NodeSpace1D):
         # Generate Elements from NodeSpace
         for i in range(self.n_elements):
             for j in range(self.nodes_per_element):
-                self.elements[i, j] = i + j + (self.nodes_per_element - 2)
+                self.elements[i, j] = i * (self.nodes_per_element - 1) + j
+
+        # end __init__
 
     def __str__(self) -> str:
         ret_str = format(self.n_elements)
@@ -61,8 +63,9 @@ class ElementSpace1D(NodeSpace1D):
                 ret_str += "[{:n},{:n}]:".format(i,j)
                 ret_str += "{:n}".format(self.elements[i,j])
                 if j != (self.nodes_per_element - 1):
-                    if self.elements[i, j] < 10: #to get consistent column tabs
+                    if self.elements[i, j] < 10:    
                         ret_str += "\t"
+                        # to get consistent column tabs
                     ret_str += "\t"
             ret_str += "\n"
         return ret_str
