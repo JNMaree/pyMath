@@ -53,15 +53,19 @@ class NodeSpace1D:
             self = nodes
     
     def __str__(self) -> str:
-        ret_str = format(self.n_nodes) + "\n"
-        ret_str += format(self.nodes)
+        ret_str = format(self.n_nodes)
+        ret_str += "\n"
+        for i in range(self.n_nodes):
+            ret_str += "[{:n}]:{:f}\n".format(i, self.nodes[i])
         return ret_str
     
     def __getitem__(self, key):
         return self.nodes[key]
     def __setitem__(self, key, value):
         self.nodes[key] = value
-    
+    def get_self(self):
+        return self
+
     # Assign numerical values to nodes at specified indices
     def assign_values(self, num_value, node_indices):
         for i in node_indices:
@@ -78,14 +82,20 @@ class NodeSpace1D:
 
 def main():
     print("Test NodeSpace:")
-    # - create a NodeSpace of 16 Nodes over a size of 4 length
-    n_space = NodeSpace1D(16, 4, 1)
-    print("n Nodes:", n_space.n_nodes)
+    # - Create a NodeSpace of 8 Nodes 
+    #   over a dimension of size 4, 
+    #   starting at point 2
+    n_space = NodeSpace1D(8, 4, 2)
+    #n_space = NodeSpace1D(numpy.linspace(2, 4, 8))
     print(n_space)
 
+    # Print NodeSpace attributes
     print("Node_Start:", n_space.node_start)
     print("Node_Distance:", n_space.node_distance)
     print("Node_End:", n_space.node_end)
+
+    n_space_selfInit = NodeSpace1D(n_space)
+    print("NodeSpace_self_init:", n_space_selfInit)
 
 if __name__ == "__main__":
     main()
