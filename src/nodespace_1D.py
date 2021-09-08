@@ -82,14 +82,20 @@ class NodeSpace1D:
 
 def main():
     print("Test NodeSpace:")
-    # - create a NodeSpace of 16 Nodes over a size of 4 length starting at 2
+    # - Create a NodeSpace of 8 Nodes 
+    #   over a dimension of size 4, 
+    #   starting at point 2
     n_space = NodeSpace1D(8, 4, 2)
+    #n_space = NodeSpace1D(numpy.linspace(2, 4, 8))
     print(n_space)
 
     # Print NodeSpace attributes
     print("Node_Start:", n_space.node_start)
     print("Node_Distance:", n_space.node_distance)
     print("Node_End:", n_space.node_end)
+
+    n_space_selfInit = NodeSpace1D(n_space)
+    print("NodeSpace_self_init:", n_space_selfInit)
 
 if __name__ == "__main__":
     main()

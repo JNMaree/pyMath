@@ -17,7 +17,7 @@ from nodespace_1D import NodeSpace1D
 class ElementSpace1D(NodeSpace1D):
 
     # Element array:
-    elements = numpy.array([])
+    elements = numpy.array([0,0])
 
     # Number of Elements:
     n_elements = 0
@@ -39,7 +39,7 @@ class ElementSpace1D(NodeSpace1D):
         # If elements is a NodeSpace1D, it defines the Nodes used by the Elements,
         # - disregards dimension & start
         elif isinstance(elements, NodeSpace1D):
-            self.elements = numpy.array((elements.n_nodes, nodes_per_element))
+            self.elements = numpy.empty([elements.n_nodes, nodes_per_element])
             self.nodes_per_element = nodes_per_element
             self.n_elements = elements.n_nodes - (self.nodes_per_element - 1)
 
@@ -83,31 +83,33 @@ class ElementSpace1D(NodeSpace1D):
 def main():
     # Test Classes & Functions
     print("Test ElementSpace:")
-    # - Create an ElementSpace of 10 elements over a size of 4,
-    #   starting at 3, with 2 nodes per element:
+    # - Create an ElementSpace of 10 elements 
+    #   over a dimension of size 4,
+    #   starting at 3, 
+    #   with 2 nodes per element:
     e_space2 = ElementSpace1D(10, 4, 3, 2)
     print("Nodes_Per_Element:", e_space2.nodes_per_element)
     print(e_space2)
 
-    # Test get_NodeSpace
+    # Test get_NodeSpace string
     print("Test ElementSpace_2 Parent NodeSpace:")
     n_space_str2 = e_space2.nodeSpace_str()
     print("N_nodes:", n_space_str2)
 
 
     print("Test ElementSpace with 4 nodes per element")
-    # - Create an ElementSpace of 8 elements over a size of 10,
-    #   starting at 0, with 4 nodes per element:
+    # - Create an ElementSpace of 8 elements 
+    #   over a dimension of size 10,
+    #   starting at 0, 
+    #   with 4 nodes per element:
     e_space4 = ElementSpace1D(8, 10, 0, 4)
     print("Nodes_Per_Element:", e_space4.nodes_per_element)
     print(e_space4)
 
-    # Test get_NodeSpace
+    # Test get_NodeSpace string
     print("Test ElementSpace_4 Parent NodeSpace:")
     n_space_str4 = e_space4.nodeSpace_str()
     print("N_nodes:", n_space_str4)
-
-
 
 
 if __name__ == "__main__":
