@@ -8,7 +8,7 @@ from matrix import Matrix
 class FiniteDifferenceMethod(Mesh1D):
 
     n = 0
-    solution_space = []
+
     material_matrix = []
     force_vector = []
     material_function = Polynomial([0, 0])
@@ -64,33 +64,37 @@ class FiniteDifferenceMethod(Mesh1D):
 
 def main():
     # Heat transfer test method:
-    
-    X_dimension = 12    # Distance specification (meters)
-    N_elements = 20     # Number of finite elements in mesh
+    x_dimension = 12        # Distance specification (meters)
+    n_elements = 10         # Number of finite elements in mesh
+    start_pos = 0           # First Node position
+    nodes_per_element = 2   # Amount of Nodes per element
 
     # Create mesh of discrete elements that consist of two nodes per element
-    fdm_mesh = Mesh1D(X_dimension, N_elements)
-
+    fdm_espace = ElementSpace1D(n_elements, x_dimension, start_pos, nodes_per_element)
+    fdm_mesh = Mesh1D(fdm_espace)
+    print(fdm_mesh)
+    
     # - Analysis Conditions:
     #   $ Material properties:
     K = 20      # Constant Stiffness coefficient
     
-    #   $ Type 1 (Dirichlet) Boundary Conditions(BCs):
+    #$  Type 1 (Dirichlet) Boundary Conditions(BCs):
     Type1_BC = 24       # Temperature specification
     Type1_Nodes = [0]   # Node indices subject to Type 1 BC
     BC_Type1 = NodeSpace1D(fdm_mesh.n_nodes)
     BC_Type1.assign_values(Type1_BC, Type1_Nodes)
     
-    #   $ Type 2 (Neumann) Boundary Conditions(BCs):
+    #$  Type 2 (Neumann) Boundary Conditions(BCs):
     Type2_BC = 16                   # Heat Flux specification
-    Type2_Nodes = [N_elements - 1]  # Node indices subject to Type 2 BC
+    Type2_Nodes = [n_elements - 1]  # Node indices subject to Type 2 BC
     BC_Type2 = NodeSpace1D(fdm_mesh.n_nodes)
     BC_Type2.assign_values(Type2_BC, Type2_Nodes)
     
     FDM = FiniteDifferenceMethod(fdm_mesh, K, BC_Type1, BC_Type2)
     FDM.setup()
-    FDM.solve()
-    FDM.plot()
-
+    
+    #FDM.solve()
+    #FDM.plot()
+    
 if __name__ == "__main__":
     main()
