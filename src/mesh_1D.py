@@ -5,7 +5,7 @@ from elementspace_1D import ElementSpace1D
 
 class Mesh1D:
 
-    # SolutionSpace defines the solution to the dof at the nodes
+    # SolutionSpace defines the degree-of-freedom (dof) at each node
     solution_space = []
 
     def __init__(self, elements):
@@ -15,7 +15,7 @@ class Mesh1D:
 
     def __str__(self) -> str:
         ret_str = self.element_space.nodeSpace_str()
-        #ret_str += self.element_space.__str__()
+        ret_str += self.element_space.__str__()
         return ret_str
 
 
@@ -26,11 +26,10 @@ def main():
     nspace = NodeSpace1D(n_array)
     espace = ElementSpace1D(nspace)
     #print("nspace:", nspace)
-    print("espace:", espace)
-    print("sub_nspace:", espace.nodeSpace_str)
+    #print("espace:", espace)
 
     mesh = Mesh1D(espace)
-    print("mesh:", mesh)
+    print(mesh)
 
 if __name__ == "__main__":
     main() 

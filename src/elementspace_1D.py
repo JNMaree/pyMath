@@ -42,17 +42,20 @@ class ElementSpace1D(NodeSpace1D):
             self.elements = numpy.empty([elements.n_nodes, nodes_per_element])
             self.nodes_per_element = nodes_per_element
             self.n_elements = elements.n_nodes - (self.nodes_per_element - 1)
-
+            
+            # initialise inherited nodeSpace
             super().__init__(elements)
 
         elif isinstance(elements, ElementSpace1D):
-            self = elements
+            self.elements = elements.elements
+            self.n_elements = elements.n_elements
+            self.nodes_per_element = elements.nodes_per_element
 
         # Generate Elements from NodeSpace
         for i in range(self.n_elements):
             for j in range(self.nodes_per_element):
                 self.elements[i, j] = i * (self.nodes_per_element - 1) + j
-
+            
         # end __init__
 
     def __str__(self) -> str:
