@@ -50,7 +50,11 @@ class NodeSpace1D:
             self.node_distance = self.node_end - self.node_start
         
         elif isinstance(nodes, NodeSpace1D):
-            self = nodes
+            self.nodes = nodes.nodes
+            self.n_nodes = nodes.n_nodes
+            self.node_start = nodes.node_start
+            self.node_end = nodes.node_end
+            self.node_distance = nodes.node_distance
     
     def __str__(self) -> str:
         ret_str = format(self.n_nodes)
@@ -94,8 +98,12 @@ def main():
     print("Node_Distance:", n_space.node_distance)
     print("Node_End:", n_space.node_end)
 
-    n_space_selfInit = NodeSpace1D(n_space)
-    print("NodeSpace_self_init:", n_space_selfInit)
+    n_space2 = NodeSpace1D(n_space)
+    print("NodeSpace_self_init:\n", n_space2)
+    print("Node_Start:", n_space2.node_start)
+    print("Node_Distance:", n_space2.node_distance)
+    print("Node_End:", n_space2.node_end)
+
 
 if __name__ == "__main__":
     main()
