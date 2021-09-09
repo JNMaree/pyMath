@@ -5,9 +5,9 @@ from mesh_1D import Mesh1D, NodeSpace1D, ElementSpace1D
 from polynomial import Polynomial
 from matrix import Matrix
 
-class FiniteDifferenceMethod(Mesh1D):
+class FiniteDifferenceMethod:
 
-    n = 0
+    mesh = []
 
     material_matrix = []
     force_vector = []
@@ -17,9 +17,8 @@ class FiniteDifferenceMethod(Mesh1D):
     type2BC = []
     
     def __init__(self, mesh, material_properties, bc_type1, bc_type2):
-        self.mesh1D = mesh
-        self.n = mesh.n_nodes
-        self.material_matrix = Matrix(numpy.zeros((self.n, self.n)))
+        self.mesh = mesh
+        self.material_matrix = Matrix(numpy.zeros((mesh.element_space.n_nodes, mesh.element_space.n_nodes)))
         self.material_function = Polynomial(material_properties)
         self.solution_space = bc_type1
         self.type1BC = bc_type1
@@ -41,9 +40,9 @@ class FiniteDifferenceMethod(Mesh1D):
     # of the matrices required to solve the problem:
     def setup(self):
         self.material_matrix[0,0] = 1.0
-        for i in range(1, self.n_nodes - 1):
-            x_i = self.mesh1D.nodes[i]
-            DX = x_i - self.mesh1D.nodes[i - 1]
+        for i in range(1, self.mesh.element_space.n_nodes):
+            x_i = self.mesh.element_space.nodes[i]
+            DX = x_i - self.mesh.element_space.nodes[i - 1]
             DXdiv2 = DX/2
             DXDX = DX*DX
             self.material_matrix[i, i - 1] += -self.material_function.evaluate(x_i - DXdiv2)/DXDX
@@ -51,11 +50,12 @@ class FiniteDifferenceMethod(Mesh1D):
             self.material_matrix[i, i] += self.material_function.evaluate(x_i + DXdiv2)/DXDX
             self.material_matrix[i, i + 1] += -self.material_function.evaluate(x_i + DXdiv2)/DXDX
             
-        self.material_matrix[self.n - 1,self.n - 1] = 1.0
-        
+        self.material_matrix[self.mesh.element_space.n_nodes - 1, self.mesh.element_space.n_nodes - 1] = 1.0
+        print(self.material_matrix)
+
     # Solve the matrix equations to generate the solution_space:
     def solve(self):
-        self.solution_space = self.material_matrix.get_inverse * self.force_vector
+        self.mesh.solution_space = self.material_matrix.get_inverse * self.force_vector
 
     # Plot the nodes at their respective coordinates vs their respective solution values. 
     def plot(self):
@@ -72,7 +72,7 @@ def main():
     # Create mesh of discrete elements that consist of two nodes per element
     fdm_espace = ElementSpace1D(n_elements, x_dimension, start_pos, nodes_per_element)
     fdm_mesh = Mesh1D(fdm_espace)
-    print(fdm_mesh)
+    #print(fdm_mesh)
     
     # - Analysis Conditions:
     #   $ Material properties:
@@ -81,18 +81,17 @@ def main():
     #$  Type 1 (Dirichlet) Boundary Conditions(BCs):
     Type1_BC = 24       # Temperature specification
     Type1_Nodes = [0]   # Node indices subject to Type 1 BC
-    BC_Type1 = NodeSpace1D(fdm_mesh.n_nodes)
+    BC_Type1 = NodeSpace1D(fdm_mesh.element_space.n_nodes)
     BC_Type1.assign_values(Type1_BC, Type1_Nodes)
     
     #$  Type 2 (Neumann) Boundary Conditions(BCs):
     Type2_BC = 16                   # Heat Flux specification
     Type2_Nodes = [n_elements - 1]  # Node indices subject to Type 2 BC
-    BC_Type2 = NodeSpace1D(fdm_mesh.n_nodes)
+    BC_Type2 = NodeSpace1D(fdm_mesh.element_space.n_nodes)
     BC_Type2.assign_values(Type2_BC, Type2_Nodes)
     
     FDM = FiniteDifferenceMethod(fdm_mesh, K, BC_Type1, BC_Type2)
     FDM.setup()
-    
     #FDM.solve()
     #FDM.plot()
     
