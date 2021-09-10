@@ -11,7 +11,7 @@ class FiniteDifferenceMethod:
 
     material_matrix = []
     force_vector = []
-    material_function = Polynomial([0, 0])
+    material_function = []
 
     type1BC = []
     type2BC = []
