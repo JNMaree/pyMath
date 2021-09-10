@@ -6,7 +6,7 @@ class Matrix:
     rows = 0
     cols = 0
 
-    # Error Tolerance for floats:
+    # Error Tolerance for FLoating Points:
     # if abs( matrix[i, j] ) < epsilon then value = zero 
     epsilon = 1e-14
 
@@ -28,7 +28,12 @@ class Matrix:
         
     # Overload 'string' method
     def __str__(self):
-        return format(self.matrix)
+        ret_str = "{}x{}\n".format(self.rows, self.cols)
+        for i in self.matrix:
+            for j in i:
+                ret_str += f"{j:>8} "
+            ret_str += "\n"
+        return ret_str
 
     # BOOLEAN MATRIX CHECK METHODS:
     # Return if matrix is square (n = rows = cols)

@@ -19,7 +19,7 @@ class FiniteDifferenceMethod:
     def __init__(self, mesh, material_properties, bc_type1, bc_type2):
         self.mesh = mesh
         self.material_matrix = Matrix(numpy.zeros((mesh.element_space.n_nodes, mesh.element_space.n_nodes)))
-        self.material_function = Polynomial(material_properties)
+        self.material_function = Polynomial([material_properties, 0])
         self.solution_space = bc_type1
         self.type1BC = bc_type1
         self.type2BC = bc_type2
@@ -40,11 +40,12 @@ class FiniteDifferenceMethod:
     # of the matrices required to solve the problem:
     def setup(self):
         self.material_matrix[0,0] = 1.0
-        for i in range(1, self.mesh.element_space.n_nodes):
+        for i in range(1, self.mesh.element_space.n_nodes - 1):
             x_i = self.mesh.element_space.nodes[i]
             DX = x_i - self.mesh.element_space.nodes[i - 1]
             DXdiv2 = DX/2
             DXDX = DX*DX
+            #print("{}:, DX:{}, DXdiv2:{}, DXDX:{}", i, DX, DXdiv2, DXDX)
             self.material_matrix[i, i - 1] += -self.material_function.evaluate(x_i - DXdiv2)/DXDX
             self.material_matrix[i, i] += self.material_function.evaluate(x_i - DXdiv2)/DXDX
             self.material_matrix[i, i] += self.material_function.evaluate(x_i + DXdiv2)/DXDX
@@ -61,7 +62,7 @@ class FiniteDifferenceMethod:
     def plot(self):
         pyplot.plot(self.nodes, self.solution_space)
 
-
+# Test Methods and Classes
 def main():
     # Heat transfer test method:
     x_dimension = 12        # Distance specification (meters)
