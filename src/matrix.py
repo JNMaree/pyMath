@@ -19,7 +19,7 @@ class Matrix:
             self.matrix = numpy.array(array)
             self.rows = len(array)
             self.cols = len(array[0])
-            
+          
     # Overload [] operator
     def __getitem__(self, key):
         return self.matrix[key]
@@ -177,7 +177,6 @@ class Matrix:
         self.matrix = self.matrix[:, new_order]
 
 
-
     # Move Full Zero rows to Bottom of Matrix
     #   - Used for Reduced row echelon form
     def move_full_zero_rows(self):
@@ -264,8 +263,8 @@ class Matrix:
         # Check if 2D and nxn (square)
         if self.matrix.ndim == 2:
             if self.rows == self.cols:
-            # Using a numpy function
-                return numpy.linalg.inv(self.matrix)
+            # Using a numpy function 
+                return Matrix(numpy.linalg.inv(self.matrix))
             else:
                 raise ArithmeticError(self.rows, " rows, ", self.cols, " cols. Matrix not square")
         else:
@@ -275,29 +274,29 @@ class Matrix:
     def get_identity(self, size=0):
         # Check if 2D and square (nxn)
         if self.matrix.ndim >= 2:
-            return numpy.eye(self.rows, self.cols)
+            return Matrix(numpy.eye(self.rows, self.cols))
         elif size > 0:
-            return numpy.eye(size)
+            return Matrix(numpy.eye(size))
         else:
-            return numpy.eye(self.matrix.shape[0])
+            return Matrix(numpy.eye(self.matrix.shape[0]))
 
     # Return the transpose of a matrix
     def get_transpose(self):
-        return numpy.transpose(self.matrix)
+        return Matrix(numpy.transpose(self.matrix))
 
     # Return the numerical determinant of a square matrix
     def get_determinant(self):
         if ~self.is_square:
             raise ArithmeticError("Matrix determinant not defined for non-square matrix")
         else:
-            return numpy.linalg.det(self.matrix)
+            return Matrix(numpy.linalg.det(self.matrix))
 
     # Return the diagonal of a square matrix
     def get_diagonal(self):
         if ~self.is_square:
             raise ArithmeticError("Matrix diagonal not defined for non-square matrix")
         else:
-            ret_matrix = numpy.zeros(self.rows)
+            ret_matrix = Matrix(numpy.zeros(self.rows))
             for i in range(self.rows):
                 ret_matrix[i] += self.matrix[i, i]
             return ret_matrix
