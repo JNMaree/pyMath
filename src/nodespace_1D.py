@@ -25,7 +25,7 @@ class NodeSpace1D:
     node_distance = 0
 
     def __init__(self, nodes, dimension_size=1, start=0):
-        if isinstance(nodes, int):
+        if isinstance(nodes, (int)):
             self.nodes = numpy.linspace(start, start + dimension_size, nodes)
             self.n_nodes = nodes
             

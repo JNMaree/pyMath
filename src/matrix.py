@@ -14,7 +14,12 @@ class Matrix:
         if isinstance(array, numpy.ndarray):
             self.matrix = array
             self.rows = array.shape[0]
-            self.cols = array.shape[1]
+            if numpy.size(array, 0) == 2:   # If 2D
+                self.cols = array.shape[1]
+            else:                           # If 1D
+                self.cols = 1
+                self.matrix = array
+        
         elif isinstance(array, list):
             self.matrix = numpy.array(array)
             self.rows = len(array)
@@ -29,10 +34,14 @@ class Matrix:
     # Overload 'string' method
     def __str__(self):
         ret_str = "{}x{}\n".format(self.rows, self.cols)
-        for i in self.matrix:
-            for j in i:
-                ret_str += f"{j:>8} "
-            ret_str += "\n"
+        if self.cols == 1:
+            for i in range(self.rows):
+                ret_str += f"{self.matrix[i]:8}\n"
+        else:
+            for i in range(self.rows):
+                for j in range(self.cols):
+                    ret_str += f"{self.matrix[i,j]:>8} "
+                ret_str += "\n"            
         return ret_str
 
     # BOOLEAN MATRIX CHECK METHODS:
