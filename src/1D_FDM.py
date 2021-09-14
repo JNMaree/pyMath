@@ -20,11 +20,26 @@ class FiniteDifferenceMethod:
         self.mesh = mesh
         self.material_matrix = Matrix(numpy.zeros((mesh.element_space.n_nodes, mesh.element_space.n_nodes)))
         self.material_function = Polynomial([material_properties, 0])
-        self.solution_space = bc_type1
-        self.type1BC = bc_type1
-        self.type2BC = bc_type2
         
+        # Define the solution space to accomodate the 
+        if isinstance(bc_type1, NodeSpace1D):
+            self.solution_space = Matrix(bc_type1.nodes)
+        elif isinstance(bc_type1, numpy.ndarray):
+            self.solution_space = Matrix(bc_type1)
+        elif isinstance(bc_type1, Matrix):
+            self.solution_space = bc_type1
+        else:
+            raise TypeError("bc_type1: Unknown Type")
 
+        if isinstance(bc_type2, NodeSpace1D):
+            self.force_vector = Matrix(bc_type2.nodes)
+        elif isinstance(bc_type2, numpy.ndarray):
+            self.force_vector = Matrix(bc_type2)
+        elif isinstance(bc_type2, Matrix):
+            self.force_vector = bc_type2
+        else:
+            raise TypeError("bc_type2: Unknown Type")
+        
     # The partial differential equations (PDEs) are solved using a Centred-Space, 
     # finite difference scheme:
     #       f'(x) = f(x + 1/2*h)/h - f(x-1/2*h)/h
@@ -52,11 +67,13 @@ class FiniteDifferenceMethod:
             self.material_matrix[i, i + 1] += -self.material_function.evaluate(x_i + DXdiv2)/DXDX
             
         self.material_matrix[self.mesh.element_space.n_nodes - 1, self.mesh.element_space.n_nodes - 1] = 1.0
-        print(self.material_matrix)
+        #print(self.material_matrix)
 
     # Solve the matrix equations to generate the solution_space:
     def solve(self):
-        self.mesh.solution_space = self.material_matrix.get_inverse * self.force_vector
+        #print("Inverse:\n", self.material_matrix.get_inverse())
+        print("Force_Vector:\n", self.force_vector)
+        #self.mesh.solution_space = self.material_matrix.get_inverse() * self.force_vector
 
     # Plot the nodes at their respective coordinates vs their respective solution values. 
     def plot(self):
@@ -82,18 +99,20 @@ def main():
     #$  Type 1 (Dirichlet) Boundary Conditions(BCs):
     Type1_BC = 24       # Temperature specification
     Type1_Nodes = [0]   # Node indices subject to Type 1 BC
-    BC_Type1 = NodeSpace1D(fdm_mesh.element_space.n_nodes)
+    BC_Type1 = NodeSpace1D( numpy.zeros( fdm_mesh.element_space.n_nodes ) )
     BC_Type1.assign_values(Type1_BC, Type1_Nodes)
-    
+    #print("BC_Type1:", BC_Type1)
+
     #$  Type 2 (Neumann) Boundary Conditions(BCs):
     Type2_BC = 16                   # Heat Flux specification
-    Type2_Nodes = [n_elements - 1]  # Node indices subject to Type 2 BC
-    BC_Type2 = NodeSpace1D(fdm_mesh.element_space.n_nodes)
+    Type2_Nodes = [n_elements]  # Node indices subject to Type 2 BC
+    BC_Type2 = NodeSpace1D( numpy.zeros( fdm_mesh.element_space.n_nodes ) )
     BC_Type2.assign_values(Type2_BC, Type2_Nodes)
-    
+    #print("BC_Type2P:", BC_Type2)
+
     FDM = FiniteDifferenceMethod(fdm_mesh, K, BC_Type1, BC_Type2)
     FDM.setup()
-    #FDM.solve()
+    FDM.solve()
     #FDM.plot()
     
 if __name__ == "__main__":
