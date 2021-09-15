@@ -1,5 +1,5 @@
 import numpy
-import matplotlib.pyplot as pyplot
+import matplotlib.pyplot as plot
 
 from elementspace_1D import NodeSpace1D, ElementSpace1D
 from polynomial import Polynomial
@@ -79,7 +79,10 @@ class FiniteDifferenceMethod:
 
     # Plot the nodes at their respective coordinates vs their respective solution values. 
     def plot(self):
-        pyplot.plot(self.mesh.nodes, self.solution_space)
+        plot.plot(self.mesh.nodes, self.solution_space)
+        plot.xlabel("X coordinates")
+        plot.ylabel("Degree-Of-Freedom")
+        plot.show()
 
 # Test Methods and Classes
 def main():
