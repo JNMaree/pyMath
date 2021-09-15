@@ -12,13 +12,14 @@ class Matrix:
 
     def __init__(self, array):
         if isinstance(array, numpy.ndarray):
-            self.matrix = array
-            self.rows = array.shape[0]
-            if numpy.size(array, 0) == 2:   # If 2D
-                self.cols = array.shape[1]
-            else:                           # If 1D
-                self.cols = 1
+            if array.ndim == 2:     # If 2D
                 self.matrix = array
+                self.rows = array.shape[0]
+                self.cols = array.shape[1]
+            elif array.ndim == 1:   # If 1D
+                self.matrix = array
+                self.rows = array.shape[0]        
+                self.cols = 1
         
         elif isinstance(array, list):
             self.matrix = numpy.array(array)
@@ -40,8 +41,8 @@ class Matrix:
         else:
             for i in range(self.rows):
                 for j in range(self.cols):
-                    ret_str += f"{self.matrix[i,j]:>8} "
-                ret_str += "\n"            
+                    ret_str += f"{self.matrix[i,j]:>4} "
+                ret_str += "\n"
         return ret_str
 
     # BOOLEAN MATRIX CHECK METHODS:
