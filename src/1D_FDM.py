@@ -87,13 +87,14 @@ class FiniteDifferenceMethod:
 
 # Test Methods and Classes
 def main():
-    # Heat transfer test method:
+    # Heat transfer test method
+    # Create mesh using parameters:
     x_dimension = 12        # Distance specification (meters)
     n_elements = 10         # Number of finite elements in mesh
     start_pos = 0           # First Node position
     nodes_per_element = 2   # Amount of Nodes per element
 
-    # Create mesh of discrete elements that consist of two nodes per element
+    # Create mesh of discrete elements that consist of nodes_per_element
     fdm_espace = ElementSpace1D(n_elements, x_dimension, start_pos, nodes_per_element)
     
     # - Analysis Conditions:

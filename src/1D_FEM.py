@@ -1,5 +1,5 @@
 import numpy
-import matplotlib.pyplot as pyplot
+import matplotlib.pyplot as plot
 
 from nodespace_1D import NodeSpace1D
 from elementspace_1D import ElementSpace1D
@@ -54,30 +54,36 @@ class FiniteElementMethod:
     def solve(self):
         pass
 
-    # Plot the solution_space on the node coordinates
+    # Plot the solution_space values on the respective node coordinates
     def plot(self):
-        pyplot.plot(self.mesh1D.nodes, self.solution_space)
+        plot.plot(self.mesh.nodes, self.solution_space)
+        plot.xlabel("X Coordinates")
+        plot.ylabel("Degree-Of-Freedom")
+        plot.show()
 
-
+# Test methods and classes
 def main():
-    # Heat transfer test method:
-    
+    # Heat transfer test method
     # Create mesh using parameters:
-    x_dimension = 10    # Distance in meters
-    n_elements = 8      # Number of finite elements in domain
-    fem_espace = ElementSpace1D(n_elements, x_dimension)
+    x_dimension = 10        # Distance in meters
+    n_elements = 8          # Number of finite elements in domain
+    start_pos = 0           # First Node position
+    nodes_per_element = 2   # Number of Nodes per element  
+
+    # Create mesh of discrete elements that consist of nodes_per_element
+    fem_espace = ElementSpace1D(n_elements, x_dimension, start_pos, nodes_per_element)
     
     # Analysis Conditions:
     #   - Material Properties:
     K = 20      # Stiffness Coefficient (Material Property)
 
-    # Type 1 (Dirichlet) boundary conditions:
+    #   - Type 1 (Dirichlet) boundary conditions:
     Type1_BC = 24       # Temperature specification
     Type1_Nodes = [0]   # Node indices subject to Type 1 BC
-    BC_Type1 = NodeSpace1D(fem_espace.n_nodes)
+    BC_Type1 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes) )
     BC_Type1.assign_values(Type1_BC, Type1_Nodes)
 
-    # Type 2 (Neumann) boundary condition:
+    #   - Type 2 (Neumann) boundary condition:
     Type2_BC = 16                   # Heat Flux Specification
     Type2_Nodes = [n_elements]      # Node indices subject to Type 2 BC
     BC_Type2 = NodeSpace1D(fem_espace.n_nodes)
