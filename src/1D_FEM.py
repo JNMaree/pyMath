@@ -1,37 +1,54 @@
 import numpy
 import matplotlib.pyplot as pyplot
 
-from mesh_1D import Mesh1D, NodeSpace1D, ElementSpace1D
+from nodespace_1D import NodeSpace1D
+from elementspace_1D import ElementSpace1D
+from polynomial import Polynomial
+from matrix import Matrix
 
-class FiniteElementMethod(Mesh1D):
+class FiniteElementMethod:
 
-    solution_space = []
+    mesh = []                   # ElementSpace
 
-    material_property = 0
+    material_matrix = []        # Matrix(square)
+    force_vector = []           # Matrix(vector)
+    material_function = []      # Polynomial
 
-    type1BC = []
-    type2BC = []
+    solution_space = []         # Matrix(vector)
 
-    def __init__(self, mesh, material_properties, bc_type1, bc_type2):
-        self.mesh1D = mesh
-        self.solution_space = NodeSpace1D(mesh)
-        self.type1BC = bc_type1
-        self.type2BC = bc_type2
-        
-    # 
-    def generate_basis_functions(self, element_array, function_order = 1):
-        if function_order == 1:
-            # linear elements
-            pass    
-        elif function_order == 2:
-            # quadratic elements
-            pass
-        elif function_order == 3:
-            # cubic elements
-            pass
-        
-    def linear_interpolationY(self, x_0, x_1, y_0, y_1, X):
-        return y_0 + (X - x_0)*(y_1 - y_0)/(x_1 - x_0)
+    def __init__(self, element_space, material_property, bc_type1, bc_type2):
+        self.mesh = element_space
+        self.material_matrix = Matrix(numpy.zeros((element_space.n_nodes, element_space.n_nodes)))
+
+        # Define linear material function
+        self.material_function = Polynomial([material_property, 0])
+
+        # Define the solution space to accomodate the initial type1 boundary conditions
+        if isinstance(bc_type1, NodeSpace1D):
+            self.solution_space = Matrix(bc_type1.nodes)
+        elif isinstance(bc_type1, numpy.ndarray):
+            self.solution_space = Matrix(bc_type1)
+        elif isinstance(bc_type1, Matrix):
+            self.solution_space = bc_type1
+        else:
+            raise TypeError("bc_type1: Unknown Type")
+
+        # Define the force vector to include the initial type2 boundary conditions
+        if isinstance(bc_type2, NodeSpace1D):
+            self.force_vector = Matrix(bc_type2.nodes)
+        elif isinstance(bc_type2, numpy.ndarray):
+            self.force_vector = Matrix(bc_type2)
+        elif isinstance(bc_type2, Matrix):
+            self.force_vector = bc_type2
+        else:
+            raise TypeError("bc_type2: Unknown Type")
+    
+    #  Define & store the matrices for solving the equations
+    def setup():
+        pass
+
+    def linear_interpolationY(self, x_0, y_0, x_2, y_2, X1):
+        return y_0 + (X1 - x_0)*(y_2 - y_0)/(x_2 - x_0)
 
     # The Partial Differential Equations are solved using ...
     def solve(self):
@@ -46,28 +63,28 @@ def main():
     # Heat transfer test method:
     
     # Create mesh using parameters:
-    X_dimension = 10    # Distance in meters
-    N_elements = 8      # Number of finite elements in domain
-    fem_mesh = Mesh1D(X_dimension, N_elements)
+    x_dimension = 10    # Distance in meters
+    n_elements = 8      # Number of finite elements in domain
+    fem_espace = ElementSpace1D(n_elements, x_dimension)
     
     # Analysis Conditions:
-    
-    # Material Properties:
+    #   - Material Properties:
     K = 20      # Stiffness Coefficient (Material Property)
 
     # Type 1 (Dirichlet) boundary conditions:
     Type1_BC = 24       # Temperature specification
     Type1_Nodes = [0]   # Node indices subject to Type 1 BC
-    BC_Type1 = NodeSpace1D(fem_mesh.n_nodes)
+    BC_Type1 = NodeSpace1D(fem_espace.n_nodes)
     BC_Type1.assign_values(Type1_BC, Type1_Nodes)
 
     # Type 2 (Neumann) boundary condition:
     Type2_BC = 16                   # Heat Flux Specification
-    Type2_Nodes = [N_elements]      # Node indices subject to Type 2 BC
-    BC_Type2 = NodeSpace1D(fem_mesh.n_nodes)
+    Type2_Nodes = [n_elements]      # Node indices subject to Type 2 BC
+    BC_Type2 = NodeSpace1D(fem_espace.n_nodes)
     BC_Type2.assign_values(Type2_BC, Type2_Nodes)
 
-    FEM = FiniteElementMethod(fem_mesh, K, BC_Type1, BC_Type2)
+    FEM = FiniteElementMethod(fem_espace, K, BC_Type1, BC_Type2)
+    FEM.setup()
     FEM.solve()
     FEM.plot()
 

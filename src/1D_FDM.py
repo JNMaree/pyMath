@@ -22,7 +22,7 @@ class FiniteDifferenceMethod:
         # Define the linear material function for constant material properties
         self.material_function = Polynomial([material_property, 0])
         
-        # Define the solution space to accomodate the 
+        # Define the solution space to accomodate the initial type1 boundary conditions
         if isinstance(bc_type1, NodeSpace1D):
             self.solution_space = Matrix(bc_type1.nodes)
         elif isinstance(bc_type1, numpy.ndarray):
@@ -32,6 +32,7 @@ class FiniteDifferenceMethod:
         else:
             raise TypeError("bc_type1: Unknown Type")
 
+        # Define the force vector to include the initial type2 boundary conditions
         if isinstance(bc_type2, NodeSpace1D):
             self.force_vector = Matrix(bc_type2.nodes)
         elif isinstance(bc_type2, numpy.ndarray):
@@ -99,14 +100,14 @@ def main():
     #   $ Material properties:
     K = 20      # Constant Stiffness coefficient
     
-    #$  Type 1 (Dirichlet) Boundary Conditions(BCs):
+    #   $ Type 1 (Dirichlet) Boundary Conditions(BCs):
     Type1_BC = 24       # Temperature specification
     Type1_Nodes = [0]   # Node indices subject to Type 1 BC
     BC_Type1 = NodeSpace1D( numpy.zeros( fdm_espace.n_nodes ) )
     BC_Type1.assign_values(Type1_BC, Type1_Nodes)
     #print("BC_Type1:", BC_Type1)
 
-    #$  Type 2 (Neumann) Boundary Conditions(BCs):
+    #   $ Type 2 (Neumann) Boundary Conditions(BCs):
     Type2_BC = 16                   # Heat Flux specification
     Type2_Nodes = [n_elements]  # Node indices subject to Type 2 BC
     BC_Type2 = NodeSpace1D( numpy.zeros( fdm_espace.n_nodes ) )
