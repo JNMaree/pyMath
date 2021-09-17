@@ -73,10 +73,10 @@ class FiniteDifferenceMethod:
 
     # Solve the matrix equations to generate the solution_space:
     def solve(self):
-        #print("Inverse:\n", self.material_matrix.get_inverse())
-        #print("Force_Vector:\n", self.force_vector)
         self.solution_space = self.material_matrix.get_inverse() * self.force_vector
-        print(self.solution_space)
+        #print("Inverse:", self.material_matrix.get_inverse())
+        #print("Force_Vector:", self.force_vector)
+        #print("Solution_space:", self.solution_space)
 
     # Plot the nodes at their respective coordinates vs their respective solution values. 
     def plot(self):
@@ -92,7 +92,7 @@ def main():
     x_dimension = 12        # Distance specification (meters)
     n_elements = 10         # Number of finite elements in mesh
     start_pos = 0           # First Node position
-    nodes_per_element = 2   # Amount of Nodes per element
+    nodes_per_element = 2   # Number of Nodes per element
 
     # Create mesh of discrete elements that consist of nodes_per_element
     fdm_espace = ElementSpace1D(n_elements, x_dimension, start_pos, nodes_per_element)

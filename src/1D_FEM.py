@@ -52,13 +52,16 @@ class FiniteElementMethod:
 
     # The Partial Differential Equations are solved using ...
     def solve(self):
-        pass
+        self.solution_space = self.material_matrix.get_inverse() * self.force_vector
+        print("Inverse_material_matrix:", self.material_matrix.get_inverse())
+        print("Force_vector:", self.force_vector)
+        print("Solution_space:", self.solution_space)
 
     # Plot the solution_space values on the respective node coordinates
     def plot(self):
         plot.plot(self.mesh.nodes, self.solution_space)
         plot.xlabel("X Coordinates")
-        plot.ylabel("Degree-Of-Freedom")
+        plot.ylabel("Degree-Of-Freedom Value")
         plot.show()
 
 # Test methods and classes
