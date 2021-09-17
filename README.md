@@ -9,8 +9,14 @@ Homogenous polynomial functions of a single variable are coded as arrays of coef
 Includes methods for derivation, integration, multiplication, division, addition and subtraction.
 
 #### matrix
-Wrapper for numpy arrays to primitively deal with scalar & vector space and matrix algebra.
-Includes methods for matrix inverse, echelon form, multiplication.
+Composite class for numpy arrays to primitively deal with scalar & vector space matrix algebra.
+Overwrites standard operators (*,+,-) to accommodate matrix operations.
+Includes the standard methods for:
+  - Inverse
+  - Determinant
+  - Transpose
+  - Echelon Form
+  - Several Row and Column Operations
 
 #### newton
 Newton's Method(or Newton-Raphson method) for finding roots to higher order polynomials.
