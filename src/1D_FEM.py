@@ -43,7 +43,7 @@ class FiniteElementMethod:
         else:
             raise TypeError("bc_type2: Unknown Type")
     
-    #  Define & store the matrices for solving the equations
+    #  Setup & store the matrices for solving the equations
     def setup():
         pass
 
@@ -52,7 +52,7 @@ class FiniteElementMethod:
 
     # The Partial Differential Equations are solved using ...
     def solve(self):
-        self.solution_space = self.material_matrix.get_inverse() * self.force_vector
+        #self.solution_space = self.material_matrix.get_inverse() * self.force_vector
         print("Inverse_material_matrix:", self.material_matrix.get_inverse())
         print("Force_vector:", self.force_vector)
         print("Solution_space:", self.solution_space)
@@ -68,7 +68,7 @@ class FiniteElementMethod:
 def main():
     # Heat transfer test method
     # Create mesh using parameters:
-    x_dimension = 10        # Distance in meters
+    x_dimension = 12        # Distance in meters
     n_elements = 8          # Number of finite elements in domain
     start_pos = 0           # First Node position
     nodes_per_element = 2   # Number of Nodes per element  
@@ -89,7 +89,7 @@ def main():
     #   - Type 2 (Neumann) boundary condition:
     Type2_BC = 16                   # Heat Flux Specification
     Type2_Nodes = [n_elements]      # Node indices subject to Type 2 BC
-    BC_Type2 = NodeSpace1D(fem_espace.n_nodes)
+    BC_Type2 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes) )
     BC_Type2.assign_values(Type2_BC, Type2_Nodes)
 
     FEM = FiniteElementMethod(fem_espace, K, BC_Type1, BC_Type2)
