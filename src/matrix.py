@@ -75,18 +75,18 @@ class Matrix:
             if self.cols != other.rows:
                 raise ArithmeticError("Product Matrix AB not defined for A:cols=", self.cols, " and B:rows=")
             else:
-                return numpy.matmul(self.matrix, other.matrix)
+                return Matrix(numpy.matmul(self.matrix, other.matrix))
     # Matrix 1-to-1 addition             
     def __add__(self, other):
         if self.is_equal_size(other):
-            return numpy.add(self.matrix, other.matrix)
+            return Matrix(numpy.add(self.matrix, other.matrix))
         else:
             raise ArithmeticError("Sum Matrix not defined for matrices of inequal size")
 
     # Matrix 1-to-1 substraction
     def __sub__(self, other):
         if self.is_equal_size(other):
-            return numpy.subtract(self.matrix, other.matrix)      
+            return Matrix(numpy.subtract(self.matrix, other.matrix))
         else:
             raise ArithmeticError("Difference Matrix not defined for matrices of inequal size")
             
