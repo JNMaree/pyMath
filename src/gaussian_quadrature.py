@@ -3,52 +3,70 @@ import math
 
 from polynomial import Polynomial
 from newtons_method import Newtons_Method
+from matrix import Matrix
+from legendre_polynomials import LegendrePolynomial
 
-#global array of legendre polynomials
-legendre_polynomials = []
 
-def calculate_gauss_legendre_points(num_of_points = 1):
-    gaussian_points_weights = numpy.array((num_of_points, 2))
-    if num_of_points == 1:
-        gaussian_points_weights[0, 0] = 0
-        gaussian_points_weights[0, 1] = 2
-    else:
-        # generate legendre equation polynomial of degree n
-        legendrePolynomial = legendre_polynomial_recursive(num_of_points)
-        legendreRoots = 
-        # use legendre polynomial to 
-        for i in range(num_of_points):
-            gaussian_points_weights[i, 0] = legendrePolynomial.ca
-            gaussian_points_weights[i, 1] = 
-    return gaussian_points_weights
+class GaussianQuad:
+    """
+    Gaussian Quadrature is a numerical approximation technique to calculate the 
+    the definite integral of a function.
+     - It utilises a weighted-sum of function values at prescribed points within the
+        definitive domain described by the integral
+     - To utilise this method, the definite interval needs to be translated to
+        the interval: [-1; 1]
+    """
 
-#Generate Legendre polynomials using recursion up to the n-th degree.
-def legendre_polynomial_recursive(n):
-    # Pn(x) = (2n - 1)*x/n * Pn-1(x) - (n - 1)*1/n * Pn-2(x) 
-    #see https://en.wikipedia.org/wiki/Legendre_polynomials for details on recurrence relations.
-    if n == 0:
-        return Polynomial([1])
-    elif n == 1:
-        return Polynomial([1, 0])
-    else:
-        coefficient_array = numpy.zeros(n + 1)
-        Pn_minOne = (2*n - 1)/n * legendre_polynomial_recursive(n - 1)
-        Pn_minTwo = -(n - 1)/n * legendre_polynomial_recursive(n - 2)
-        coefficient_array += numpy.append(Pn_minOne, 0.) + numpy.concatenate(([0], [0], Pn_minTwo))
-    return Polynomial(coefficient_array)
+    # Define the order of Gaussian Quadrature:
+    #   - n_order = number of points / order of gaussian quadrature
+    n_order = 1                     # Int (>= 1)
+    
+    # Define the legendre polynomials up to a point
+    legendre_poly = []              # Legendre Polynomial for specified order
 
-#Calculate the weights of a set of roots 
-def calculate_weight_function(x_i, n):
-    # w_i = 2/(1 - (x_i)^2) * 2/(P'n(x_i)^2)
-    #see https://en.wikipedia.org/wiki/Gaussian_quadrature for details on formula.
-    return 2/(1-x_i**2) * 2/(legendre_polynomials[n].derivative().calculate(x_i)**2)
+    # Define the Quadrature Matrix:
+    #   - Size: Order x 2:
+    #       [n,0] = node position
+    #       [n,1] = node weight value
+    quadrature = []                 # Matrix (nx2)
 
-def main(degree_n):
-    # test function for legendre_polynomial + binomial_coefficient
-    legendre_polynomials = numpy.zeros((degree_n, degree_n))
-    for i in range(degree_n):
-        legendre_polynomials += legendre_polynomial_recursive(degree_n)
+
+    def __init__(self, n_points) -> None:
+        self.n_order = n_points
+        self.quadrature = numpy.array((n_points, 2))
         
+        if n_points == 1:   # If first simple case, avoid generating legendre polynomials
+            self.quadrature[0, 0] = 0
+            self.quadrature[0, 1] = 2
+        else:
+            # generate legendre equation polynomial of degree n
+            self.legendre_poly = LegendrePolynomial(n_points)
+            
+            # use legendre polynomial to 
+            for i in range(n_points):
+                self.quadrature[i, 0] = self.legendre_poly.evaluate()
+                self.quadrature[i, 1] = 
+        return self.quadrature
+
+    def __str__(self) -> str:
+        ret_str = "{}\n".format(self.n_order)
+        for i in range(self.n_order):
+            ret_str += "{}:{},\n".format(self.quadrature[i,0])
+        return ret_str
+
+    #Calculate the weights of a set of roots 
+    def calculate_weight_function(self, x_i, n):
+        # w_i = 2/(1 - (x_i)^2) * 2/(P'n(x_i)^2)
+        #see https://en.wikipedia.org/wiki/Gaussian_quadrature for details on formula.
+        return 2/(1-x_i**2) * 2/(self.legendre_polynomials[n].derivative().calculate(x_i)**2)
+
+# Tests for the Gaussian Quadrature method
+def main():
+    # test function for legendre_polynomial + binomial_coefficient
+    n_test = 3
+    gquad = GaussianQuad(n_test)
+    print("n_test:", gquad)
+
 
 if __name__ == "__main__":
-    main(3)
+    main()

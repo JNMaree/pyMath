@@ -16,7 +16,13 @@ class FiniteElementMethod:
 
     solution_space = []         # Matrix(vector)
 
-    def __init__(self, element_space, material_property, bc_type1, bc_type2):
+    # Define the number of Gaussian Integration Points:
+    gauss_order = 2             # Int (>= 1)
+    
+    # Define the Gaussian Quaqdrature positions & weights:
+    gauss_quad = []                   # Matrix (element_order x 2)
+
+    def __init__(self, element_space, material_property, bc_type1, bc_type2, gauss = 2):
         self.mesh = element_space
         self.material_matrix = Matrix(numpy.zeros((element_space.n_nodes, element_space.n_nodes)))
 
@@ -42,10 +48,13 @@ class FiniteElementMethod:
             self.force_vector = bc_type2
         else:
             raise TypeError("bc_type2: Unknown Type")
+
+        self.gauss_order = gauss
+        self.gauss_quad = 
     
     #  Setup & store the matrices for solving the equations
     def setup():
-        pass
+        
 
     def linear_interpolationY(self, x_0, y_0, x_2, y_2, X1):
         return y_0 + (X1 - x_0)*(y_2 - y_0)/(x_2 - x_0)
@@ -92,7 +101,10 @@ def main():
     BC_Type2 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes) )
     BC_Type2.assign_values(Type2_BC, Type2_Nodes)
 
-    FEM = FiniteElementMethod(fem_espace, K, BC_Type1, BC_Type2)
+    # Numerical Conditions:
+    Gaussian_order = 2
+
+    FEM = FiniteElementMethod(fem_espace, K, BC_Type1, BC_Type2, Gaussian_order)
     FEM.setup()
     FEM.solve()
     FEM.plot()
