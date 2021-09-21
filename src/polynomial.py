@@ -34,13 +34,11 @@ class Polynomial:
     def __setitem__(self, key, value):
         self.co_array[key] = value
 
-    # Create 'official' string representation for a Polynomial object 
+    # Create 'official' string representation for a Polynomial object
+    #   - Prints the function form of the polynomial:
+    #       f(x) = ax^2 + bx + c
     def __repr__(self):
-        return 'Polynomial({})'.format(self.co_array)
-
-    # represent polynomial in format: ax^i + bx^(i-1) + cx^(i-2) + ...
-    def __str__(self):
-        ret = ""
+        ret = "degree:{}\n".format(self.degree)
         for i in range(self.degree):
             if i > 0 and i < self.degree:
                 if self.co_array[i] > 0: 
@@ -55,6 +53,12 @@ class Polynomial:
                     ret += str(i)
             else:
                 ret += str(self.co_array[i])
+        return ret
+
+    # represent polynomial in format: ax^i + bx^(i-1) + cx^(i-2) + ...
+    def __str__(self):
+        ret = "{}\n".format(self.degree)
+        ret += self.co_array
         return ret
 
     # overload the addition('+') arithmetic operator
