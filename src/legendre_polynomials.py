@@ -2,31 +2,44 @@ import numpy
 
 from polynomial import Polynomial
 
-class LegendrePolynomial:
+class Legendre(Polynomial):
+    """
+    Legendre Polynomials
+    """
+
+    def __init__(self, degree) -> None:
+        self.degree = degree
+        self.co_array = self.generate_recursive(degree)
     
-    n_order = 1
-
-    polynomial = []
-
-    def __init__(self, order) -> None:
-        self.n_order = order
-        self.generate_legendre_polynomial_recursive()
-
     # Generate Legendre polynomials up to the n-th degree.
     #   - Uses recursive method
-    def generate_legendre_polynomial_recursive(self):
+    def generate_recursive(self, order):
         # Pn(x) = (2n - 1)*x/n * Pn-1(x) - (n - 1)*1/n * Pn-2(x) 
-        #see https://en.wikipedia.org/wiki/Legendre_polynomials for details on recurrence relations.
-        if self.n_order == 0:
-            self.polynomial = Polynomial([1])
-        elif self.n_order == 1:
-            self.polynomial = Polynomial([1, 0])
+        #   - see https://en.wikipedia.org/wiki/Legendre_polynomials
+        #     for details on recurrence relations.
+        if order == 0:
+            return numpy.array([1])
+        elif order == 1:
+            return numpy.array([1, 0])
         else:
-            coefficient_array = numpy.zeros(self.n_order + 1)
-            Pn_minOne = (2*self.n_order - 1)/self.n_order * self.legendre_polynomial_recursive(self.n_order - 1)
-            Pn_minTwo = -(self.n_order - 1)/self.n_order * self.legendre_polynomial_recursive(self.n_order - 2)
+            coefficient_array = numpy.zeros(order + 1)
+            Pn_minOne = (2*order - 1)/order * self.generate_recursive(order - 1)
+            Pn_minTwo = -(order - 1)/order * self.generate_recursive(order - 2)
             coefficient_array += numpy.append(Pn_minOne, 0.) + numpy.concatenate(([0], [0], Pn_minTwo))
-        self.polynomial = Polynomial(coefficient_array)
+        return coefficient_array
+    
+    def __str__(self) -> str:
+        sret = "{}\n".format(self.degree)
+        sret += format(self.co_array)
+        return sret
 
-    def evaluate(self, x):
-        self.polynomial.evaluate(x)
+
+# Define the Test functions and methods
+def main():
+    # Test legendre_polynomial for degree 3
+    n_poly = 3
+    legendre = Legendre(n_poly)
+    print("Test1_Legendre:", legendre)
+
+if __name__ == "__main__":
+    main()

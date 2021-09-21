@@ -6,20 +6,23 @@ from newtons_method import Newtons_Method
 from matrix import Matrix
 from legendre_polynomials import LegendrePolynomial
 
-# Gaussian Quadrature is a numerical approximation technique to calculate the 
-# the definite integral of a function.
-# - It utilises a weighted-sum of function values at prescribed points within the
-#   definitive domain described by the integral
-# - To utilise this method, the definite interval needs to be translated to
-#   the interval: [-1; 1]
-class GaussQuad:
-   
+
+class GaussianQuad:
+    """
+    Gaussian Quadrature is a numerical approximation technique to calculate the 
+    the definite integral of a function.
+     - It utilises a weighted-sum of function values at prescribed points within the
+        definitive domain described by the integral
+     - To utilise this method, the definite interval needs to be translated to
+        the interval: [-1; 1]
+    """
+
     # Define the order of Gaussian Quadrature:
     #   - n_order = number of points / order of gaussian quadrature
     n_order = 1                     # Int (>= 1)
     
     # Define the legendre polynomials up to a point
-    legendre_poly = []        # Legendre Polynomial for specified order
+    legendre_poly = []              # Legendre Polynomial for specified order
 
     # Define the Quadrature Matrix:
     #   - Size: Order x 2:
@@ -37,12 +40,11 @@ class GaussQuad:
             self.quadrature[0, 1] = 2
         else:
             # generate legendre equation polynomial of degree n
-            legendrePolynomial = self.legendre_polynomial_recursive(n_points)
-
+            self.legendre_poly = LegendrePolynomial(n_points)
             
             # use legendre polynomial to 
             for i in range(n_points):
-                self.quadrature[i, 0] = legendrePolynomial.evaluate
+                self.quadrature[i, 0] = self.legendre_poly.evaluate()
                 self.quadrature[i, 1] = 
         return self.quadrature
 
@@ -62,7 +64,7 @@ class GaussQuad:
 def main():
     # test function for legendre_polynomial + binomial_coefficient
     n_test = 3
-    gquad = GaussQuad(n_test)
+    gquad = GaussianQuad(n_test)
     print("n_test:", gquad)
 
 
