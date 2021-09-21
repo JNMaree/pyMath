@@ -11,7 +11,7 @@ class Legendre(Polynomial):
         self.degree = degree
         self.co_array = self.generate_recursive(degree)
     
-    # Generate Legendre polynomials up to the n-th degree.
+    # Generate Legendre polynomial(co-array) up to the n-th degree.
     #   - Uses recursive method
     def generate_recursive(self, order):
         # Pn(x) = (2n - 1)*x/n * Pn-1(x) - (n - 1)*1/n * Pn-2(x) 
@@ -33,13 +33,16 @@ class Legendre(Polynomial):
         sret += format(self.co_array)
         return sret
 
+    def __repr__(self):
+        return super().__repr__()
 
 # Define the Test functions and methods
 def main():
     # Test legendre_polynomial for degree 3
     n_poly = 3
     legendre = Legendre(n_poly)
-    print("Test1_Legendre:", legendre)
+    print("Test1_Legendre(STR):\n", legendre)
+    print("Test1_Legendre(REPR):\n", legendre.__repr__())
 
 if __name__ == "__main__":
     main()
