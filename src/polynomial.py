@@ -38,28 +38,32 @@ class Polynomial:
     #   - Prints the function form of the polynomial:
     #       f(x) = ax^2 + bx + c
     def __repr__(self):
-        ret = "degree:{}\n".format(self.degree)
-        for i in range(self.degree):
-            if i > 0 and i < self.degree:
-                if self.co_array[i] > 0: 
-                    ret += " +"
-                else:
-                    ret += " "
-            if i > 0:
-                ret += str(self.co_array[i])
-                ret += "x"
-                if i > 1:
-                    ret += "^"
-                    ret += str(i)
+        sRet = "{}\n".format(self.degree)
+        for i in reversed(range(self.degree)):
+            # Set prefix sign(+,- or none)
+            coeff = self.co_array[i]
+            if i < (self.degree - 1):
+                if coeff > 0:
+                    sRet += f" +{coeff}"
+                elif coeff < 0:
+                    sRet += f" {coeff}"
             else:
-                ret += str(self.co_array[i])
-        return ret
+                sRet += f"{coeff}"
+            
+            # If coefficient is displayed
+            if coeff != 0:
+                if i > 0:
+                    sRet += "x"
+                    if i > 1:
+                        sRet += f"^{i}"
+
+        return sRet
 
     # represent polynomial in format: ax^i + bx^(i-1) + cx^(i-2) + ...
     def __str__(self):
-        ret = "{}\n".format(self.degree)
-        ret += self.co_array
-        return ret
+        sRet = f"{format(self.degree)}\n"
+        sRet += format(self.co_array)
+        return sRet
 
     # overload the addition('+') arithmetic operator
     def __add__(self, other):
@@ -137,17 +141,18 @@ class Polynomial:
         return calc
         
     # Calculate a function's derivative from a co-array
+    #   - Uses recursion for derivative_order > 1
     def derive(self, derivative_order = 1):
         derivative_poly = Polynomial(self.degree - 1)
         for i in range(self.co_array.size - 1):
             derivative_poly[i] = self.co_array[i+1]*(i+1)
         if derivative_order > 1:
-            derivative_poly = derivative_poly.derivative(derivative_order - 1)
+            derivative_poly = derivative_poly.derive(derivative_order - 1)
         return derivative_poly
 
     # Calculate the number of real roots using Sturm's theorem
     def sturms_roots(self):
-        q, r = euclidean_division(self, self.derive)
+        q, r = euclidean_division(self, self.derive())
         while r.degree > 1:
             pass
 
@@ -224,24 +229,24 @@ def main():
     poly2 = Polynomial(numpy.array([16, 4, 2]))
 
     print("Polynomial_Test:")
-    print("Poly1:", poly1, ", degree:", poly1.degree)
-    print("Poly2:", poly2, ", degree:", poly2.degree)
+    print("Poly1:", poly1, ", repr:", repr(poly1))
+    print("Poly2:", poly2, ", repr:", repr(poly2))
 
-    print("Polynomial_Addition:")
-    print("Poly1 + Poly2:", poly1 + poly2)
-    print("Poly2 + Poly1:", poly2 + poly1)
+#    print("Polynomial_Addition:")
+#    print("Poly1 + Poly2:", poly1 + poly2)
+#    print("Poly2 + Poly1:", poly2 + poly1)
     
-    print("Polynomial_Subtraction:")
-    print("Poly1 - Poly2:", poly1 - poly2)
-    print("Poly2 - Poly1:", poly2 - poly1)
+#    print("Polynomial_Subtraction:")
+#    print("Poly1 - Poly2:", poly1 - poly2)
+#    print("Poly2 - Poly1:", poly2 - poly1)
     
-    print("Polynomial_Differentiation:")
-    print("Poly1:", poly1.derive())
-    print("Poly2:", poly2.derive())
+#    print("Polynomial_Differentiation:")
+#    print("Poly1:", poly1.derive())
+#    print("Poly2:", poly2.derive())
 
-    print("Polynomial_2ndDifferentiation:")
-    print("Poly1:", poly1.derive(2))
-    print("Poly2:", poly2.derive(2))
+#    print("Polynomial_2ndDifferentiation:")
+#    print("Poly1:", poly1.derive(2))
+#    print("Poly2:", poly2.derive(2))
 
     x = 10
     print("Polynomial_Evaluation(Exponent_method: x=",x,"):")
