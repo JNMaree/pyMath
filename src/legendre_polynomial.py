@@ -17,8 +17,7 @@ class Legendre(Polynomial):
     roots = []
 
     def __init__(self, degree) -> None:
-        self.degree = degree
-        self.co_array = self.generate_recursive(degree)
+        Polynomial.__init__(self, self.generate_recursive(degree))
         self.roots = get_roots(Polynomial(self.co_array))
     
     def __str__(self) -> str:
@@ -43,18 +42,19 @@ class Legendre(Polynomial):
             coefficient_array = numpy.zeros(order + 1)
             Pn_minOne = (2*order - 1)/order * self.generate_recursive(order - 1)
             Pn_minTwo = -(order - 1)/order * self.generate_recursive(order - 2)
-            coefficient_array += numpy.append(Pn_minOne, 0.) + numpy.concatenate(([0], [0], Pn_minTwo))
-        return coefficient_array
+            coefficient_array += numpy.append(Pn_minOne, 0) + numpy.concatenate(([0], [0], Pn_minTwo))        
+        #print("coeff_array:", coefficient_array)
+        #print("flipd_array:", numpy.flip(coefficient_array))
+        return numpy.flip(coefficient_array)
 
 
 # Define the Test functions and methods
 def main():
     # Test legendre_polynomial for degree 3
-    n_poly = 4
+    n_poly = 3
     legendre = Legendre(n_poly)
-    print("Test1_Legendre(STR):\n", legendre)
-    print("Test1_Legendre(REPR):\n", legendre.__repr__())
-    print("Test1_Legendre(roots):\n", format(legendre.roots))
+    print("Test1_Legendre(REPR): ", repr(legendre))
+    #print("Test1_Legendre(roots):\n", format(legendre.roots))
 
 if __name__ == "__main__":
     main()

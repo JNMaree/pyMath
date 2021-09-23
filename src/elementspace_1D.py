@@ -3,7 +3,9 @@ from numpy.lib.arraysetops import isin
 
 from nodespace_1D import NodeSpace1D
 
-"""
+
+class ElementSpace1D(NodeSpace1D):
+    """
     An Element space is a collection of elements in a single dimension, X.
     The data is stored in a 2-dimensional array.
 
@@ -12,18 +14,15 @@ from nodespace_1D import NodeSpace1D
 
         ElementSpace[i,j] = Node_j of Element_i
 
-"""
-# This class is a wrapper for a numpy array
-class ElementSpace1D(NodeSpace1D):
-
+    """
     # Element array:
-    elements = numpy.array([0,0])
+    elements = numpy.array([0,0])       # Numpy array
 
     # Number of Elements:
-    n_elements = 0
+    n_elements = 0                      # int (>0)
 
     # Number of Nodes per Element:
-    nodes_per_element = 2
+    nodes_per_element = 2               # int (>=2)
 
     def __init__(self, elements, dimension=1, start=0, nodes_per_element=2):
         # If elements is a number, it specifies the number of elements

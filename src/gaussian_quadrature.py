@@ -4,7 +4,7 @@ import math
 from polynomial import Polynomial
 from newtons_method import Newtons_Method
 from matrix import Matrix
-from legendre_polynomials import LegendrePolynomial
+from legendre_polynomial import Legendre
 
 
 class GaussianQuad:
@@ -40,7 +40,7 @@ class GaussianQuad:
             self.quadrature[0, 1] = 2
         else:
             # generate legendre equation polynomial of degree n
-            self.legendre_poly = LegendrePolynomial(n_points)
+            self.legendre_poly = Legendre(n_points)
             
             # use legendre polynomial to 
             for i in range(n_points):
