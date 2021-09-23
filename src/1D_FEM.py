@@ -54,7 +54,7 @@ class FiniteElementMethod:
     
     #  Setup & store the matrices for solving the equations
     def setup():
-        
+        pass
 
     def linear_interpolationY(self, x_0, y_0, x_2, y_2, X1):
         return y_0 + (X1 - x_0)*(y_2 - y_0)/(x_2 - x_0)

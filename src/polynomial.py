@@ -17,13 +17,13 @@ class Polynomial:
     def __init__(self, parameter):
         if isinstance(parameter, int):
             self.degree = parameter
-            self.co_array = numpy.zeros(parameter)
+            self.co_array = numpy.zeros(parameter + 1)
         elif isinstance(parameter, numpy.ndarray):
             self.co_array = parameter
-            self.degree =   parameter.size
+            self.degree = parameter.size - 1
         elif isinstance(parameter, (list)):
             self.co_array = numpy.array(parameter)
-            self.degree = len(parameter)
+            self.degree = len(parameter) - 1
         else:
             raise TypeError
 
@@ -39,10 +39,10 @@ class Polynomial:
     #       f(x) = ax^2 + bx + c
     def __repr__(self):
         sRet = "{}\n".format(self.degree)
-        for i in reversed(range(self.degree)):
+        for i in reversed(range(self.degree + 1)):
             # Set prefix sign(+,- or none)
             coeff = self.co_array[i]
-            if i < (self.degree - 1):
+            if i < self.degree:
                 if coeff > 0:
                     sRet += f" +{coeff}"
                 elif coeff < 0:
@@ -136,7 +136,7 @@ class Polynomial:
     # Evaluate a polynomial using Horner's method (recursive multiplication)
     def evaluate_horners(self, x, degree=0):
         calc = 0
-        if degree < self.degree:
+        if degree <= self.degree:
             calc += self.co_array[degree] + x*(self.evaluate_horners(x, degree + 1))
         return calc
         
@@ -232,21 +232,21 @@ def main():
     print("Poly1:", poly1, ", repr:", repr(poly1))
     print("Poly2:", poly2, ", repr:", repr(poly2))
 
-#    print("Polynomial_Addition:")
-#    print("Poly1 + Poly2:", poly1 + poly2)
-#    print("Poly2 + Poly1:", poly2 + poly1)
+    print("Polynomial_Addition:")
+    print("Poly1 + Poly2:", poly1 + poly2)
+    print("Poly2 + Poly1:", poly2 + poly1)
     
-#    print("Polynomial_Subtraction:")
-#    print("Poly1 - Poly2:", poly1 - poly2)
-#    print("Poly2 - Poly1:", poly2 - poly1)
+    print("Polynomial_Subtraction:")
+    print("Poly1 - Poly2:", poly1 - poly2)
+    print("Poly2 - Poly1:", poly2 - poly1)
     
-#    print("Polynomial_Differentiation:")
-#    print("Poly1:", poly1.derive())
-#    print("Poly2:", poly2.derive())
+    print("Polynomial_Differentiation:")
+    print("Poly1:", repr(poly1.derive()))
+    print("Poly2:", repr(poly2.derive()))
 
-#    print("Polynomial_2ndDifferentiation:")
-#    print("Poly1:", poly1.derive(2))
-#    print("Poly2:", poly2.derive(2))
+    print("Polynomial_2ndDifferentiation:")
+    print("Poly1:", repr(poly1.derive(2)))
+    print("Poly2:", repr(poly2.derive(2)))
 
     x = 10
     print("Polynomial_Evaluation(Exponent_method: x=",x,"):")
