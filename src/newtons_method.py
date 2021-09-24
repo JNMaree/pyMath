@@ -17,11 +17,15 @@ def Newtons_method(polynomi, estimate = 1):
     error = 1
     x_n = 0
     iteratr = 0
-    while error > error_tolerance or iteratr < max_iterations:
+    loop_error_max = True
+    while loop_error_max:
         x_n = approximate_function(x, polynomi)
         error = abs(x - x_n)
         x = x_n
         iteratr += 1
+        if error < error_tolerance or iteratr < max_iterations:
+            loop_error_max = False
+
         #print("i:",iTerate, ", x=", x, ", x+=", x_n, ", error=", error)
     
     if iteratr < max_iterations:
@@ -63,7 +67,7 @@ def get_roots(polynomi, n_roots=0, interval_start=-1,interval_end=1):
     #   - assuming equally spaced within specified interval
     for i in range(n_estimates):
         est = interval_start + i * estimate_interval
-        print(f"{i}_est:{est}")
+        #print(f"{i}_est:{est}")
         potential_root = Newtons_method(polynomi, est)
         for j in range(roots.size):
             if ~is_approximately_equal(j, potential_root):
@@ -99,9 +103,9 @@ def main():
     print(f"leg3_roots:{get_roots(legendre3)}")
 
     # Test individual estimates
-    #print(f"leg_est(-1):{newtons_method(legendre3, -1)}")
-    #print(f"leg_est(0):{newtons_method(legendre3, 0)}")
-    #print(f"leg_est(+1):{newtons_method(legendre3, 1)}")
+    print(f"leg_est(-1):{Newtons_method(legendre3, -1)}")
+    print(f"leg_est( 0):{Newtons_method(legendre3, 0)}")
+    print(f"leg_est(+1):{Newtons_method(legendre3, 1)}")
     
     legendre4 = Polynomial([3/8, 0, 30/8, 0, 35/8])
     print(f"leg4: {legendre4.__repr__()}")
@@ -110,6 +114,11 @@ def main():
     # Test root finding method:
     print(f"leg4_roots:{get_roots(legendre4)}")
 
+    # Test individual estimates
+    print(f"leg_est(  -1):{Newtons_method(legendre4, -1)}")
+    print(f"leg_est(-0.3):{Newtons_method(legendre4, -0.3)}")
+    print(f"leg_est(+0.3):{Newtons_method(legendre4, 0.3)}")
+    print(f"leg_est(  +1):{Newtons_method(legendre4, 1)}")
 
 if __name__ == "__main__":
     main()
