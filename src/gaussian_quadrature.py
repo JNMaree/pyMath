@@ -2,7 +2,7 @@ import numpy
 import math
 
 from polynomial import Polynomial
-from newtons_method import Newtons_Method
+from newtons_method import Newtons_method, get_roots
 from matrix import Matrix
 from legendre_polynomial import Legendre
 
@@ -22,7 +22,10 @@ class GaussianQuad:
     n_order = 1                     # Int (>= 1)
     
     # Define the legendre polynomials up to a point
-    legendre_poly = []              # Legendre Polynomial for specified order
+    legendre_polynom = []              # Legendre Polynomial for specified order
+    
+    # Define the Legendre polynomial roots 
+    legendre_roots = []
 
     # Define the Quadrature Matrix:
     #   - Size: Order x 2:
@@ -40,12 +43,13 @@ class GaussianQuad:
             self.quadrature[0, 1] = 2
         else:
             # generate legendre equation polynomial of degree n
-            self.legendre_poly = Legendre(n_points)
-            
+            self.legendre_polynom = Legendre(n_points)
+            self.legendre_roots = get_roots(self.legendre_polynom)
+
             # use legendre polynomial to 
             for i in range(n_points):
-                self.quadrature[i, 0] = self.legendre_poly.evaluate()
-                self.quadrature[i, 1] = 
+                self.quadrature[i, 0] = self.legendre_roots[i]
+                self.quadrature[i, 1] = self.calculate_weight_function()
         return self.quadrature
 
     def __str__(self) -> str:
@@ -55,10 +59,10 @@ class GaussianQuad:
         return ret_str
 
     #Calculate the weights of a set of roots 
-    def calculate_weight_function(self, x_i, n):
+    def calculate_weight_function(self, root_i):
         # w_i = 2/(1 - (x_i)^2) * 2/(P'n(x_i)^2)
         #see https://en.wikipedia.org/wiki/Gaussian_quadrature for details on formula.
-        return 2/(1-x_i**2) * 2/(self.legendre_polynomials[n].derivative().calculate(x_i)**2)
+        return 2/(1-root_i**2) * 2/(self.legendre_polynom.derivative().calculate(root_i)**2)
 
 # Tests for the Gaussian Quadrature method
 def main():
