@@ -12,7 +12,7 @@ max_iterations = 30
 
 # Newton's Method: An iterative method for finding roots to polynomials
 # - an estimate is required to find the closest root
-def newtons_method(polynomi, estimate = 1):
+def Newtons_method(polynomi, estimate = 1):
     x = estimate
     error = 1
     x_n = 0
@@ -64,7 +64,7 @@ def get_roots(polynomi, n_roots=0, interval_start=-1,interval_end=1):
     for i in range(n_estimates):
         est = interval_start + i * estimate_interval
         print(f"{i}_est:{est}")
-        potential_root = newtons_method(polynomi, est)
+        potential_root = Newtons_method(polynomi, est)
         for j in range(roots.size):
             if ~is_approximately_equal(j, potential_root):
                 roots[i] = potential_root
@@ -87,7 +87,7 @@ def main():
     print("Frac:", approximate_function(x, polynom))
     
     # Test Newton's Method for calculating a root based on an estimate(x)
-    root = newtons_method(polynom, x)
+    root = Newtons_method(polynom, x)
     print(f"newtons_method_root:{root}")
 
     # Test the application of Newton's Method for finding all roots within a given interval
