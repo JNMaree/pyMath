@@ -17,16 +17,18 @@ def Newtons_method(polynomi, estimate = 1):
     error = 1
     x_n = 0
     iteratr = 0
-    loop_error_max = True
-    while loop_error_max:
+    loop = True
+    while loop:
         x_n = approximate_function(x, polynomi)
         error = abs(x - x_n)
-        x = x_n
-        iteratr += 1
-        if error < error_tolerance or iteratr < max_iterations:
-            loop_error_max = False
+
+        # Check loop breakout conditions
+        if is_approximately_equal(x, x_n) or iteratr < max_iterations:
+            loop = False
 
         #print("i:",iTerate, ", x=", x, ", x+=", x_n, ", error=", error)
+        x = x_n
+        iteratr += 1
     
     if iteratr < max_iterations:
         root = x_n
