@@ -1,14 +1,20 @@
 # pyMath
-A set of mathematical methods implemented from first principles in python.
+An implementation of numerical methods, specific to linear algebra, from first principles.
 
-## Base math modules:
+## Class Modules:
 [//]: =========================
 
-#### polynomial
+#### Polynomial
 Homogenous polynomial functions of a single variable are coded as arrays of coefficients. 
-Includes methods for derivation, integration, multiplication, division, addition and subtraction.
+Includes standard methods for:
+  - multiplication, division, addition and subtraction
+  - derivation
+  - variable evaluation
 
-#### matrix
+##### Legendre Polynomial:
+An implementation for the generation of Legendré Polynomials to the specified degree.
+
+#### Matrix
 Composite class for numpy arrays to primitively deal with scalar & vector space matrix algebra.
 Overwrites standard operators (*,+,-) to accommodate matrix operations.
 Includes the standard methods for:
@@ -18,12 +24,12 @@ Includes the standard methods for:
   - Echelon Form
   - Several Row and Column Operations
 
-#### newton
-Newton's Method(or Newton-Raphson method) for finding roots to higher order polynomials.
-
 
 ## Numerical method modules:
 [//]: ==========================
+
+#### newton
+Newton's Method(or Newton-Raphson method) for finding roots to higher order polynomials.
 
 #### gauss_quad 
 A method for generating Gaussian-Legendre quadrature points for numerical integration
