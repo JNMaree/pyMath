@@ -5,10 +5,10 @@ from polynomial import Polynomial
 
 # The error_tolerance defines the threshold at which numbers are equal:
 #   |n1 - n2| < error_tolerance
-error_tolerance = 1e-8
+error_tolerance = 1e-6
 
 # Maximum number of iterations to run if solution does not converge
-max_iterations = 30
+max_iterations = 50
 
 # Newton's Method: An iterative method for finding roots to polynomials
 # - an estimate is required to find the closest root
@@ -20,10 +20,10 @@ def Newtons_method(polynomi, estimate = 1):
     loop = True
     while loop:
         x_n = approximate_function(x, polynomi)
-        error = abs(x - x_n)
+        error = x - x_n
 
-        # Check loop breakout conditions
-        if is_approximately_equal(x, x_n) or iteratr < max_iterations:
+        # Check if necessary to iterate
+        if error < error_tolerance or iteratr == max_iterations:
             loop = False
 
         #print("i:",iTerate, ", x=", x, ", x+=", x_n, ", error=", error)
@@ -31,21 +31,22 @@ def Newtons_method(polynomi, estimate = 1):
         iteratr += 1
     
     if iteratr < max_iterations:
-        root = x_n
-        return root
+        return x_n  # return root
     else:
         print(f"Max_Iterations:{iteratr} reached without convergence.")
-        print(f"Error_Tolerance:{error_tolerance}, error reached:{error:.16f}")
-        raise RuntimeError("Loop Iteration Ceased!")
+        print(f"Error_Tolerance:{error_tolerance:.9f}, error reached:{error:.9f}")
+        #raise RuntimeError("Loop Iteration Ceased!")
 
-# x_n+1 = x_n - f(x_n)/f'(x_n)
-def approximate_function(x_n, polynomial):
-    return x_n - polynomial.evaluate(x_n)/polynomial.derive().evaluate(x_n)
+# x_n = x - f(x)/f'(x)
+def approximate_function(x, polynomial):
+    return x - polynomial.evaluate(x)/polynomial.derive().evaluate(x)
 
 # Determine if the difference between numbers falls below a threshold,
 # making it effectively zero
-def is_approximately_equal(a, b):
-    if abs(a - b) < error_tolerance:
+def is_equal(a, b):
+    ans = abs(a - b)
+    if ans < error_tolerance:
+        print(f"is_equal|TRUE|a:{a}, b:{b}|(a-b):{ans}")
         return True
     else:
         return False
@@ -72,7 +73,7 @@ def get_roots(polynomi, n_roots=0, interval_start=-1,interval_end=1):
         #print(f"{i}_est:{est}")
         potential_root = Newtons_method(polynomi, est)
         for j in range(roots.size):
-            if ~is_approximately_equal(j, potential_root):
+            if ~is_equal(j, potential_root):
                 roots[i] = potential_root
 
     return roots
@@ -80,6 +81,7 @@ def get_roots(polynomi, n_roots=0, interval_start=-1,interval_end=1):
 
 # Test function
 def main():
+
     # Test Newton's Method for 1 iteration
     polynom = Polynomial([-3,8,-7,1]) # -3 + 8x -7x^2 + x^3
     print(f"poly:{polynom}\npoly_derive:{polynom.derive()}")
@@ -95,14 +97,15 @@ def main():
     # Test Newton's Method for calculating a root based on an estimate(x)
     root = Newtons_method(polynom, x)
     print(f"newtons_method_root:{root}")
-
+    
     # Test the application of Newton's Method for finding all roots within a given interval
     legendre3 = Polynomial([0, -1.5, 0, 2.5])
-    print(f"leg3_repr: {legendre3.__repr__()}")
-    print(f"leg3_derive: {legendre3.derive().__repr__()}")
+    #print(f"leg3_repr: {legendre3.__repr__()}")
+    #print(f"leg3_derive: {legendre3.derive().__repr__()}")
     
     # Test root finding methodology
     print(f"leg3_roots:{get_roots(legendre3)}")
+    print(f"leg3_numpy_roots:{numpy.roots(numpy.flip(legendre3.co_array))}")
 
     # Test individual estimates
     print(f"leg_est(-1):{Newtons_method(legendre3, -1)}")
@@ -110,16 +113,17 @@ def main():
     print(f"leg_est(+1):{Newtons_method(legendre3, 1)}")
     
     legendre4 = Polynomial([3/8, 0, 30/8, 0, 35/8])
-    print(f"leg4: {legendre4.__repr__()}")
-    print(f"leg4_derive: {legendre4.derive().__repr__()}")
+    #print(f"leg4: {legendre4.__repr__()}")
+    #print(f"leg4_derive: {legendre4.derive().__repr__()}")
 
     # Test root finding method:
     print(f"leg4_roots:{get_roots(legendre4)}")
+    print(f"leg4_numpy_roots:{numpy.roots(numpy.flip(legendre4.co_array))}")
 
     # Test individual estimates
     print(f"leg_est(  -1):{Newtons_method(legendre4, -1)}")
-    print(f"leg_est(-0.3):{Newtons_method(legendre4, -0.3)}")
-    print(f"leg_est(+0.3):{Newtons_method(legendre4, 0.3)}")
+    print(f"leg_est(-0.3):{Newtons_method(legendre4, -0.2)}")
+    print(f"leg_est(+0.3):{Newtons_method(legendre4, 0.2)}")
     print(f"leg_est(  +1):{Newtons_method(legendre4, 1)}")
 
 if __name__ == "__main__":
