@@ -5,14 +5,15 @@ from polynomial import Polynomial
 
 # The error_tolerance defines the threshold at which numbers are equal:
 #   |n1 - n2| < error_tolerance
-error_tolerance = 1e-6
+error_tolerance = 1e-9
 
 # Maximum number of iterations to run if solution does not converge
 max_iterations = 50
+max_occurences = 10
 
 # Newton's Method: An iterative method for finding roots to polynomials
 # - an estimate is required to find the closest root
-def Newtons_method(polynomi, estimate = 1):
+def Newtons_method(polynomi, estimate = 1, occurence=0):
     x = estimate
     error = 1
     x_n = 0
@@ -20,7 +21,7 @@ def Newtons_method(polynomi, estimate = 1):
     loop = True
     while loop:
         x_n = approximate_function(x, polynomi)
-        error = x - x_n
+        error = abs(x - x_n)
 
         # Check if necessary to iterate
         if error < error_tolerance or iteratr == max_iterations:
@@ -35,7 +36,12 @@ def Newtons_method(polynomi, estimate = 1):
     else:
         print(f"Max_Iterations:{iteratr} reached without convergence.")
         print(f"Error_Tolerance:{error_tolerance:.9f}, error reached:{error:.9f}")
-        #raise RuntimeError("Loop Iteration Ceased!")
+        occurence += 1
+        if occurence < max_occurences:
+            new_estimate = x_n - occurence*abs(x_n - estimate)
+            return Newtons_method(polynomi, new_estimate, occurence)
+        else:
+            raise RuntimeError("Loop Iteration Ceased! Max Occurrences reached!")
 
 # x_n = x - f(x)/f'(x)
 def approximate_function(x, polynomial):
