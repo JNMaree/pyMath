@@ -52,7 +52,6 @@ def approximate_function(x, polynomial):
 def is_equal(a, b):
     ans = abs(a - b)
     if ans < error_tolerance:
-        print(f"is_equal|TRUE|a:{a}, b:{b}|(a-b):{ans}")
         return True
     else:
         return False
@@ -105,6 +104,7 @@ def main():
     print(f"newtons_method_root:{root}")
     
     # Test the application of Newton's Method for finding all roots within a given interval
+    # Define a Legendre polynomial of degree 3
     legendre3 = Polynomial([0, -1.5, 0, 2.5])
     #print(f"leg3_repr: {legendre3.__repr__()}")
     #print(f"leg3_derive: {legendre3.derive().__repr__()}")
@@ -118,6 +118,7 @@ def main():
     print(f"leg_est( 0):{Newtons_method(legendre3, 0)}")
     print(f"leg_est(+1):{Newtons_method(legendre3, 1)}")
     
+    # Define a Legendre Polynomial of degree 4
     legendre4 = Polynomial([3/8, 0, -30/8, 0, 35/8])
     #print(f"leg4: {legendre4.__repr__()}")
     #print(f"leg4_derive: {legendre4.derive().__repr__()}")

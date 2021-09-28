@@ -38,17 +38,17 @@ class Polynomial:
     #   - Prints the function form of the polynomial:
     #       f(x) = ax^2 + bx + c
     def __repr__(self):
-        sRet = "{}\n".format(self.degree)
+        sRet = ""
         for i in reversed(range(self.degree + 1)):
             # Set prefix sign(+,- or none)
             coeff = self.co_array[i]
             if i < self.degree:
                 if coeff > 0:
-                    sRet += f" +{coeff}"
+                    sRet += f" +{coeff:.3f}"
                 elif coeff < 0:
-                    sRet += f" {coeff}"
+                    sRet += f" {coeff:.3f}"
             else:
-                sRet += f"{coeff}"
+                sRet += f"{coeff:.3f}"
             
             # If coefficient is displayed
             if coeff != 0:
