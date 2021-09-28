@@ -18,7 +18,10 @@ class Legendre(Polynomial):
 
     def __init__(self, degree) -> None:
         Polynomial.__init__(self, self.generate_recursive(degree))
-        self.roots = get_roots(Polynomial(self.co_array))
+        if degree > 1:
+            self.roots = get_roots(Polynomial(self.co_array))
+        else:
+            roots = [1]
     
     def __str__(self) -> str:
         sret = "{}\n".format(self.degree)
@@ -40,8 +43,8 @@ class Legendre(Polynomial):
             return numpy.array([1, 0])
         else:
             coefficient_array = numpy.zeros(order + 1)
-            Pn_minOne = (2*order - 1)/order * self.generate_recursive(order - 1)
-            Pn_minTwo = -(order - 1)/order * self.generate_recursive(order - 2)
+            Pn_minOne = (2*order + 1)/(order + 1) * self.generate_recursive(order - 1)
+            Pn_minTwo = -order/(order + 1) * self.generate_recursive(order - 2)
             coefficient_array += numpy.append(Pn_minOne, 0) + numpy.concatenate(([0], [0], Pn_minTwo))        
         #print("coeff_array:", coefficient_array)
         #print("flipd_array:", numpy.flip(coefficient_array))
@@ -50,11 +53,12 @@ class Legendre(Polynomial):
 
 # Define the Test functions and methods
 def main():
-    # Test legendre_polynomial for degree 3
-    n_poly = 3
-    legendre = Legendre(n_poly)
-    print("Test1_Legendre(REPR): ", repr(legendre))
-    #print("Test1_Legendre(roots):\n", format(legendre.roots))
+
+    # Generate Legendre polynomials for various degrees
+    for n in range(5):
+        # Test generation for degree i
+        legendre = Legendre(n)
+        print(f"Test{n}|_Legendre:{repr(legendre)}, roots:{legendre.roots}")
 
 if __name__ == "__main__":
     main()
