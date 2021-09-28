@@ -41,7 +41,7 @@ def Newtons_method(polynomi, estimate = 1, occurence=0):
             new_estimate = x_n - occurence*abs(x_n - estimate)
             return Newtons_method(polynomi, new_estimate, occurence)
         else:
-            raise RuntimeError("Loop Iteration Ceased! Max Occurrences reached!")
+            raise RuntimeError("Loop Iteration Ceased & Max Occurrences reached with no roots found!")
 
 # x_n = x - f(x)/f'(x)
 def approximate_function(x, polynomial):
@@ -118,7 +118,7 @@ def main():
     print(f"leg_est( 0):{Newtons_method(legendre3, 0)}")
     print(f"leg_est(+1):{Newtons_method(legendre3, 1)}")
     
-    legendre4 = Polynomial([3/8, 0, 30/8, 0, 35/8])
+    legendre4 = Polynomial([3/8, 0, -30/8, 0, 35/8])
     #print(f"leg4: {legendre4.__repr__()}")
     #print(f"leg4_derive: {legendre4.derive().__repr__()}")
 
@@ -128,8 +128,8 @@ def main():
 
     # Test individual estimates
     print(f"leg_est(  -1):{Newtons_method(legendre4, -1)}")
-    print(f"leg_est(-0.3):{Newtons_method(legendre4, -0.2)}")
-    print(f"leg_est(+0.3):{Newtons_method(legendre4, 0.2)}")
+    print(f"leg_est(-0.3):{Newtons_method(legendre4, -0.3)}")
+    print(f"leg_est(+0.3):{Newtons_method(legendre4, 0.3)}")
     print(f"leg_est(  +1):{Newtons_method(legendre4, 1)}")
 
 if __name__ == "__main__":
