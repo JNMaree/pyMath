@@ -34,17 +34,20 @@ class Legendre(Polynomial):
     # Generate Legendre polynomial(co-array) up to the n-th degree.
     #   - Uses recursive method
     def generate_recursive(self, order):
-        # Pn(x) = (2n - 1)*x/n * Pn-1(x) - (n - 1)*1/n * Pn-2(x) 
+        # Pn(x) = (2n + 1)*x/(n+1) * Pn-1(x) - (n)/(n+1) * Pn-2(x) 
         #   - see https://en.wikipedia.org/wiki/Legendre_polynomials
         #     for details on recurrence relations.
-        if order == 0:
+        order -= 1
+        if order == -1:
             return numpy.array([1])
-        elif order == 1:
+        elif order == 0:
             return numpy.array([1, 0])
         else:
-            coefficient_array = numpy.zeros(order + 1)
-            Pn_minOne = (2*order + 1)/(order + 1) * self.generate_recursive(order - 1)
-            Pn_minTwo = -order/(order + 1) * self.generate_recursive(order - 2)
+            coefficient_array = numpy.zeros(order + 2)
+            Pn_minOne = (2*order + 1)/(order + 1) * self.generate_recursive(order)
+            #print("Pn_min1:", Pn_minOne)
+            Pn_minTwo = -order/(order + 1) * self.generate_recursive(order - 1)
+            #print("Pn_min2:", Pn_minTwo)
             coefficient_array += numpy.append(Pn_minOne, 0) + numpy.concatenate(([0], [0], Pn_minTwo))        
         #print("coeff_array:", coefficient_array)
         #print("flipd_array:", numpy.flip(coefficient_array))
