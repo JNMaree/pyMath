@@ -37,22 +37,30 @@ class Legendre(Polynomial):
         # Pn(x) = (2n + 1)*x/(n+1) * Pn-1(x) - (n)/(n+1) * Pn-2(x) 
         #   - see https://en.wikipedia.org/wiki/Legendre_polynomials
         #     for details on recurrence relations.
-        order -= 1
-        if order == -1:
+        if order == 0:
             return numpy.array([1])
-        elif order == 0:
-            return numpy.array([1, 0])
+        elif order == 1:
+            return numpy.array([0, 1])
         else:
-            coefficient_array = numpy.zeros(order + 2)
-            Pn_minOne = (2*order + 1)/(order + 1) * self.generate_recursive(order)
-            #print("Pn_min1:", Pn_minOne)
-            Pn_minTwo = -order/(order + 1) * self.generate_recursive(order - 1)
-            #print("Pn_min2:", Pn_minTwo)
-            coefficient_array += numpy.append(Pn_minOne, 0) + numpy.concatenate(([0], [0], Pn_minTwo))        
-        #print("coeff_array:", coefficient_array)
-        #print("flipd_array:", numpy.flip(coefficient_array))
-        return numpy.flip(coefficient_array)
+            coefficient_array = numpy.zeros(order + 1)
+            
+            # Generate First term
+            Pn_minOne = self.generate_recursive(order - 1)
+            Pn_minOne = Pn_minOne*(2*order - 1)/(order)
+            Pn_minOne = numpy.insert(Pn_minOne, [0], 0, axis=0)
+            print(f"Pn_min1:{Pn_minOne}")
+            
+            # Generate Second Term
+            Pn_minTwo = self.generate_recursive(order - 2)
+            Pn_minTwo = Pn_minTwo*-(order - 1)/(order)
+            Pn_minTwo = numpy.append(Pn_minTwo, [0, 0])
+            print(f"Pn_min2:{Pn_minTwo}")
 
+            # Combine Terms
+            coefficient_array += Pn_minOne + Pn_minTwo
+            print(f"coeff_array:{coefficient_array}")
+
+        return coefficient_array
 
 # Define the Test functions and methods
 def main():

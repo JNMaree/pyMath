@@ -106,7 +106,7 @@ def main():
     # Test the application of Newton's Method for finding all roots within a given interval
     # Define a Legendre polynomial of degree 3
     legendre3 = Polynomial([0, -1.5, 0, 2.5])
-    #print(f"leg3_repr: {legendre3.__repr__()}")
+    print(f"leg3_repr: {legendre3.__repr__()}")
     #print(f"leg3_derive: {legendre3.derive().__repr__()}")
     
     # Test root finding methodology
@@ -120,7 +120,7 @@ def main():
     
     # Define a Legendre Polynomial of degree 4
     legendre4 = Polynomial([3/8, 0, -30/8, 0, 35/8])
-    #print(f"leg4: {legendre4.__repr__()}")
+    print(f"leg4: {legendre4.__repr__()}")
     #print(f"leg4_derive: {legendre4.derive().__repr__()}")
 
     # Test root finding method:
