@@ -67,7 +67,7 @@ class GaussianQuad:
 # Tests for the Gaussian Quadrature method
 def main():
     # test function for legendre_polynomial + binomial_coefficient
-    n_test = 3
+    n_test = 4
     gquad = GaussianQuad(n_test)
     print("n_test:", gquad)
 

@@ -9,6 +9,11 @@ error_tolerance = 1e-9
 
 # Maximum number of iterations to run if solution does not converge
 max_iterations = 50
+
+# Occurences are counted for each estimate:
+# - If convergence for a single estimate is not reached, 
+#   the estimate is slightly increased and Newton's method is re-run on the new estimate
+#   = This counts as an occurrence.
 max_occurences = 10
 
 # Newton's Method: An iterative method for finding roots to polynomials
