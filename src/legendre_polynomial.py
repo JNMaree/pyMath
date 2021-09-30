@@ -21,7 +21,7 @@ class Legendre(Polynomial):
         if degree > 1:
             self.roots = get_roots(Polynomial(self.co_array))
         else:
-            roots = [1]
+            roots = [0]
     
     def __str__(self) -> str:
         sret = "{}\n".format(self.degree)
@@ -48,17 +48,17 @@ class Legendre(Polynomial):
             Pn_minOne = self.generate_recursive(order - 1)
             Pn_minOne = Pn_minOne*(2*order - 1)/(order)
             Pn_minOne = numpy.insert(Pn_minOne, [0], 0, axis=0)
-            print(f"Pn_min1:{Pn_minOne}")
+            #print(f"Pn_min1:{Pn_minOne}")
             
             # Generate Second Term
             Pn_minTwo = self.generate_recursive(order - 2)
             Pn_minTwo = Pn_minTwo*-(order - 1)/(order)
             Pn_minTwo = numpy.append(Pn_minTwo, [0, 0])
-            print(f"Pn_min2:{Pn_minTwo}")
+            #print(f"Pn_min2:{Pn_minTwo}")
 
             # Combine Terms
             coefficient_array += Pn_minOne + Pn_minTwo
-            print(f"coeff_array:{coefficient_array}")
+            #print(f"coeff_array:{coefficient_array}")
 
         return coefficient_array
 
@@ -66,7 +66,7 @@ class Legendre(Polynomial):
 def main():
 
     # Generate Legendre polynomials for various degrees
-    for n in range(5):
+    for n in range(11):
         # Test generation for degree i
         legendre = Legendre(n)
         print(f"Test{n}|_Legendre:{repr(legendre)}, roots:{legendre.roots}")
