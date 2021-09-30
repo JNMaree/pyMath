@@ -185,8 +185,11 @@ class Polynomial:
 
 class MultivariatePolynomial:
 
-    unique_variables = 0
-    polynomials = []
+    # Define the number of unique, independent variables stored
+    n_variables = 0                 # Int (>= 1)
+    
+    # Define an array of Polynomial objects
+    polynomials = []                # python list
 
     def __init__(self, parameters):
         if isinstance(parameters, numpy.ndarray):
@@ -201,9 +204,12 @@ class MultivariatePolynomial:
         else:
             raise TypeError
 
-    def evaluate(self, variables):
-        for i in self.polynomials:
-            i.evaluate(variables[i])
+    def evaluate(self, values):
+        if len(values) != self.n_variables:
+            raise ArithmeticError("Missing Variable Values for MultiVariate Polynomial")
+        else:
+            for i in self.n_variables:
+                i.evaluate()
 
     
  
