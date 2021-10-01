@@ -19,7 +19,7 @@ class GaussianQuad:
 
     # Define the order of Gaussian Quadrature:
     #   - n_order = number of points / order of gaussian quadrature
-    n_order = 1                     # Int (>= 1)
+    order = 1                     # Int (>= 1)
     
     # Define the legendre polynomials up to a point
     legendre = []              # Legendre Polynomial for specified order
@@ -32,7 +32,7 @@ class GaussianQuad:
 
 
     def __init__(self, n_points) -> None:
-        self.n_order = n_points
+        self.order = n_points
         self.quadrature = numpy.zeros((n_points, 2))
         
         if n_points == 1:   # If first simple case, avoid generating legendre polynomials
@@ -50,8 +50,8 @@ class GaussianQuad:
 
 
     def __str__(self) -> str:
-        ret_str = "{}\n".format(self.n_order)
-        for i in range(self.n_order):
+        ret_str = "{}\n".format(self.order)
+        for i in range(self.order):
             ret_str += "{}:{},\n".format(self.quadrature[i,0], self.quadrature[i, 1])
         return ret_str
 
@@ -67,7 +67,7 @@ class GaussianQuad:
 # Tests for the Gaussian Quadrature method
 def main():
     # test function for legendre_polynomial + binomial_coefficient
-    n_test = 3
+    n_test = 4
     gquad = GaussianQuad(n_test)
     print("n_test:", gquad)
 

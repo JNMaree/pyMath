@@ -5,6 +5,7 @@ from nodespace_1D import NodeSpace1D
 from elementspace_1D import ElementSpace1D
 from polynomial import Polynomial
 from matrix import Matrix
+from gaussian_quadrature import GaussianQuad
 
 class FiniteElementMethod:
 
@@ -16,13 +17,10 @@ class FiniteElementMethod:
 
     solution_space = []         # Matrix(vector)
 
-    # Define the number of Gaussian Integration Points:
-    gauss_order = 2             # Int (>= 1)
-    
     # Define the Gaussian Quaqdrature positions & weights:
-    gauss_quad = []                   # Matrix (element_order x 2)
+    gaussian = []             # GaussianQuad instance
 
-    def __init__(self, element_space, material_property, bc_type1, bc_type2, gauss = 2):
+    def __init__(self, element_space, material_property, bc_type1, bc_type2, gauss_order = 2):
         self.mesh = element_space
         self.material_matrix = Matrix(numpy.zeros((element_space.n_nodes, element_space.n_nodes)))
 
@@ -49,8 +47,7 @@ class FiniteElementMethod:
         else:
             raise TypeError("bc_type2: Unknown Type")
 
-        self.gauss_order = gauss
-        self.gauss_quad = 
+        self.gaussian = GaussianQuad(gauss_order)
     
     #  Setup & store the matrices for solving the equations
     def setup():
