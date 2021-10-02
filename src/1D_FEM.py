@@ -22,7 +22,7 @@ class FiniteElementMethod:
 
     def __init__(self, element_space, material_property, bc_type1, bc_type2, gauss_order = 2):
         self.mesh = element_space
-        self.material_matrix = Matrix(numpy.zeros((element_space.n_nodes, element_space.n_nodes)))
+        self.material_matrix = Matrix(numpy.zeros((element_space.n_nodes + 1, element_space.n_nodes + 1)))
 
         # Define linear material function
         self.material_function = Polynomial([material_property, 0])
@@ -49,9 +49,19 @@ class FiniteElementMethod:
 
         self.gaussian = GaussianQuad(gauss_order)
     
-    #  Setup & store the matrices for solving the equations
-    def setup():
-        pass
+    #  Setup the matrices for solving the equations
+    def setup(self):
+        # setup the material matrix, K
+        for i in range(self.mesh.n_nodes):
+            for n_i in range(self.mesh.nodes_per_element - 2):
+                nodeA = self.mesh.elements[i, n_i]
+                nodeB = self.mesh.elements[i, n_i + 1]
+                dx = self.mesh.nodes[nodeB] - self.mesh.nodes[nodeA]
+                self.material_matrix[i, i] += self.material_function.evaluate(1)/dx
+                self.material_matrix[i + 1, i] += -self.material_function.evaluate(1)/dx
+                self.material_matrix[i, i + 1] += -self.material_function.evaluate(1)/dx 
+                self.material_matrix[i + 1, i + 1] += self.material_function.evaluate(1)/dx
+
 
     def linear_interpolationY(self, x_0, y_0, x_2, y_2, X1):
         return y_0 + (X1 - x_0)*(y_2 - y_0)/(x_2 - x_0)
