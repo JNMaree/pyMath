@@ -102,7 +102,7 @@ def main():
     print("Test ElementSpace with 4 nodes per element")
     # - Create an ElementSpace of 8 elements 
     #   over a dimension of size 10,
-    #   starting at 0, 
+    #   starting at 0,
     #   with 4 nodes per element:
     e_space4 = ElementSpace1D(8, 10, 0, 4)
     print("Nodes_Per_Element:", e_space4.nodes_per_element)
