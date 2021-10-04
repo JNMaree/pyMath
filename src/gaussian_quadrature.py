@@ -41,7 +41,8 @@ class GaussianQuad:
         else:
             # generate legendre equation polynomial of degree n
             self.legendre = Legendre(n_points)
-            print(f"legendre_polynomial:{self.legendre.co_array}, roots:{self.legendre.roots}")
+            # Print Legendre polynomial info
+            #print(f"legendre_polynomial:{self.legendre.co_array}, roots:{self.legendre.roots}")
             
             # use legendre polynomial to 
             for i in range(n_points):
@@ -61,7 +62,9 @@ class GaussianQuad:
         #   - see https://en.wikipedia.org/wiki/Gaussian_quadrature for details on formula.
         derivative = self.legendre.derive()
         deriv_x_i = derivative.evaluate(root_i)
-        print(f"i:{i}|root_i:{root_i}, dx_i:{deriv_x_i}, deriv:{repr(derivative)}")
+        
+        # Print root info used for calculating corresponding weight values
+        #print(f"i:{i}|root_i:{root_i}, dx_i:{deriv_x_i}, deriv:{repr(derivative)}")
         return 2/((1-root_i**2)*(deriv_x_i**2))
 
 # Tests for the Gaussian Quadrature method
