@@ -51,17 +51,18 @@ class FiniteElementMethod:
     
     #  Setup the matrices for solving the equations
     def setup(self):
+        print("setup_mesh:", self.mesh)
+        print("element_type:", type(self.mesh.elements))
         # setup the material matrix, K
-        for i in range(self.mesh.n_nodes):
-            for n_i in range(self.mesh.nodes_per_element - 2):
-                nodeA = self.mesh.elements[i, n_i]
-                nodeB = self.mesh.elements[i, n_i + 1]
+        for i in range(self.mesh.n_elements):
+            for n_i in range(self.mesh.nodes_per_element - 1):
+                nodeA = int( self.mesh.elements[i, n_i] )
+                nodeB = int( self.mesh.elements[i, n_i + 1] )
                 dx = self.mesh.nodes[nodeB] - self.mesh.nodes[nodeA]
                 self.material_matrix[i, i] += self.material_function.evaluate(1)/dx
                 self.material_matrix[i + 1, i] += -self.material_function.evaluate(1)/dx
                 self.material_matrix[i, i + 1] += -self.material_function.evaluate(1)/dx 
                 self.material_matrix[i + 1, i + 1] += self.material_function.evaluate(1)/dx
-
 
     def linear_interpolationY(self, x_0, y_0, x_2, y_2, X1):
         return y_0 + (X1 - x_0)*(y_2 - y_0)/(x_2 - x_0)
@@ -69,7 +70,8 @@ class FiniteElementMethod:
     # The Partial Differential Equations are solved using ...
     def solve(self):
         #self.solution_space = self.material_matrix.get_inverse() * self.force_vector
-        print("Inverse_material_matrix:", self.material_matrix.get_inverse())
+        print("Material_matrix:", self.material_matrix)
+        #print("Inverse_material_matrix:", self.material_matrix.get_inverse())
         print("Force_vector:", self.force_vector)
         print("Solution_space:", self.solution_space)
 
@@ -112,9 +114,12 @@ def main():
     Gaussian_order = 2
 
     FEM = FiniteElementMethod(fem_espace, K, BC_Type1, BC_Type2, Gaussian_order)
+    print("FEM_setup..........................................................")
     FEM.setup()
+    print("FEM_solve..........................................................")
     FEM.solve()
-    FEM.plot()
+    print("FEM_plot...........................................................")
+    #FEM.plot()
 
 if __name__ == "__main__":
     main()

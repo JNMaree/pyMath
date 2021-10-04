@@ -16,7 +16,7 @@ class ElementSpace1D(NodeSpace1D):
 
     """
     # Element array:
-    elements = numpy.array([0,0])       # Numpy array
+    elements = numpy.array([0,0], dtype=int)       # Numpy array
 
     # Number of Elements:
     n_elements = 0                      # int (>0)
@@ -53,8 +53,7 @@ class ElementSpace1D(NodeSpace1D):
         # Generate Elements from NodeSpace
         for i in range(self.n_elements):
             for j in range(self.nodes_per_element):
-                self.elements[i, j] = i * (self.nodes_per_element - 1) + j
-            
+                self.elements[i, j] = int( i * (self.nodes_per_element - 1) + j )
         # end __init__
 
     def __str__(self) -> str:
