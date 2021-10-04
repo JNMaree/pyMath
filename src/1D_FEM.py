@@ -63,6 +63,9 @@ class FiniteElementMethod:
                 self.material_matrix[i + 1, i] += -self.material_function.evaluate(1)/dx
                 self.material_matrix[i, i + 1] += -self.material_function.evaluate(1)/dx 
                 self.material_matrix[i + 1, i + 1] += self.material_function.evaluate(1)/dx
+        
+        self.material_matrix[0,0] = 1.0
+        self.material_matrix[self.mesh.n_nodes, self.mesh.n_nodes] = 1.0
 
     def linear_interpolationY(self, x_0, y_0, x_2, y_2, X1):
         return y_0 + (X1 - x_0)*(y_2 - y_0)/(x_2 - x_0)
@@ -71,7 +74,7 @@ class FiniteElementMethod:
     def solve(self):
         #self.solution_space = self.material_matrix.get_inverse() * self.force_vector
         print("Material_matrix:", self.material_matrix)
-        #print("Inverse_material_matrix:", self.material_matrix.get_inverse())
+        print("Inverse_material_matrix:", self.material_matrix.get_inverse())
         print("Force_vector:", self.force_vector)
         print("Solution_space:", self.solution_space)
 
@@ -111,7 +114,7 @@ def main():
     BC_Type2.assign_values(Type2_BC, Type2_Nodes)
 
     # Numerical Conditions:
-    Gaussian_order = 2
+    Gaussian_order = 3
 
     FEM = FiniteElementMethod(fem_espace, K, BC_Type1, BC_Type2, Gaussian_order)
     print("FEM_setup..........................................................")
