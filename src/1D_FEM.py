@@ -9,13 +9,21 @@ from gaussian_quadrature import GaussianQuad
 
 class FiniteElementMethod:
 
+    # Define the 1D mesh for the Finite Element Method
     mesh = []                   # ElementSpace
 
+    # Define the global stiffness matrix (K)
     material_matrix = []        # Matrix(square)
+    
+    # Define the global (RHS) force matrix (F)
     force_vector = []           # Matrix(vector)
+    
+    # Define the global (LHS) solution matrix (U)
+    solution_vector = []         # Matrix(vector)
+    
+    # Define the material properties for the material used by the 
     material_function = []      # Polynomial
 
-    solution_space = []         # Matrix(vector)
 
     # Define the Gaussian Quaqdrature positions & weights:
     gaussian = []             # GaussianQuad instance
@@ -29,11 +37,11 @@ class FiniteElementMethod:
 
         # Define the solution space to accomodate the initial type1 boundary conditions
         if isinstance(bc_type1, NodeSpace1D):
-            self.solution_space = Matrix(bc_type1.nodes)
+            self.solution_vector = Matrix(bc_type1.nodes)
         elif isinstance(bc_type1, numpy.ndarray):
-            self.solution_space = Matrix(bc_type1)
+            self.solution_vector = Matrix(bc_type1)
         elif isinstance(bc_type1, Matrix):
-            self.solution_space = bc_type1
+            self.solution_vector = bc_type1
         else:
             raise TypeError("bc_type1: Unknown Type")
 
@@ -51,19 +59,44 @@ class FiniteElementMethod:
     
     #  Setup the matrices for solving the equations
     def setup(self):
-        print("setup_mesh:", self.mesh)
-        print("element_type:", type(self.mesh.elements))
+        #print("setup_mesh:", self.mesh)
+        #print("element_type:", type(self.mesh.elements))
+
         # setup the material matrix, K
-        for i in range(self.mesh.n_elements):
-            for n_i in range(self.mesh.nodes_per_element - 1):
-                nodeA = int( self.mesh.elements[i, n_i] )
-                nodeB = int( self.mesh.elements[i, n_i + 1] )
-                dx = self.mesh.nodes[nodeB] - self.mesh.nodes[nodeA]
-                self.material_matrix[i, i] += self.material_function.evaluate(1)/dx
-                self.material_matrix[i + 1, i] += -self.material_function.evaluate(1)/dx
-                self.material_matrix[i, i + 1] += -self.material_function.evaluate(1)/dx 
-                self.material_matrix[i + 1, i + 1] += self.material_function.evaluate(1)/dx
+        for e in range(self.mesh.n_elements):
+
+            nodeA = int( self.mesh.elements[e, 0] )
+            nodeB = int( self.mesh.elements[e, 1] )
+            xA = self.mesh.nodes[nodeA]
+            xB = self.mesh.nodes[nodeB]
+            dx = xB - xA
+
+            for q in range(self.gaussian.order):
+                xQ = xA + self.gaussian[q, 0] * dx
+                w = self.gaussian[q, 1] * dx
+
+                # Generate and add local matrices to global matrix
+                for i in range(2):
+
+                    if i == 0:
+                        fi = (xQ - xB)/dx
+                        fi_prime = -1.0 / dx
+                    else:
+                        fi = (xQ - xA)/dx
+                        fi_prime = 1.0 / dx
+
+                    self.force_vector[e + i] += w * fi * self.material_function.evaluate(xQ)
+
+                    for j in range(2):
+                        
+                        if j == 0:
+                            fj_prime = -1.0 / dx
+                        else:
+                            fi_prime = 1.0 / dx
+                        
+                        self.material_matrix[e + i, e + j] += w * fi_prime * fj_prime
         
+        # Set constant values in matrix to enforce boundary conditions
         self.material_matrix[0,0] = 1.0
         self.material_matrix[self.mesh.n_nodes, self.mesh.n_nodes] = 1.0
 
@@ -72,10 +105,10 @@ class FiniteElementMethod:
 
     # The Partial Differential Equations are solved using ...
     def solve(self):
-        #self.solution_space = self.material_matrix.get_inverse() * self.force_vector
-        print("Material_matrix:", self.material_matrix)
-        print("Inverse_material_matrix:", self.material_matrix.get_inverse())
-        print("Force_vector:", self.force_vector)
+        self.solution_space = self.material_matrix.get_inverse() * self.force_vector
+        #print("Material_matrix:", self.material_matrix)
+        #print("Inverse_material_matrix:", self.material_matrix.get_inverse())
+        #print("Force_vector:", self.force_vector)
         print("Solution_space:", self.solution_space)
 
     # Plot the solution_space values on the respective node coordinates
@@ -102,26 +135,26 @@ def main():
     K = 20      # Stiffness Coefficient (Material Property)
 
     #   - Type 1 (Dirichlet) boundary conditions:
-    Type1_BC = 24       # Temperature specification
-    Type1_Nodes = [0]   # Node indices subject to Type 1 BC
-    BC_Type1 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes) )
+    Type1_BC = 24                       # Temperature specification
+    Type1_Nodes = [0]                   # Node indices subject to Type 1 BC
+    BC_Type1 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes + 1) )
     BC_Type1.assign_values(Type1_BC, Type1_Nodes)
 
     #   - Type 2 (Neumann) boundary condition:
-    Type2_BC = 16                   # Heat Flux Specification
-    Type2_Nodes = [n_elements]      # Node indices subject to Type 2 BC
-    BC_Type2 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes) )
+    Type2_BC = 16                       # Heat Flux Specification
+    Type2_Nodes = [n_elements + 1]      # Node indices subject to Type 2 BC
+    BC_Type2 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes + 1) )
     BC_Type2.assign_values(Type2_BC, Type2_Nodes)
 
     # Numerical Conditions:
     Gaussian_order = 3
 
     FEM = FiniteElementMethod(fem_espace, K, BC_Type1, BC_Type2, Gaussian_order)
-    print("FEM_setup..........................................................")
+    #print("FEM_setup..........................................................")
     FEM.setup()
-    print("FEM_solve..........................................................")
+    #print("FEM_solve..........................................................")
     FEM.solve()
-    print("FEM_plot...........................................................")
+    #print("FEM_plot...........................................................")
     #FEM.plot()
 
 if __name__ == "__main__":

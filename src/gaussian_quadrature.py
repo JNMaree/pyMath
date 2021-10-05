@@ -57,7 +57,7 @@ class GaussianQuad:
         return ret_str
 
     # Calculate the weight value correlating to specified root of Legendre polynomial
-    def calculate_weight_function(self, i, root_i):
+    def calculate_weight_function(self, i, root_i) -> float:
         # w_i = 2/(1 - (x_i)^2) * 2/(P'n(x_i)^2)
         #   - see https://en.wikipedia.org/wiki/Gaussian_quadrature for details on formula.
         derivative = self.legendre.derive()
