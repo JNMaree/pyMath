@@ -73,7 +73,7 @@ class Matrix:
             self.matrix *= other
         else:
             if self.cols != other.rows:
-                raise ArithmeticError("Product Matrix AB not defined for A:cols=", self.cols, " and B:rows=")
+                raise ArithmeticError(f"Product Matrix AB not defined for A:cols={self.cols} and B:rows={other.rows}")
             else:
                 return Matrix(numpy.matmul(self.matrix, other.matrix))
     # Matrix 1-to-1 addition             
