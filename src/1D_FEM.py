@@ -56,6 +56,7 @@ class FiniteElementMethod:
             raise TypeError("bc_type2: Unknown Type")
 
         self.gaussian = GaussianQuad(gauss_order)
+        print(f"self_gaussian:{self.gaussian}")
     
     #  Setup the matrices for solving the equations
     def setup(self):
@@ -72,23 +73,26 @@ class FiniteElementMethod:
             dx = xB - xA
 
             for q in range(self.gaussian.order):
-                xQ = xA + self.gaussian[q, 0] * dx
-                w = self.gaussian[q, 1] * dx
+                xQ = xA + self.gaussian.quadrature[q, 0] * dx
+                w = self.gaussian.quadrature[q, 1] * dx
 
                 # Generate and add local matrices to global matrix
+                #   - loop through i in stiffness_matrix[i,j]
                 for i in range(2):
-
+                    # define function & gradient depending on side of Gauss point
                     if i == 0:
                         fi = (xQ - xB)/dx
                         fi_prime = -1.0 / dx
                     else:
                         fi = (xQ - xA)/dx
                         fi_prime = 1.0 / dx
-
+                    
+                    # Add RHS conditions to force_matrix
                     self.force_vector[e + i] += w * fi * self.material_function.evaluate(xQ)
 
+                    # loop through j in stiffness_matrix[i,j]
                     for j in range(2):
-                        
+                        # Define gradient depending on side of Gauss point
                         if j == 0:
                             fj_prime = -1.0 / dx
                         else:
@@ -102,6 +106,14 @@ class FiniteElementMethod:
 
     def linear_interpolationY(self, x_0, y_0, x_2, y_2, X1):
         return y_0 + (X1 - x_0)*(y_2 - y_0)/(x_2 - x_0)
+
+    def calculate_integral(self, a, b, q):
+        ba = (b - a)/2
+        ab = (a + b)/2
+        fret = ba
+        for i in range(self.gaussian.order):
+            fret *= 
+        return fret
 
     # The Partial Differential Equations are solved using ...
     def solve(self):
