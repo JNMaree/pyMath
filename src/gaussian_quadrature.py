@@ -70,7 +70,7 @@ class GaussianQuad:
     # Calulate definite integral (a numerical approximation) of a polynomial function
     #  between limits a and b
     #   - translates [a,b] limits to [-1,1]
-    #   - calculate the weighted sum of function values
+    #   - calculate the weighted sum of function values at each Gaussian point
     def calculate_definite_integral(self, polynomial, a, b):
         ba = (b - a)/2
         ab = (a + b)/2
