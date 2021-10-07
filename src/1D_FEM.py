@@ -104,16 +104,10 @@ class FiniteElementMethod:
         self.material_matrix[0,0] = 1.0
         self.material_matrix[self.mesh.n_nodes, self.mesh.n_nodes] = 1.0
 
+    # Linear interpolation provides an estimate for a Y-value between
+    #  two existing X,Y pairs based on a linear function between them.
     def linear_interpolationY(self, x_0, y_0, x_2, y_2, X1):
         return y_0 + (X1 - x_0)*(y_2 - y_0)/(x_2 - x_0)
-
-    def calculate_integral(self, a, b, q):
-        ba = (b - a)/2
-        ab = (a + b)/2
-        fret = ba
-        for i in range(self.gaussian.order):
-            fret *= 
-        return fret
 
     # The Partial Differential Equations are solved using ...
     def solve(self):
