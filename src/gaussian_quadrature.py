@@ -67,6 +67,20 @@ class GaussianQuad:
         #print(f"i:{i}|root_i:{root_i}, dx_i:{deriv_x_i}, deriv:{repr(derivative)}")
         return 2/((1-root_i**2)*(deriv_x_i**2))
 
+    # Calulate definite integral (a numerical approximation) of a polynomial function
+    #  between limits a and b
+    #   - translates [a,b] limits to [-1,1]
+    #   - calculate the weighted sum of function values at each Gaussian point
+    def calculate_definite_integral(self, polynomial, a, b):
+        ba = (b - a)/2
+        ab = (a + b)/2
+        fret = 0.0
+        for p in range(self.gaussian.order):
+            val = ba*self.quadrature[p, 0] + ab
+            fret += self.quadrature[p, 1]*polynomial.evaluate(val)
+        fret *= ba
+        return fret
+
 # Tests for the Gaussian Quadrature method
 def main():
     # test function for legendre_polynomial + binomial_coefficient
