@@ -19,7 +19,7 @@ class FiniteElementMethod:
     force_vector = []           # Matrix(vector)
     
     # Define the global (LHS) solution matrix (U)
-    solution_vector = []         # Matrix(vector)
+    solution_space = []         # Matrix(vector)
     
     # Define the material properties for the material used by the 
     material_function = []      # Polynomial
@@ -30,18 +30,18 @@ class FiniteElementMethod:
 
     def __init__(self, element_space, material_property, bc_type1, bc_type2, gauss_order = 2):
         self.mesh = element_space
-        self.material_matrix = Matrix(numpy.zeros((element_space.n_nodes + 1, element_space.n_nodes + 1)))
+        self.material_matrix = Matrix(numpy.zeros((element_space.n_nodes, element_space.n_nodes)))
 
         # Define linear material function
         self.material_function = Polynomial([material_property, 0])
 
         # Define the solution space to accomodate the initial type1 boundary conditions
         if isinstance(bc_type1, NodeSpace1D):
-            self.solution_vector = Matrix(bc_type1.nodes)
+            self.solution_space = Matrix(bc_type1.nodes)
         elif isinstance(bc_type1, numpy.ndarray):
-            self.solution_vector = Matrix(bc_type1)
+            self.solution_space = Matrix(bc_type1)
         elif isinstance(bc_type1, Matrix):
-            self.solution_vector = bc_type1
+            self.solution_space = bc_type1
         else:
             raise TypeError("bc_type1: Unknown Type")
 
@@ -73,8 +73,8 @@ class FiniteElementMethod:
             dx = xB - xA
 
             for q in range(self.gaussian.order):
-                xQ = xA + self.gaussian.quadrature[q, 0] * dx
-                w = self.gaussian.quadrature[q, 1] * dx
+                xQ = xA + (dx/2) + self.gaussian.quadrature[q, 0] * (dx/2)
+                wQ = self.gaussian.quadrature[q, 1] * dx
 
                 # Generate and add local matrices to global matrix
                 #   - loop through i in stiffness_matrix[i,j]
@@ -88,7 +88,7 @@ class FiniteElementMethod:
                         fi_prime = 1.0 / dx
                     
                     # Add RHS conditions to force_matrix
-                    self.force_vector[e + i] += w * fi * self.material_function.evaluate(xQ)
+                    self.force_vector[e + i] += wQ * fi * self.material_function.evaluate(xQ)
 
                     # loop through j in stiffness_matrix[i,j]
                     for j in range(2):
@@ -98,7 +98,7 @@ class FiniteElementMethod:
                         else:
                             fi_prime = 1.0 / dx
                         
-                        self.material_matrix[e + i, e + j] += w * fi_prime * fj_prime
+                        self.material_matrix[e + i, e + j] += wQ * fi_prime * fj_prime
         
         # Set constant values in matrix to enforce boundary conditions
         self.material_matrix[0,0] = 1.0
@@ -119,9 +119,9 @@ class FiniteElementMethod:
 
     # Plot the solution_space values on the respective node coordinates
     def plot(self):
-        plot.plot(self.mesh.nodes, self.solution_space)
+        plot.plot(self.mesh.nodes, self.solution_space.matrix)
         plot.xlabel("X Coordinates")
-        plot.ylabel("Degree-Of-Freedom Value")
+        plot.ylabel("Degree-of-Freedom Value")
         plot.show()
 
 # Test methods and classes
@@ -143,13 +143,13 @@ def main():
     #   - Type 1 (Dirichlet) boundary conditions:
     Type1_BC = 24                       # Temperature specification
     Type1_Nodes = [0]                   # Node indices subject to Type 1 BC
-    BC_Type1 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes + 1) )
+    BC_Type1 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes) )
     BC_Type1.assign_values(Type1_BC, Type1_Nodes)
 
     #   - Type 2 (Neumann) boundary condition:
     Type2_BC = 16                       # Heat Flux Specification
-    Type2_Nodes = [n_elements + 1]      # Node indices subject to Type 2 BC
-    BC_Type2 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes + 1) )
+    Type2_Nodes = [n_elements]          # Node indices subject to Type 2 BC
+    BC_Type2 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes) )
     BC_Type2.assign_values(Type2_BC, Type2_Nodes)
 
     # Numerical Conditions:
@@ -161,7 +161,7 @@ def main():
     #print("FEM_solve..........................................................")
     FEM.solve()
     #print("FEM_plot...........................................................")
-    #FEM.plot()
+    FEM.plot()
 
 if __name__ == "__main__":
     main()
