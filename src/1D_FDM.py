@@ -76,13 +76,13 @@ class FiniteDifferenceMethod:
         self.solution_space = self.material_matrix.get_inverse() * self.force_vector
         #print("Inverse:", self.material_matrix.get_inverse())
         #print("Force_Vector:", self.force_vector)
-        print("Solution_space:", self.solution_space)
+        #print("Solution_space:", self.solution_space)
 
     # Plot the nodes at their respective coordinates vs their respective solution values. 
     def plot(self):
         plot.plot(self.mesh.nodes, self.solution_space.matrix)
         plot.xlabel("X coordinates")
-        plot.ylabel("Degree-Of-Freedom Value")
+        plot.ylabel("Degree-of-Freedom Value")
         plot.show()
 
 # Test Methods and Classes
