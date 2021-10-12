@@ -28,12 +28,12 @@ class FiniteElementMethod:
     # Define the Gaussian Quaqdrature positions & weights:
     gaussian = []             # GaussianQuad instance
 
-    def __init__(self, element_space, material_property, bc_type1, bc_type2, gauss_order = 2):
+    def __init__(self, element_space, material_properties, bc_type1, bc_type2, gauss_order = 2):
         self.mesh = element_space
         self.material_matrix = Matrix(numpy.zeros((element_space.n_nodes, element_space.n_nodes)))
 
         # Define linear material function
-        self.material_function = Polynomial([material_property, 0])
+        self.material_function = Polynomial(material_properties)
 
         # Define the solution space to accomodate the initial type1 boundary conditions
         if isinstance(bc_type1, NodeSpace1D):
@@ -66,11 +66,14 @@ class FiniteElementMethod:
         # setup the material matrix, K
         for e in range(self.mesh.n_elements):
 
+            # Set Temporary Nodes A,B for element [e]
+            # - For Setting up Stiffness Matrix
             nodeA = int( self.mesh.elements[e, 0] )
             nodeB = int( self.mesh.elements[e, 1] )
             xA = self.mesh.nodes[nodeA]
             xB = self.mesh.nodes[nodeB]
             dx = xB - xA
+            print(f"elem_{e}|A:{nodeA}, B:{nodeB}|xA:{xA}, xB:{xB}, dX:{dx}")
 
             for q in range(self.gaussian.order):
                 xQ = xA + (dx/2) + self.gaussian.quadrature[q, 0] * (dx/2)
@@ -81,11 +84,11 @@ class FiniteElementMethod:
                 for i in range(2):
                     # define function & gradient depending on side of Gauss point
                     if i == 0:
-                        fi = (xQ - xB)/dx
-                        fi_prime = -1.0 / dx
+                        fi = (xQ - xB) / (dx)
+                        fi_prime = -1.0 / (dx)
                     else:
-                        fi = (xQ - xA)/dx
-                        fi_prime = 1.0 / dx
+                        fi = (xQ - xA) / (dx)
+                        fi_prime = 1.0 / (dx)
                     
                     # Add RHS conditions to force_matrix
                     self.force_vector[e + i] += wQ * fi * self.material_function.evaluate(xQ)
@@ -94,15 +97,15 @@ class FiniteElementMethod:
                     for j in range(2):
                         # Define gradient depending on side of Gauss point
                         if j == 0:
-                            fj_prime = -1.0 / dx
+                            fj_prime = 1.0 / dx
                         else:
-                            fi_prime = 1.0 / dx
+                            fi_prime = -1.0 / dx
                         
                         self.material_matrix[e + i, e + j] += wQ * fi_prime * fj_prime
         
         # Set constant values in matrix to enforce boundary conditions
         self.material_matrix[0,0] = 1.0
-        self.material_matrix[self.mesh.n_nodes, self.mesh.n_nodes] = 1.0
+        self.material_matrix[self.mesh.n_nodes - 1, self.mesh.n_nodes - 1] = 1.0
 
     # Linear interpolation provides an estimate for a Y-value between
     #  two existing X,Y pairs based on a linear function between them.
@@ -138,19 +141,21 @@ def main():
     
     # Analysis Conditions:
     #   - Material Properties:
-    K = 20      # Stiffness Coefficient (Material Property)
+    K = [20, 0]             # Stiffness Coefficient (Material Property)
 
     #   - Type 1 (Dirichlet) boundary conditions:
     Type1_BC = 24                       # Temperature specification
     Type1_Nodes = [0]                   # Node indices subject to Type 1 BC
     BC_Type1 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes) )
     BC_Type1.assign_values(Type1_BC, Type1_Nodes)
+    print(BC_Type1)
 
     #   - Type 2 (Neumann) boundary condition:
     Type2_BC = 16                       # Heat Flux Specification
     Type2_Nodes = [n_elements]          # Node indices subject to Type 2 BC
     BC_Type2 = NodeSpace1D( numpy.zeros(fem_espace.n_nodes) )
     BC_Type2.assign_values(Type2_BC, Type2_Nodes)
+    print(BC_Type2)
 
     # Numerical Conditions:
     Gaussian_order = 3
@@ -158,7 +163,7 @@ def main():
     FEM = FiniteElementMethod(fem_espace, K, BC_Type1, BC_Type2, Gaussian_order)
     #print("FEM_setup..........................................................")
     FEM.setup()
-    #print("FEM_solve..........................................................")
+    print("FEM_solve..........................................................")
     FEM.solve()
     #print("FEM_plot...........................................................")
     FEM.plot()
