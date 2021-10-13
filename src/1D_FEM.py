@@ -165,10 +165,20 @@ def main():
     FEM = FiniteElementMethod(fem_espace, K, BC_Type1, BC_Type2, Gaussian_order)
     #print("FEM_setup..........................................................")
     FEM.setup()
-    print("FEM_solve..........................................................")
+    #print("FEM_solve..........................................................")
     FEM.solve()
     #print("FEM_plot...........................................................")
     FEM.plot()
+
+    # Calculate exact linear solution for verification:
+    tLeft = Type1_BC
+    q = Type2_BC
+    k = Polynomial(K).evaluate(1)
+    x = x_dimension
+    tRight = (q*x) / (k) + tLeft
+    n = n_elements + 1
+    # Printout to verify with Solution_Space                            tR=33.6
+    print(f"LHS|t0:{tLeft} --- x:{x} --- q:{q} --- k{k} --- RHS|t{n}:{tRight}\n")
 
 if __name__ == "__main__":
     main()
