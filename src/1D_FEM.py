@@ -24,9 +24,8 @@ class FiniteElementMethod:
     # Define the material properties for the material used by the 
     material_function = []      # Polynomial
 
-
     # Define the Gaussian Quaqdrature positions & weights:
-    gaussian = []             # GaussianQuad instance
+    gaussian = []               # GaussianQuad instance
 
     def __init__(self, element_space, material_properties, bc_type1, bc_type2, gauss_order = 2):
         self.mesh = element_space
@@ -76,7 +75,8 @@ class FiniteElementMethod:
             print(f"elem_{e}|A:{nodeA}, B:{nodeB}|xA:{xA}, xB:{xB}, dX:{dx}")
 
             for q in range(self.gaussian.order):
-                xQ = xA + (dx/2) + self.gaussian.quadrature[q, 0] * (dx/2)
+                xDim = (dx/2) + self.gaussian.quadrature[q, 0] * (dx/2)
+                xQ = xA + xDim
                 wQ = self.gaussian.quadrature[q, 1] * dx
 
                 # Generate and add local matrices to global matrix
@@ -91,7 +91,7 @@ class FiniteElementMethod:
                         fi_prime = 1.0 / (dx)
                     
                     # Add RHS conditions to force_matrix
-                    self.force_vector[e + i] += wQ * fi * self.material_function.evaluate(xQ)
+                    self.force_vector[e + i] += wQ * fi * self.material_function.evaluate(xDim)
 
                     # loop through j in stiffness_matrix[i,j]
                     for j in range(2):
@@ -99,8 +99,9 @@ class FiniteElementMethod:
                         if j == 0:
                             fj_prime = 1.0 / dx
                         else:
-                            fi_prime = -1.0 / dx
-                        
+                            fj_prime = -1.0 / dx
+
+                        # Add Result to existing stiffness values in stiffness matrix    
                         self.material_matrix[e + i, e + j] += wQ * fi_prime * fj_prime
         
         # Set constant values in matrix to enforce boundary conditions
@@ -141,7 +142,8 @@ def main():
     
     # Analysis Conditions:
     #   - Material Properties:
-    K = [20, 0]             # Stiffness Coefficient (Material Property)
+    K = [20, 0]             # Stiffness Coefficient Polynomial 
+                            #   - (Material Property Function)
 
     #   - Type 1 (Dirichlet) boundary conditions:
     Type1_BC = 24                       # Temperature specification
