@@ -25,7 +25,7 @@ class Polynomial:
             self.co_array = numpy.array(parameter)
             self.degree = len(parameter) - 1
         else:
-            raise TypeError
+            raise TypeError("Incorrect Type Used as Parameter")
 
     # Overload the array position('[]') operator to refer to co_array
     def __getitem__(self, key):

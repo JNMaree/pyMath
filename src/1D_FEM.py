@@ -27,12 +27,12 @@ class FiniteElementMethod:
     # Define the Gaussian Quaqdrature positions & weights:
     gaussian = []               # GaussianQuad instance
 
-    def __init__(self, element_space, material_properties, bc_type1, bc_type2, gauss_order = 2):
+    def __init__(self, element_space, mat_property_func, bc_type1, bc_type2, gauss_order = 2):
         self.mesh = element_space
         self.material_matrix = Matrix(numpy.zeros((element_space.n_nodes, element_space.n_nodes)))
 
-        # Define linear material function
-        self.material_function = Polynomial(material_properties)
+        # Define linear material property function
+        self.material_function = mat_property_func
 
         # Define the solution space to accomodate the initial type1 boundary conditions
         if isinstance(bc_type1, NodeSpace1D):
@@ -55,7 +55,7 @@ class FiniteElementMethod:
             raise TypeError("bc_type2: Unknown Type")
 
         self.gaussian = GaussianQuad(gauss_order)
-        print(f"self_gaussian:{self.gaussian}")
+        #print(f"self_gaussian:{self.gaussian}")
     
     #  Setup the matrices for solving the equations
     def setup(self):
@@ -72,7 +72,7 @@ class FiniteElementMethod:
             xA = self.mesh.nodes[nodeA]
             xB = self.mesh.nodes[nodeB]
             dx = xB - xA
-            print(f"elem_{e}|A:{nodeA}, B:{nodeB}|xA:{xA}, xB:{xB}, dX:{dx}")
+            #print(f"elem_{e}|A:{nodeA}, B:{nodeB}|xA:{xA}, xB:{xB}, dX:{dx}")
 
             for q in range(self.gaussian.order):
                 xDim = (dx/2) + self.gaussian.quadrature[q, 0] * (dx/2)
@@ -84,22 +84,22 @@ class FiniteElementMethod:
                 for i in range(2):
                     # define function & gradient depending on side of Gauss point
                     if i == 0:
-                        fi = (xQ - xB) / (dx)
-                        fi_prime = -1.0 / (dx)
+                        fi = (xQ - xB) / (-dx)
+                        fi_prime = 1.0 / (-dx)
                     else:
                         fi = (xQ - xA) / (dx)
                         fi_prime = 1.0 / (dx)
                     
                     # Add RHS conditions to force_matrix
-                    self.force_vector[e + i] += wQ * fi * self.material_function.evaluate(xDim)
+                    self.force_vector[e + i] += wQ * fi * 16
 
                     # loop through j in stiffness_matrix[i,j]
                     for j in range(2):
                         # Define gradient depending on side of Gauss point
                         if j == 0:
-                            fj_prime = 1.0 / dx
+                            fj_prime = 1.0 / (-dx)
                         else:
-                            fj_prime = -1.0 / dx
+                            fj_prime = 1.0 / (dx)
 
                         # Add Result to existing stiffness values in stiffness matrix    
                         self.material_matrix[e + i, e + j] += wQ * fi_prime * fj_prime
@@ -142,8 +142,8 @@ def main():
     
     # Analysis Conditions:
     #   - Material Properties:
-    K = [20, 0]             # Stiffness Coefficient Polynomial 
-                            #   - (Material Property Function)
+    K = Polynomial([0, 20])             # Stiffness Coefficient Polynomial 
+                                        #   - (Material Property Function)
 
     #   - Type 1 (Dirichlet) boundary conditions:
     Type1_BC = 24                       # Temperature specification
@@ -162,6 +162,17 @@ def main():
     # Numerical Conditions:
     Gaussian_order = 3
 
+    # Calculate exact linear solution for verification:
+    tLeft = Type1_BC
+    q = Type2_BC
+    k = K.evaluate(1)
+    x = x_dimension
+    tRight = (q*x) / (k) + tLeft
+    n = n_elements + 1
+    # Printout to verify with Solution_Space                            tR=33.6
+    print(f"LHS|t0:{tLeft} --- x:{x} --- q:{q} --- k:{k} --- RHS|t{n}:{tRight}\n")
+
+    # Create Instance of FEM analysis
     FEM = FiniteElementMethod(fem_espace, K, BC_Type1, BC_Type2, Gaussian_order)
     #print("FEM_setup..........................................................")
     FEM.setup()
@@ -170,15 +181,7 @@ def main():
     #print("FEM_plot...........................................................")
     FEM.plot()
 
-    # Calculate exact linear solution for verification:
-    tLeft = Type1_BC
-    q = Type2_BC
-    k = Polynomial(K).evaluate(1)
-    x = x_dimension
-    tRight = (q*x) / (k) + tLeft
-    n = n_elements + 1
-    # Printout to verify with Solution_Space                            tR=33.6
-    print(f"LHS|t0:{tLeft} --- x:{x} --- q:{q} --- k{k} --- RHS|t{n}:{tRight}\n")
+    
 
 if __name__ == "__main__":
     main()
