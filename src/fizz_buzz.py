@@ -7,6 +7,10 @@ class FizzBuzz:
     # Define the max number to count to
     maxi = 0
 
+    # Define multiple terms and numbers
+    mNum = [3,5]
+    mName = ["Fizz", "Buzz"]
+
     # Define the array that will hold the designation
     array = []
 
@@ -17,19 +21,18 @@ class FizzBuzz:
  
     # Generate sequence up to and including maxi
     def init_with_max(self):
-        tmp = []
+        tmp_array = []
+        
         for i in range(self.start, self.maxi + 1):
-            if i % 3 == 0:
-                if i % 5 == 0:
-                    tmp.append("FizzBuzz")
-                else:
-                    tmp.append("Fizz")
-            elif i % 5 == 0:
-                tmp.append("Buzz")
-            else:
-                tmp.append(format(i))
+            tmp_str = ""
+            for m in range(len(self.mNum)):
+                if i % self.mNum[m] == 0:
+                    tmp_str += self.mName[m]
+            if tmp_str == "":
+                tmp_str += format(i)
+            tmp_array.append(tmp_str)
             #print(f"{i}|:{self.array[i-self.start]}")
-        self.array = tmp
+        self.array = tmp_array
 
     # Generate class STR for printout
     def __str__(self):
