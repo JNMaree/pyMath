@@ -20,7 +20,9 @@ class FizzBuzz:
         self.init_with_max()
  
     # Generate sequence up to and including maxi
-    def init_with_max(self):
+    def init_with_max(self, max_i=0):
+        if max_i != 0 :
+            self.maxi = max_i
         tmp_array = []
         
         for i in range(self.start, self.maxi + 1):
@@ -41,6 +43,10 @@ class FizzBuzz:
             ret_str += i + ", "
         return ret_str
 
+    def add_multiple_designation(self, multiple, designation):
+        self.mNum.append(multiple)
+        self.mName.append(format(designation))
+
 
 def main():
 
@@ -50,10 +56,18 @@ def main():
 
     # Calculate sequence & Print Output to terminal
     print("TEST_1:")
-    print(FizzBuzz(x1))
+    F1 = FizzBuzz(x1)
+    print(F1)
     
     print("TEST_2:")
-    print(FizzBuzz(x2))
+    F2 = FizzBuzz(x2)
+    print(F2)
+
+    # Add "Fuzz" as a designator for a multiple of 7
+    F1.add_multiple_designation(7, "Fuzz")
+    F1.init_with_max(105)
+    print(F1)
+
 
 
 if __name__ == "__main__":
