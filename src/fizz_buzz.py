@@ -7,7 +7,7 @@ class FizzBuzz:
     # Define the max number to count to
     maxi = 0
 
-    # Define multiple terms and numbers
+    # Define the multiples and the corresponding descriptor terms
     mNum = [3,5]
     mName = ["Fizz", "Buzz"]
 
