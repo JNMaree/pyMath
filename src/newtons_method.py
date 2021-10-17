@@ -1,7 +1,7 @@
 import numpy
 from numpy.lib.polynomial import roots
 
-from polynomial import Polynomial
+from base.polynomial import Polynomial
 
 # The error_tolerance defines the threshold at which numbers are equal:
 #   |n1 - n2| < error_tolerance

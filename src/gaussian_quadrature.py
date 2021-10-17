@@ -1,9 +1,9 @@
 import numpy
 import math
 
-from polynomial import Polynomial
+from base.polynomial import Polynomial
+from base.matrix import Matrix
 from newtons_method import Newtons_method, get_roots
-from matrix import Matrix
 from legendre_polynomial import Legendre
 
 

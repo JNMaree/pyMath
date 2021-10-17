@@ -1,10 +1,10 @@
 import numpy
 import matplotlib.pyplot as plot
 
-from nodespace_1D import NodeSpace1D
-from elementspace_1D import ElementSpace1D
-from polynomial import Polynomial
-from matrix import Matrix
+from base.nodespace_1D import NodeSpace1D
+from base.elementspace_1D import ElementSpace1D
+from base.polynomial import Polynomial
+from base.matrix import Matrix
 from gaussian_quadrature import GaussianQuad
 
 class FiniteElementMethod:

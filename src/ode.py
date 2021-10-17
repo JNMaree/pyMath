@@ -1,5 +1,6 @@
 import numpy
-from polynomial import MultivariatePolynomial
+
+from base.polynomial import MultivariatePolynomial
 
 class ODE(MultivariatePolynomial):
 

@@ -1,9 +1,9 @@
 import numpy
 import matplotlib.pyplot as plot
 
-from elementspace_1D import NodeSpace1D, ElementSpace1D
-from polynomial import Polynomial
-from matrix import Matrix
+from base.elementspace_1D import NodeSpace1D, ElementSpace1D
+from base.polynomial import Polynomial
+from base.matrix import Matrix
 
 class FiniteDifferenceMethod:
 

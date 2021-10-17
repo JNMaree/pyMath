@@ -1,6 +1,6 @@
 import numpy
 
-from polynomial import Polynomial
+from base.polynomial import Polynomial
 from newtons_method import get_roots
 
 class Legendre(Polynomial):
