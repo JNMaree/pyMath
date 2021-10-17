@@ -1,6 +1,6 @@
 import numpy
 
-from polynomial import Polynomial
+from base.polynomial import Polynomial
 
 
 def eulers_method(multiVarPolynom, y0, h, time_steps):

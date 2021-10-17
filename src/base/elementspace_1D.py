@@ -1,8 +1,6 @@
 import numpy
-from numpy.lib.arraysetops import isin
 
 from nodespace_1D import NodeSpace1D
-
 
 class ElementSpace1D(NodeSpace1D):
     """
