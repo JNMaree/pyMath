@@ -1,3 +1,12 @@
+# Encapsulate the pairs of int multiples to related string monikers
+class MultipleMoniker:
+    mul = 0
+    mon = ""
+
+    def __init__(self, multiple, moniker) -> None:
+        self.mul = multiple
+        self.mon = moniker
+
 # Define object to contain methods
 class FizzBuzz:
 
@@ -8,8 +17,7 @@ class FizzBuzz:
     maxi = 0
 
     # Define the multiples and the corresponding descriptor terms
-    mNum = [3,5]
-    mName = ["Fizz", "Buzz"]
+    mmPair = [MultipleMoniker(3, "Fizz"), MultipleMoniker(5, "Buzz")]
 
     # Define the array that will hold the designation
     array = []
@@ -27,9 +35,9 @@ class FizzBuzz:
         
         for i in range(self.start, self.maxi + 1):
             tmp_str = ""
-            for m in range(len(self.mNum)):
-                if i % self.mNum[m] == 0:
-                    tmp_str += self.mName[m]
+            for m in range(len(self.mmPair)):
+                if i % self.mmPair[m].mul == 0:
+                    tmp_str += self.mmPair[m].mon
             if tmp_str == "":
                 tmp_str += format(i)
             tmp_array.append(tmp_str)
@@ -43,9 +51,8 @@ class FizzBuzz:
             ret_str += i + ", "
         return ret_str
 
-    def add_multiple_designation(self, multiple, designation):
-        self.mNum.append(multiple)
-        self.mName.append(format(designation))
+    def add_multiple_moniker(self, multiple, moniker):
+        self.mmPair.append(MultipleMoniker(multiple, moniker))
 
 
 def main():
@@ -64,7 +71,7 @@ def main():
     print(F2)
 
     # Add "Fuzz" as a designator for a multiple of 7
-    F1.add_multiple_designation(7, "Fuzz")
+    F1.add_multiple_moniker(7, "Fuzz")
     F1.init_with_max(105)
     print(F1)
 
