@@ -6,6 +6,9 @@ class CharacterArray:
     # Define the number of characters
     n_ch = 0
 
+    # Define a Permutation Collection
+    permuations = ""
+
     def __init__(self, string) -> None:
         self.chArray = list(string)
         self.n_ch = len(string)
@@ -33,16 +36,22 @@ class CharacterArray:
             self.chArray.pop(spec)
 
     # Get all permutations of the character arrangement
-    def get_permutations(self, pstr=[], rstr=""):
-        if not pstr:
-            self.get_permutations(self.chArray, "")
-        if len(pstr) == 0:
-            return rstr
-        for i in range(len(pstr)):
-            char = pstr[i]
-            substr = pstr[0:i] + pstr[i+1:]
-            self.get_permutations(substr, rstr + char)
-        
+    def get_permutations(self, pstr=None, rstr=""):
+        if pstr != None:
+            if len(pstr) == 0:
+                self.permuations += rstr + "\n"
+                return 
+            else:
+                for i in range(len(pstr)):
+                    char = pstr[i]
+                    substr = pstr[0:i] + pstr[i+1:]
+                    #print(f"substr:{substr}, char:{char}")
+                    self.get_permutations(substr, rstr + char) 
+        else:
+            self.get_permutations(self.chArray)
+
+        return self.permuations
+
 
 def main():
     
