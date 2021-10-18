@@ -49,10 +49,13 @@ class NumberArray:
 
     def calculate_expected_sum(self):
         n = self.n_num
-        return (int) ( n * (n + 1) )/2
+        return (int) ( n * (n + 1)/2 )
 
     def calculate_actual_sum(self):
         return np.sum(self.numArray)
+
+    def find_missing_entity(self):
+        return self.calculate_expected_sum() - self.calculate_actual_sum()
 
 def main():
     # Test Functions
@@ -62,13 +65,13 @@ def main():
     t1.shuffle()
     print(t1)
 
-    # Test remove
+    # Test remove & sum methods
     t1_rem = 7
     t1.remove_num(num=t1_rem)
     print(f"remove:{t1_rem}, new_series:{t1}") 
     print(f"expected_sum_of_series:{t1.calculate_expected_sum()}")
     print(f"actual_sum_of_series:{t1.calculate_actual_sum()}")
-    print(f"difference:{t1.calculate_expected_sum() - t1.calculate_actual_sum()}")
+    print(f"find_difference:{t1.find_missing_entity()}")
 
 
 if __name__ == "__main__":
