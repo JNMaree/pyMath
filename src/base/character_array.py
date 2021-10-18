@@ -9,6 +9,7 @@ class CharacterArray:
     # Define a Permutation Collection
     permuations = ""
 
+    # Create std class methods
     def __init__(self, string) -> None:
         self.chArray = list(string)
         self.n_ch = len(string)
