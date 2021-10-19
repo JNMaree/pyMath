@@ -57,8 +57,19 @@ class Node:
             parent.R = Node(val)
             return level
 
-    def search(self, term):
-        pass
+    def search(self, term, level=0):
+        if self.val == term:
+            print(f"found: term:{term}, node:[{self}] level:{level}")
+            return self, level
+        else:
+            sL = None
+            sR = None
+            if self.L != None:
+                sL = self.L.search(term, level + 1)
+            if self.R != None:
+                sR = self.R.search(term, level + 1)
+            if sL and sR == None:
+                return None
 
     # In-Place Transform to Binary Search Tree
     def to_search_tree(self):
@@ -80,6 +91,8 @@ def main():
     root.L.L = Node(4)
     root.R.R = Node(5)
     root.L.R = Node(6)
+    
+    # Test Insert Method
     #root.R.L = Node(7)
     root.insert(7)
 
@@ -87,6 +100,11 @@ def main():
     print(root.depth_first())
     root.to_search_tree()
     print(root.depth_first())
+
+    # Test Search
+    st = 6
+    nd, le = root.search(st)
+    print(f"n:[{nd}] level:{le}")
 
 if __name__ == "__main__":
     main()
