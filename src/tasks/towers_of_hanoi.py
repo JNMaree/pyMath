@@ -35,13 +35,40 @@ class TowersOfHanoi:
     def top(self, tower):
         rint = 0
         ind = 0
-        while rint == 0 or ind < self.n:
+        while ind < self.n:
             rint = self.towers[ind, tower]
             if rint != 0:
                 return rint
             else:
                 ind += 1
-        return rint
+        return 0
+    
+    # Return the top disk of each tower
+    def top_row(self):
+        rarr = np.zeros(3)
+        for i in range(rarr.size):
+            rarr[i] = self.top(i)
+        return rarr
+    
+    # Return the tower of the max value in the top row
+    def ind_top_max(self):
+        tmax = 0
+        tind = 0
+        for i in range(3):
+            ttop = self.top(i)
+            if ttop > tmax:
+                tmax = ttop
+                tind = i
+        return tind
+
+    # Return the number of disks in tower
+    def get_stack_size(self, tower):
+        ind = 0
+        while ind < self.n:
+            if self.towers[ind, tower] != 0:
+                return self.n - ind
+            ind += 1
+        return 0
 
     # Simulate moving of a value from from_Tower to to_Tower
     def move(self, tFr, tTo):
@@ -70,6 +97,12 @@ class TowersOfHanoi:
 
     # Solve the puzzle iteratively
     def solve_iterative(self):
+        priority = np.array([0,1,2])
+        for i in range(self.minimum_moves()):
+            pass
+
+    # Solve the puzzle recursively
+    def solve_recursive(self):
         c = 0
         while self.top(0) == 0 and self.top(1) == 0:
             if self.top(0) > self.top(2):
@@ -82,16 +115,13 @@ class TowersOfHanoi:
                 self.move(2, 1)
                 c += 1
         print(f"Solved in {c} moves!")
-
-    # Solve the puzzle recursively
-    def solve_recursive(self):
-        pass
     
 
 def main():
     # Test function
     t3 = TowersOfHanoi(3)
     print(t3)
+
 
     #t5 = TowersOfHanoi(5)
     #print(t5)
