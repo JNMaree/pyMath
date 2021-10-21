@@ -149,31 +149,40 @@ class TowersOfHanoi:
             self.shift_smallest_right()
             self.shift_middle_right()
         self.shift_smallest_right()
-        #print(self)
+        print(f"Solved puzzle ITERATIVELY in {loops*2 + 1} moves!")
     
     # Solve the puzzle recursively
-    def solve_recursive(self):
-        c = 0
-        while self.top(0) == self.zero and self.top(1) == self.zero:
-            if self.top(0) > self.top(2):
-                self.move(0, 2)
-                c += 1
-            if self.top(0) > self.top(1):
-                self.move(0, 1)
-                c += 1
-            if self.top(2) < self.top(1):
-                self.move(2, 1)
-                c += 1
-        print(f"Solved in {c} moves!")
+    def solve_recursive(self, c=0):
+        if self.top(0) == self.top(1) == self.zero:     # Check WinCondition
+            print(f"Solved puzzle RECURSIVELY in {c} moves!")
+            return True
+        else:
+            if c % 2 == 0:
+                self.shift_smallest_right()
+            else:
+                self.shift_middle_right()
+            return self.solve_recursive(c + 1)
 
 def main():
-    # Test function
+
+    # Test functions
     t3 = TowersOfHanoi(3)
     print(t3)
     t3.solve_iterative()
+    t3 = TowersOfHanoi(3)
+    t3.solve_recursive()
 
-    #t5 = TowersOfHanoi(5)
-    #print(t5)
+    t4 = TowersOfHanoi(4)
+    print(t4)
+    t4.solve_iterative()
+    t4 = TowersOfHanoi(4)
+    t4.solve_recursive()
+
+    t5 = TowersOfHanoi(5)
+    print(t5)
+    t5.solve_iterative()
+    t5 = TowersOfHanoi(5)
+    t5.solve_recursive()
 
 if __name__ == "__main__":
     main()
