@@ -69,7 +69,7 @@ class Node:
             if self.R != None:
                 sR = self.R.search(term, level + 1)
             if sL and sR == None:
-                return None
+                return None, level
 
     # In-Place Transform to Binary Search Tree
     def to_search_tree(self):
