@@ -63,7 +63,7 @@ class NumberArray:
 
     def calculate_expected_sum(self):
         n = self.n
-        return (int) ( n * (n + 1)/2 )
+        return n * (n + 1)//2
 
     def calculate_actual_sum(self):
         return np.sum(self.nums)
@@ -143,10 +143,16 @@ class NumberArray:
     #   - Partition the array into 2 parts
     #   - Sort each partition independently
     #   - Merge Sorted arrays back into a single array
-    def sort_merge(self, l=0, r=n):
-        split = (int) (l + (r-l)/2)
-        size = r - l
-        
+    def sort_merge(self, arr=nums):
+        if arr.size > 1:
+            split = arr.size//2
+            l = self.sort_merge(self.nums[:split])
+            r = self.sort_merge(self.nums[split:])
+
+            
+        else:
+            return arr
+
 
     def sort_merge_iterative(self):
         pass

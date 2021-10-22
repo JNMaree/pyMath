@@ -93,7 +93,7 @@ class TowersOfHanoi:
 
     # Move the top disk from fr_Tower >>>to>>> to_Tower
     def move(self, tFr, tTo):
-        print(f"MOVE| tFR:{tFr}, tTo:{tTo}")
+        #print(f"MOVE| tFR:{tFr}, tTo:{tTo}")
         # Get Top diskspace indices from specified towers
         iFr, iTo = -1, -1
         # Set starting indices
@@ -115,7 +115,7 @@ class TowersOfHanoi:
         # Swap values at indices
         # print(f"tFrom:{tFr}|iFrom:{iFr}\t tTo:{tTo}|iTo:{iTo}")
         self.towers[iFr, tFr], self.towers[iTo, tTo] = self.towers[iTo, tTo], self.towers[iFr, tFr]
-        print(self.__str__()) # TEST: Print layout post-Move
+        #print(self.__str__()) # TEST: Print layout post-Move
 
     # Define a function to shift the smallest disk (1) right by NP places
     #   - NP = 1 if n is even
@@ -144,7 +144,7 @@ class TowersOfHanoi:
 
     # Solve the puzzle iteratively
     def solve_iterative(self):
-        loops = (int) (self.minimum_moves()/2)
+        loops = self.minimum_moves()//2
         for i in range(loops):
             self.shift_smallest_right()
             self.shift_middle_right()
@@ -171,18 +171,21 @@ def main():
     t3.solve_iterative()
     t3 = TowersOfHanoi(3)
     t3.solve_recursive()
+    print(t3)
 
     t4 = TowersOfHanoi(4)
     print(t4)
     t4.solve_iterative()
     t4 = TowersOfHanoi(4)
     t4.solve_recursive()
+    print(t4)
 
     t5 = TowersOfHanoi(5)
     print(t5)
     t5.solve_iterative()
     t5 = TowersOfHanoi(5)
     t5.solve_recursive()
+    print(t5)
 
 if __name__ == "__main__":
     main()
