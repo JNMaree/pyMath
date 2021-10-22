@@ -3,6 +3,8 @@ import numpy as np
 from numpy import random
 from copy import deepcopy
 
+import numpy
+
 class NumberArray:
     
     # Define the Number array
@@ -39,15 +41,25 @@ class NumberArray:
             # Swap
             self.nums[endint], self.nums[randint] = self.nums[randint], self.nums[endint]
 
-    # Define method to remove element from array,
+    # Remove element from array,
     #   - index: specify index to remove element from
     #   - num: specify component data to remove
-    def remove_num(self, index=None, num=None):
+    def remove(self, index=None, num=None):
         if index != None:
             self.nums = np.delete(self.nums, index)
         else:
             self.nums = self.nums[~np.isin(self.nums, num)]
         self.n = self.nums.size
+    
+    # Add element to array
+    def add(self, num):
+        if isinstance(num, (list, numpy.ndarray)):
+            for i in num:
+                self.nums.append(i)
+                self.n += 1
+        else:
+            self.nums = np.append(self.nums, num)
+            self.n += 1
 
     def calculate_expected_sum(self):
         n = self.n
@@ -114,6 +126,31 @@ class NumberArray:
                 for k in range(j):
                     self.nums[i - k], self.nums[i - k - 1] = self.nums[i - k - 1], self.nums[i - k]
 
+    # 5. Recursive Insertion Sort
+    #   - Same process as insertion sort, applied recursively
+    def sort_insertion_recursive(self, index=1):
+        j = 1
+        while self.nums[index - j + 1] < self.nums[index - j]:
+            self.nums[index - j + 1], self.nums[index - j] = self.nums[index - j], self.nums[index - j + 1]
+            if (index - j) > 0:
+                j += 1
+        if index < (self.n - 1):
+            self.sort_insertion_recursive(index + 1)
+        else:
+            return
+
+    # 6. Merge Sort
+    #   - Partition the array into 2 parts
+    #   - Sort each partition independently
+    #   - Merge Sorted arrays back into a single array
+    def sort_merge(self, l=0, r=n):
+        split = (int) (l + (r-l)/2)
+        size = r - l
+        
+
+    def sort_merge_iterative(self):
+        pass
+
 def main():
     # Test Functions
     t1_n = 16
@@ -122,13 +159,15 @@ def main():
     t1.shuffle()
     print(t1)
 
-    # Test remove & sum methods
+    # Test remove, add & sum methods
     t1_rem = 10
-    t1.remove_num(num=t1_rem)
+    t1.remove(num=t1_rem)
     print(f"remove:{t1_rem}, new_series:{t1}") 
     print(f"expected_sum_of_series:{t1.calculate_expected_sum()}")
     print(f"actual_sum_of_series:{t1.calculate_actual_sum()}")
     print(f"find_difference:{t1.find_missing_entity()}")
+    t1.add(t1.find_missing_entity())
+    print(f"add_missing_entity:{t1}")
 
     # Test Sorting Methods
     dashes = '-'*(t1.n * 4)
@@ -152,6 +191,13 @@ def main():
     t_ins.sort_insertion()
     print("sort_ins:", t_ins, "\n")
 
+    t_irc = copy.deepcopy(t1)
+    t_irc.sort_insertion_recursive()
+    print("sort_irc:", t_irc, "\n")
+
+    t_mrg = copy.deepcopy(t1)
+    t_mrg.sort_merge()
+    print("sort_mrg:", t_mrg, "\n")
 
 if __name__ == "__main__":
     main()

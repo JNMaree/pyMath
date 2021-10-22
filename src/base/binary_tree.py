@@ -12,10 +12,10 @@ class Node:
         self.R = node_right
         self.val = val
     def __str__(self) -> str:
-        rstr = f"{self.val}| L:{self.L}, R:{self.R}"
+        rstr = f"{self.val}| L:{self.L} <-> R:{self.R}"
         return rstr
 
-    def depth_first(self, level=0, side=-1):
+    def pre_order_traversal(self, level=0, side=-1):
         if self != None:
             # setup pyramid
             if side == 0:
@@ -97,9 +97,9 @@ def main():
     root.insert(7)
 
     # Print root depth-first string output
-    print(root.depth_first())
+    print(root.pre_order_traversal())
     root.to_search_tree()
-    print(root.depth_first())
+    print(root.pre_order_traversal())
 
     # Test Search
     st = 6
