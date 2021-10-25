@@ -143,17 +143,39 @@ class NumberArray:
     #   - Partition the array into 2 parts
     #   - Sort each partition independently
     #   - Merge Sorted arrays back into a single array
-    def sort_merge(self, arr=nums):
-        if arr.size > 1:
+    def sort_merge(self, arr=None):
+        if arr is None:
+            self.sort_merge(self.nums)
+        elif arr.size > 1:
             split = arr.size//2
-            l = self.sort_merge(self.nums[:split])
-            r = self.sort_merge(self.nums[split:])
 
+            # Split array into 2, Sort each side (L & R) independently
+            L = arr[:split]
+            R = arr[split:]
+            self.sort_merge(L)
+            self.sort_merge(R)
+
+            # Merge L & R sides of array as ordered
+            iL = iR = iA = 0
+            while iL < L.size and iR < R.size:
+                if L[iL] < R[iR]:
+                    arr[iA] = L[iL]
+                    iL += 1
+                else:
+                    arr[iA] = R[iR]
+                    iR += 1
+                iA += 1
             
-        else:
-            return arr
-
-
+            # Catch Remainders
+            while iL < L.size:
+                arr[iA] = L[iL]
+                iL += 1
+                iA += 1
+            while iR < R.size:
+                arr[iA] = R[iR]
+                iR += 1
+                iA += 1
+    
     def sort_merge_iterative(self):
         pass
 
@@ -183,23 +205,23 @@ def main():
 
     t_sel = copy.deepcopy(t1)
     t_sel.sort_selection()
-    print("sort_sel:", t_sel, "\n")
+    #print("sort_sel:", t_sel, "\n")
 
     t_bub = copy.deepcopy(t1)
     t_bub.sort_bubble()
-    print("sort_bub:", t_bub, "\n")
+    #print("sort_bub:", t_bub, "\n")
 
     t_brc = copy.deepcopy(t1)
     t_brc.sort_bubble_recursive()
-    print("sort_brc:", t_brc, "\n")
+    #print("sort_brc:", t_brc, "\n")
 
     t_ins = copy.deepcopy(t1)
     t_ins.sort_insertion()
-    print("sort_ins:", t_ins, "\n")
+    #print("sort_ins:", t_ins, "\n")
 
     t_irc = copy.deepcopy(t1)
     t_irc.sort_insertion_recursive()
-    print("sort_irc:", t_irc, "\n")
+    #print("sort_irc:", t_irc, "\n")
 
     t_mrg = copy.deepcopy(t1)
     t_mrg.sort_merge()
