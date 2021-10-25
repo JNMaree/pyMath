@@ -139,10 +139,11 @@ class NumberArray:
         else:
             return
 
-    # 6. Merge Sort
-    #   - Partition the array into 2 parts
+    # 6. Merge Sort 
+    #   - Partition the provided array into 2 parts
     #   - Sort each partition independently
     #   - Merge Sorted arrays back into a single array
+    #   - TOP-DOWN approach
     def sort_merge(self, arr=None):
         if arr is None:
             self.sort_merge(self.nums)
@@ -150,8 +151,8 @@ class NumberArray:
             split = arr.size//2
 
             # Split array into 2, Sort each side (L & R) independently
-            L = arr[:split]
-            R = arr[split:]
+            L = np.array(arr[:split])
+            R = np.array(arr[split:])
             self.sort_merge(L)
             self.sort_merge(R)
 
@@ -176,8 +177,19 @@ class NumberArray:
                 iR += 1
                 iA += 1
     
+    # 7. Merge Sort (Iterative)
+    #   - Same implementation as Merge Sort,
+    #   - No Recursive function calls
+    #   - Implements Merge Sort BOTTOM-UP (from small to large arrays)
     def sort_merge_iterative(self):
-        pass
+        jump = 2
+        while jump < self.n:
+            interval = self.n//jump
+            for j in range(interval):   # Loop through main array
+                for i in range(jump - 1):   # Loop through sub-arrays
+                    pass
+            jump *= 2
+            
 
 def main():
     # Test Functions
@@ -226,6 +238,10 @@ def main():
     t_mrg = copy.deepcopy(t1)
     t_mrg.sort_merge()
     print("sort_mrg:", t_mrg, "\n")
+
+    t_mgi = copy.deepcopy(t1)
+    t_mgi.sort_merge_iterative()
+    print("sort_mgi:", t_mgi, "\n")
 
 if __name__ == "__main__":
     main()
