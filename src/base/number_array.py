@@ -189,7 +189,20 @@ class NumberArray:
                 for i in range(jump - 1):   # Loop through sub-arrays
                     pass
             jump *= 2
-            
+    
+    # 8. Quick Sort
+    #   - Select a pivot (First number used in this case)
+    #   - Partition array into two sections based on values:
+    #       1. Greater Than Pivot
+    #       2. Smaller Than Pivot
+    def sort_quick(self, pivot=0):
+        pass
+
+    # 9. Quick Sort (Iterative)
+    #   - Same pivot based algorithm as quick sort
+    #   - Implemented iteratively
+    def sort_quick_iterative(self):
+        pass
 
 def main():
     # Test Functions
@@ -217,31 +230,39 @@ def main():
 
     t_sel = copy.deepcopy(t1)
     t_sel.sort_selection()
-    #print("sort_sel:", t_sel, "\n")
+    #print("sort_sel: ", t_sel, "\n")
 
     t_bub = copy.deepcopy(t1)
     t_bub.sort_bubble()
-    #print("sort_bub:", t_bub, "\n")
+    #print("sort_bub: ", t_bub, "\n")
 
     t_brc = copy.deepcopy(t1)
     t_brc.sort_bubble_recursive()
-    #print("sort_brc:", t_brc, "\n")
+    #print("sort_brc: ", t_brc, "\n")
 
     t_ins = copy.deepcopy(t1)
     t_ins.sort_insertion()
-    #print("sort_ins:", t_ins, "\n")
+    #print("sort_ins: ", t_ins, "\n")
 
     t_irc = copy.deepcopy(t1)
     t_irc.sort_insertion_recursive()
-    #print("sort_irc:", t_irc, "\n")
+    #print("sort_irc: ", t_irc, "\n")
 
     t_mrg = copy.deepcopy(t1)
     t_mrg.sort_merge()
-    print("sort_mrg:", t_mrg, "\n")
+    #print("sort_mrg: ", t_mrg, "\n")
 
     t_mgi = copy.deepcopy(t1)
     t_mgi.sort_merge_iterative()
-    print("sort_mgi:", t_mgi, "\n")
+    print("sort_mgi: ", t_mgi, "\n")
+
+    t_qui = copy.deepcopy(t1)
+    t_qui.sort_quick()
+    print("sort_qui: ", t_qui, "\n")
+
+    t_qit = copy.deepcopy(t1)
+    t_qit.sort_quick_iterative()
+    print("sort_qit: ", t_qit, "\n")
 
 if __name__ == "__main__":
     main()
