@@ -71,6 +71,10 @@ class NumberArray:
     def find_missing_entity(self):
         return self.calculate_expected_sum() - self.calculate_actual_sum()
 
+    # Define a function to swap array entries based on index
+    def swap(self, i, j):
+        self.nums[i], self.nums[j] = self.nums[j], self.nums[i]
+
     # SORTING ALGORITHMS
     #   - implemented to favour ascending order
 
@@ -82,7 +86,7 @@ class NumberArray:
             for j in range(i + 1, self.n):
                 if self.nums[j] < self.nums[min_i]:
                     min_i = j
-            self.nums[i], self.nums[min_i] = self.nums[min_i], self.nums[i]
+            self.swap(i, min_i)
 
     # 2. Bubble Sort:
     #   - find min of 2 adjacent elements, swap if larger value precedes
@@ -92,7 +96,7 @@ class NumberArray:
         swaps = 0
         while not_sorted:
             if self.nums[c] > self.nums[c + 1]:
-                self.nums[c], self.nums[c + 1] = self.nums[c + 1], self.nums[c]
+                self.swap(c, c + 1)
                 swaps += 1
             c += 1
             if c == (self.n - 1):
@@ -107,7 +111,7 @@ class NumberArray:
     def sort_bubble_recursive(self, n=0):
         for i in range(self.n -1 -n):
             if self.nums[i] > self.nums[i + 1]:
-                self.nums[i], self.nums[i + 1] = self.nums[i + 1], self.nums[i]
+                self.swap(i, i + 1)
         if n != (self.n - 2):
             self.sort_bubble_recursive(n + 1)
 
@@ -124,14 +128,14 @@ class NumberArray:
                 if j >= i:
                     j = i
                 for k in range(j):
-                    self.nums[i - k], self.nums[i - k - 1] = self.nums[i - k - 1], self.nums[i - k]
+                    self.swap(i - k, i - k - 1)
 
     # 5. Recursive Insertion Sort
     #   - Same process as insertion sort, applied recursively
     def sort_insertion_recursive(self, index=1):
         j = 1
         while self.nums[index - j + 1] < self.nums[index - j]:
-            self.nums[index - j + 1], self.nums[index - j] = self.nums[index - j], self.nums[index - j + 1]
+            self.swap(index - j, index - j + 1)
             if (index - j) > 0:
                 j += 1
         if index < (self.n - 1):
@@ -182,14 +186,40 @@ class NumberArray:
     #   - No Recursive function calls
     #   - Implements Merge Sort BOTTOM-UP (from small to large arrays)
     def sort_merge_iterative(self):
-        jump = 2
-        while jump < self.n:
-            interval = self.n//jump
-            for j in range(interval):   # Loop through main array
-                for i in range(jump - 1):   # Loop through sub-arrays
-                    pass
-            jump *= 2
-    
+        # Set initial block size
+        interval = 2
+        while interval <= self.n:
+
+            # Partition Array into blocks of specified size (interval)
+            blocks = self.n//interval
+            print(f"interval:{interval}\tblocks:{blocks}| {self.nums}")
+
+            # Sort each individual block
+            for b in range(blocks):
+                # Set starting index for block
+                i0 = b * interval
+                # Loop through all entries in single block
+                for i in range(interval - 1):
+                    iMod = i + 1
+                    while iMod < interval and self.nums[i0 + i] > self.nums[i0 + iMod]:
+                        self.swap(i0 + i, i0 + iMod)
+                        iMod += 1
+            print(f"blocksort:{interval}\tblocks:{blocks}| {self.nums}")
+                        
+            # Merge adjacent blocks (A & B)
+            for b in range(blocks//2):
+                iA = b * 2 * interval       # Start index of block A
+                iB = iA + interval          # Start index of block B
+                for i in range(interval):
+                    if self.nums[iA + i] > self.nums[iB]:
+                        while iB < interval and self.nums[iA + i] > self.nums[iB]:
+                            iB += 1
+                        self.swap(iA + i, iB)
+                        iB = iA + interval
+
+            # Double block size
+            interval *= 2
+
     # 8. Quick Sort
     #   - Select a pivot (First number used in this case)
     #   - Partition array into two sections based on values:
@@ -218,14 +248,15 @@ def main():
     print(f"remove:{t1_rem}, new_series:{t1}") 
     print(f"expected_sum_of_series:{t1.calculate_expected_sum()}")
     print(f"actual_sum_of_series:{t1.calculate_actual_sum()}")
-    print(f"find_difference:{t1.find_missing_entity()}")
-    t1.add(t1.find_missing_entity())
-    print(f"add_missing_entity:{t1}")
+    missing = t1.find_missing_entity()
+    print(f"missing:{missing}")
+    t1.add(missing)
+    #print(f"add_missing_entity:{t1}")
 
     # Test Sorting Methods
     dashes = '-'*(t1.n * 4)
     print(dashes)
-    print("Unsorted:", t1)
+    print("Unsorted: ", t1)
     print(dashes)
 
     t_sel = copy.deepcopy(t1)
@@ -250,19 +281,21 @@ def main():
 
     t_mrg = copy.deepcopy(t1)
     t_mrg.sort_merge()
-    #print("sort_mrg: ", t_mrg, "\n")
+    print("sort_mrg: ", t_mrg, "\n")
 
-    t_mgi = copy.deepcopy(t1)
+    #t_mgi = copy.deepcopy(t1)
+    t_mgi = NumberArray(numpy.array([1,12,4,14,5,9,8,13,11,3,6,0,7,2,15,10]))
     t_mgi.sort_merge_iterative()
     print("sort_mgi: ", t_mgi, "\n")
 
     t_qui = copy.deepcopy(t1)
+
     t_qui.sort_quick()
-    print("sort_qui: ", t_qui, "\n")
+    #print("sort_qui: ", t_qui, "\n")
 
     t_qit = copy.deepcopy(t1)
     t_qit.sort_quick_iterative()
-    print("sort_qit: ", t_qit, "\n")
+    #print("sort_qit: ", t_qit, "\n")
 
 if __name__ == "__main__":
     main()
