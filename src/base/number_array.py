@@ -192,7 +192,7 @@ class NumberArray:
 
             # Partition Array into blocks of specified size (interval)
             blocks = self.n//interval
-            print(f"interval:{interval}\tblocks:{blocks}| {self.nums}")
+            #print(f"interval:{interval}\tblocks:{blocks}| {self.nums}")
 
             # Sort each individual block
             for b in range(blocks):
@@ -204,18 +204,17 @@ class NumberArray:
                     while iMod < interval and self.nums[i0 + i] > self.nums[i0 + iMod]:
                         self.swap(i0 + i, i0 + iMod)
                         iMod += 1
-            print(f"blocksort:{interval}\tblocks:{blocks}| {self.nums}")
-                        
+            #print(f"blocksort:{interval}\tblocks:{blocks}| {self.nums}")
+ 
             # Merge adjacent blocks (A & B)
             for b in range(blocks//2):
                 iA = b * 2 * interval       # Start index of block A
                 iB = iA + interval          # Start index of block B
-                for i in range(interval):
-                    if self.nums[iA + i] > self.nums[iB]:
-                        while iB < interval and self.nums[iA + i] > self.nums[iB]:
-                            iB += 1
-                        self.swap(iA + i, iB)
-                        iB = iA + interval
+                for a in range(iA, iA + interval):
+                    b = iB
+                    while self.nums[a] > self.nums[b]:
+                        self.swap(a, b)
+                        b += 1
 
             # Double block size
             interval *= 2
