@@ -210,9 +210,9 @@ class NumberArray:
             for b in range(blocks//2):
                 iA = b * 2 * interval       # Start index of block A
                 iB = iA + interval          # Start index of block B
-                for a in range(iA, iA + interval):
+                for a in range(iA, iB):
                     b = iB
-                    while self.nums[a] > self.nums[b]:
+                    while b < self.n and self.nums[a] > self.nums[b]:
                         self.swap(a, b)
                         b += 1
 
@@ -224,14 +224,37 @@ class NumberArray:
     #   - Partition array into two sections based on values:
     #       1. Greater Than Pivot
     #       2. Smaller Than Pivot
-    def sort_quick(self, pivot=0):
-        pass
+    def sort_quick(self, start=0, end=None):
+        if end is None:
+            end = self.n
+        if start < end:
+            pivot = self.nums[end - 1]
+            low = start - 1
+
+            for i in range(start, end):
+                if self.nums[i] < pivot:
+                    low += 1
+                    self.swap(low, i)
+
+            low += 1
+            self.swap(low, end - 1)
+
+            self.sort_quick(start, low)
+            self.sort_quick(low + 1, end)
 
     # 9. Quick Sort (Iterative)
     #   - Same pivot based algorithm as quick sort
     #   - Implemented iteratively
     def sort_quick_iterative(self):
-        pass
+        pivot_pos = 0
+        pivot = self.nums[pivot_pos]
+        pivot_count = 1
+        while pivot_count < self.n:
+            # Sort array to pivot point
+            for i in range(1, self.n):
+                if self.nums[i] < pivot:
+                    self.swap(i, pivot_pos)
+                    pivot_pos += 1
 
 def main():
     # Test Functions
@@ -280,21 +303,19 @@ def main():
 
     t_mrg = copy.deepcopy(t1)
     t_mrg.sort_merge()
-    print("sort_mrg: ", t_mrg, "\n")
+    #print("sort_mrg: ", t_mrg, "\n")
 
-    #t_mgi = copy.deepcopy(t1)
-    t_mgi = NumberArray(numpy.array([1,12,4,14,5,9,8,13,11,3,6,0,7,2,15,10]))
+    t_mgi = copy.deepcopy(t1)
     t_mgi.sort_merge_iterative()
-    print("sort_mgi: ", t_mgi, "\n")
+    #print("sort_mgi: ", t_mgi, "\n")
 
     t_qui = copy.deepcopy(t1)
-
     t_qui.sort_quick()
-    #print("sort_qui: ", t_qui, "\n")
+    print("sort_qui: ", t_qui, "\n")
 
     t_qit = copy.deepcopy(t1)
     t_qit.sort_quick_iterative()
-    #print("sort_qit: ", t_qit, "\n")
+    print("sort_qit: ", t_qit, "\n")
 
 if __name__ == "__main__":
     main()
