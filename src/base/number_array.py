@@ -256,6 +256,13 @@ class NumberArray:
                     self.swap(i, pivot_pos)
                     pivot_pos += 1
 
+    # 10. Heap Sort (Binary Tree)
+    #   - Array is converted to a binary tree format
+    #   - Smallest values are positioned furthest from the root
+    #   - Root assumes value of maximum array value
+    def sort_binary_heap(self):
+        pass
+
 def main():
     # Test Functions
     t1_n = 16
@@ -316,6 +323,12 @@ def main():
     t_qit = copy.deepcopy(t1)
     t_qit.sort_quick_iterative()
     print("sort_qit: ", t_qit, "\n")
+
+    t_bhp = copy.deepcopy(t1)
+    t_bhp.sort_binary_heap()
+    print("sort_bhp: ", t_bhp, "\n")
+
+    
 
 if __name__ == "__main__":
     main()
