@@ -245,16 +245,32 @@ class NumberArray:
     # 9. Quick Sort (Iterative)
     #   - Same pivot based algorithm as quick sort
     #   - Implemented iteratively
+    #   - Uses a temporary array as a stack
     def sort_quick_iterative(self):
-        pivot_pos = 0
-        pivot = self.nums[pivot_pos]
-        pivot_count = 1
+        stack = np.zeros(self.n)
+        pivot_count = 0
+        pivot = self.nums[pivot_count]
+        stack[pivot_count] = pivot
+       
         while pivot_count < self.n:
-            # Sort array to pivot point
-            for i in range(1, self.n):
-                if self.nums[i] < pivot:
-                    self.swap(i, pivot_pos)
-                    pivot_pos += 1
+            for i in range(pivot_count, self.n):
+                if self.nums[i] > pivot:        # >pivot
+                    mov = 1
+                    while self.nums[i] > stack[pivot_count + mov]:
+                        mov += 1
+                    stack[pivot_count + mov] = self.nums[i]
+                    pivot_count += 1
+                elif self.nums[i] < pivot:      # <pivot
+                    mov = 1
+                    while self.nums[i] < stack[pivot_count - mov]:
+                        mov += 1
+                    stack[pivot_count - mov] = self.nums[i]
+                    pivot_count += 1
+                else:                           # ==pivot
+                    pivot_count += 1
+                    stack[pivot_count] = self.nums[i]
+
+        self.nums = stack
 
     # 10. Heap Sort (Binary Tree)
     #   - Array is converted to a binary tree format
@@ -328,7 +344,7 @@ def main():
     t_bhp.sort_binary_heap()
     print("sort_bhp: ", t_bhp, "\n")
 
-    
+
 
 if __name__ == "__main__":
     main()
