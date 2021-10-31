@@ -248,29 +248,15 @@ class NumberArray:
     #   - Uses a temporary array as a stack
     def sort_quick_iterative(self):
         stack = np.zeros(self.n)
-        pivot_count = 0
-        pivot = self.nums[pivot_count]
-        stack[pivot_count] = pivot
-       
-        while pivot_count < self.n:
-            for i in range(pivot_count, self.n):
-                if self.nums[i] > pivot:        # >pivot
-                    mov = 1
-                    while self.nums[i] > stack[pivot_count + mov]:
-                        mov += 1
-                    stack[pivot_count + mov] = self.nums[i]
-                    pivot_count += 1
-                elif self.nums[i] < pivot:      # <pivot
-                    mov = 1
-                    while self.nums[i] < stack[pivot_count - mov]:
-                        mov += 1
-                    stack[pivot_count - mov] = self.nums[i]
-                    pivot_count += 1
-                else:                           # ==pivot
-                    pivot_count += 1
-                    stack[pivot_count] = self.nums[i]
+        pivot_count = 1
+        stack[1] = self.n
+        while pivot_count >= 0:
 
-        self.nums = stack
+            # partition function
+            pivot = self.nums[pivot_count]
+            for i in range(self.n):
+                if self.nums[i] <= pivot:
+                    self.swap(0, i)
 
     # 10. Heap Sort (Binary Tree)
     #   - Array is converted to a binary tree format
