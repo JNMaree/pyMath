@@ -286,11 +286,25 @@ class NumberArray:
 
     # 11. Counting Sort
     #   - Operates by counting instances of occuring numbers
-    #   - 
+    #   - Converts count array to the cumulative sum of counts
+    #   - Count array describes the index of the 
     def sort_counting(self):
         mini = self.minimum()
+        maxi = self.maximum()
+        count = np.zeros(maxi - mini + 1)
+ 
+        for i in range(self.n):    # Count the nubmer of unique occurrences
+            count[self.ints[i]] += 1
+        #print("count_array: \t\t", count)
+        for i in range(1, count.size):      # Convert count to cumulative sum
+            count[i] += count[i - 1]
+        #print("cumulative_array: \t", count)
         
-
+        output = np.zeros(self.n, dtype=self.ints.dtype)
+        for i in range(self.n):
+            output[int (count[self.ints[i]] - 1)] = self.ints[i]
+            count[self.ints[i]] -= 1
+        self.ints = output
 
 def main():
     # Test Functions
@@ -347,17 +361,19 @@ def main():
 
     t_qui = copy.deepcopy(t1)
     t_qui.sort_quick()
-    print("sort_qui: ", t_qui, "\n")
+    #print("sort_qui: ", t_qui, "\n")
 
     t_qit = copy.deepcopy(t1)
     t_qit.sort_quick_iterative()
-    print("sort_qit: ", t_qit, "\n")
+    #print("sort_qit: ", t_qit, "\n")
 
     t_bhp = copy.deepcopy(t1)
     t_bhp.sort_binary_heap()
     print("sort_bhp: ", t_bhp, "\n")
 
-
+    t_cnt = copy.deepcopy(t1)
+    t_cnt.sort_counting()
+    print("sort_cnt: ", t_cnt, "\n")
 
 if __name__ == "__main__":
     main()
