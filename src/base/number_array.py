@@ -1,6 +1,6 @@
 import copy
 import numpy as np
-from numpy import random
+from numpy import minimum, random
 from copy import deepcopy
 
 import numpy
@@ -8,7 +8,7 @@ import numpy
 class NumberArray:
     
     # Define the Number array
-    nums = []
+    ints = []
 
     # Define the number of array entries
     n = 0
@@ -16,16 +16,16 @@ class NumberArray:
     # Create std class methods
     def __init__(self, setup) -> None:
         if isinstance(setup, np.ndarray):
-            self.nums = setup
+            self.ints = setup
             self.n = setup.size
         elif isinstance(setup, int):
-            self.nums = np.arange(setup)
+            self.ints = np.arange(setup)
             self.n = setup
         else:
             raise TypeError("Unknown Type specified as 'setup' parameter")
     def __str__(self) -> str:
         rstr = format(self.n)
-        rstr += self.nums.__str__()
+        rstr += self.ints.__str__()
         return rstr
 
     # Define method to randomise the order of existing array entries
@@ -39,26 +39,26 @@ class NumberArray:
             endint = self.n-1-i
             randint = random.randint(0, endint)
             # Swap
-            self.nums[endint], self.nums[randint] = self.nums[randint], self.nums[endint]
+            self.ints[endint], self.ints[randint] = self.ints[randint], self.ints[endint]
 
     # Remove element from array,
     #   - index: specify index to remove element from
     #   - num: specify component data to remove
     def remove(self, index=None, num=None):
         if index != None:
-            self.nums = np.delete(self.nums, index)
+            self.ints = np.delete(self.ints, index)
         else:
-            self.nums = self.nums[~np.isin(self.nums, num)]
-        self.n = self.nums.size
+            self.ints = self.ints[~np.isin(self.ints, num)]
+        self.n = self.ints.size
     
     # Add element to array
     def add(self, num):
         if isinstance(num, (list, numpy.ndarray)):
             for i in num:
-                self.nums.append(i)
+                self.ints.append(i)
                 self.n += 1
         else:
-            self.nums = np.append(self.nums, num)
+            self.ints = np.append(self.ints, num)
             self.n += 1
 
     def calculate_expected_sum(self):
@@ -66,14 +66,22 @@ class NumberArray:
         return n * (n + 1)//2
 
     def calculate_actual_sum(self):
-        return np.sum(self.nums)
+        return np.sum(self.ints)
 
     def find_missing_entity(self):
         return self.calculate_expected_sum() - self.calculate_actual_sum()
 
     # Define a function to swap array entries based on index
     def swap(self, i, j):
-        self.nums[i], self.nums[j] = self.nums[j], self.nums[i]
+        self.ints[i], self.ints[j] = self.ints[j], self.ints[i]
+
+    # Return minimum/maximum numbers present in array
+    def minimum(self):
+        return np.amin(self.ints)
+    def maximum(self):
+        return np.amax(self.ints)
+
+
 
     # SORTING ALGORITHMS
     #   - implemented to favour ascending order
@@ -84,7 +92,7 @@ class NumberArray:
         for i in range(self.n):
             min_i = i
             for j in range(i + 1, self.n):
-                if self.nums[j] < self.nums[min_i]:
+                if self.ints[j] < self.ints[min_i]:
                     min_i = j
             self.swap(i, min_i)
 
@@ -95,7 +103,7 @@ class NumberArray:
         c = 0
         swaps = 0
         while not_sorted:
-            if self.nums[c] > self.nums[c + 1]:
+            if self.ints[c] > self.ints[c + 1]:
                 self.swap(c, c + 1)
                 swaps += 1
             c += 1
@@ -110,7 +118,7 @@ class NumberArray:
     #   - Same swapping practive as bubble sort, implemented recursively
     def sort_bubble_recursive(self, n=0):
         for i in range(self.n -1 -n):
-            if self.nums[i] > self.nums[i + 1]:
+            if self.ints[i] > self.ints[i + 1]:
                 self.swap(i, i + 1)
         if n != (self.n - 2):
             self.sort_bubble_recursive(n + 1)
@@ -121,9 +129,9 @@ class NumberArray:
     #       placed into correct position in sorted array
     def sort_insertion(self):
         for i in range(1, self.n):
-            if self.nums[i] < self.nums[i - 1]:
+            if self.ints[i] < self.ints[i - 1]:
                 j = 0
-                while self.nums[i] < self.nums[i - 1 - j]:
+                while self.ints[i] < self.ints[i - 1 - j]:
                     j += 1
                 if j >= i:
                     j = i
@@ -134,7 +142,7 @@ class NumberArray:
     #   - Same process as insertion sort, applied recursively
     def sort_insertion_recursive(self, index=1):
         j = 1
-        while self.nums[index - j + 1] < self.nums[index - j]:
+        while self.ints[index - j + 1] < self.ints[index - j]:
             self.swap(index - j, index - j + 1)
             if (index - j) > 0:
                 j += 1
@@ -150,7 +158,7 @@ class NumberArray:
     #   - TOP-DOWN approach
     def sort_merge(self, arr=None):
         if arr is None:
-            self.sort_merge(self.nums)
+            self.sort_merge(self.ints)
         elif arr.size > 1:
             split = arr.size//2
 
@@ -201,7 +209,7 @@ class NumberArray:
                 # Loop through all entries in single block
                 for i in range(interval - 1):
                     iMod = i + 1
-                    while iMod < interval and self.nums[i0 + i] > self.nums[i0 + iMod]:
+                    while iMod < interval and self.ints[i0 + i] > self.ints[i0 + iMod]:
                         self.swap(i0 + i, i0 + iMod)
                         iMod += 1
             #print(f"blocksort:{interval}\tblocks:{blocks}| {self.nums}")
@@ -212,7 +220,7 @@ class NumberArray:
                 iB = iA + interval          # Start index of block B
                 for a in range(iA, iB):
                     b = iB
-                    while b < self.n and self.nums[a] > self.nums[b]:
+                    while b < self.n and self.ints[a] > self.ints[b]:
                         self.swap(a, b)
                         b += 1
 
@@ -228,11 +236,11 @@ class NumberArray:
         if end is None:
             end = self.n
         if start < end:
-            pivot = self.nums[end - 1]
+            pivot = self.ints[end - 1]
             low = start - 1
 
             for i in range(start, end):
-                if self.nums[i] < pivot:
+                if self.ints[i] < pivot:
                     low += 1
                     self.swap(low, i)
 
@@ -245,18 +253,29 @@ class NumberArray:
     # 9. Quick Sort (Iterative)
     #   - Same pivot based algorithm as quick sort
     #   - Implemented iteratively
-    #   - Uses a temporary array as a stack
+    #   - Use a temporary array to store indices in sorted form
     def sort_quick_iterative(self):
-        stack = np.zeros(self.n)
-        pivot_count = 1
-        stack[1] = self.n
-        while pivot_count >= 0:
+        stack = self.ints
+        pivot_pos = 0               # Set pivot as first index
+        pivot = stack[pivot_pos]
+        pivot_pos += 1
 
-            # partition function
-            pivot = self.nums[pivot_count]
-            for i in range(self.n):
-                if self.nums[i] <= pivot:
-                    self.swap(0, i)
+        while pivot_pos < self.n - 1:
+            # Position the pivot in correct position in stack array
+            for i in range(pivot_pos, self.n):
+                if self.ints[i] <= pivot:
+                    self.swap(i, i - 1)
+
+            pivot_pos += 1
+            pivot = stack[pivot_pos]
+
+            for l in range(pivot_pos):
+                if self.ints[l] > self.ints[l + 1]:
+                    self.swap(l, l + 1)
+            
+            for h in range(pivot_pos, self.n):
+                if self.ints[h] < self.ints[h - 1]:
+                    self.swap(h, h - 1)
 
     # 10. Heap Sort (Binary Tree)
     #   - Array is converted to a binary tree format
@@ -264,6 +283,28 @@ class NumberArray:
     #   - Root assumes value of maximum array value
     def sort_binary_heap(self):
         pass
+
+    # 11. Counting Sort
+    #   - Operates by counting instances of occuring numbers
+    #   - Converts count array to the cumulative sum of counts
+    #   - Count array describes the index of the 
+    def sort_counting(self):
+        mini = self.minimum()
+        maxi = self.maximum()
+        count = np.zeros(maxi - mini + 1)
+ 
+        for i in range(self.n):    # Count the nubmer of unique occurrences
+            count[self.ints[i]] += 1
+        #print("count_array: \t\t", count)
+        for i in range(1, count.size):      # Convert count to cumulative sum
+            count[i] += count[i - 1]
+        #print("cumulative_array: \t", count)
+        
+        output = np.zeros(self.n, dtype=self.ints.dtype)
+        for i in range(self.n):
+            output[int (count[self.ints[i]] - 1)] = self.ints[i]
+            count[self.ints[i]] -= 1
+        self.ints = output
 
 def main():
     # Test Functions
@@ -320,17 +361,19 @@ def main():
 
     t_qui = copy.deepcopy(t1)
     t_qui.sort_quick()
-    print("sort_qui: ", t_qui, "\n")
+    #print("sort_qui: ", t_qui, "\n")
 
     t_qit = copy.deepcopy(t1)
     t_qit.sort_quick_iterative()
-    print("sort_qit: ", t_qit, "\n")
+    #print("sort_qit: ", t_qit, "\n")
 
     t_bhp = copy.deepcopy(t1)
     t_bhp.sort_binary_heap()
     print("sort_bhp: ", t_bhp, "\n")
 
-
+    t_cnt = copy.deepcopy(t1)
+    t_cnt.sort_counting()
+    print("sort_cnt: ", t_cnt, "\n")
 
 if __name__ == "__main__":
     main()
