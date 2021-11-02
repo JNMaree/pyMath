@@ -81,6 +81,11 @@ class NumberArray:
     def maximum(self):
         return np.amax(self.ints)
 
+    # Define a function to reverse the array
+    def reverse(self):
+        for i in range(self.n//2):          # Reverse array
+            self.swap(i, self.n - 1 - i)
+
 
 
     # SORTING ALGORITHMS
@@ -281,8 +286,30 @@ class NumberArray:
     #   - Array is converted to a binary tree format
     #   - Smallest values are positioned furthest from the root
     #   - Root assumes value of maximum array value
-    def sort_binary_heap(self):
-        pass
+    def sort_binary_heap(self, index=0):
+        ind = self.n - index
+        P = ind             # Parent node index
+        L = 2*P + 1        # Left node index
+        R = 2*P + 2        # Right node index
+
+        # Order P, L, R nodes so P is the largest value, followed by R then L
+        if L < self.n and self.ints[P] < self.ints[L]:
+            P = L
+        if R < self.n and self.ints[P] < self.ints[R]:
+            P = R
+        
+        if P != ind:            
+            self.swap(ind, P)
+            self.sort_binary_heap(P)
+
+        if index < self.n//2 - 1:
+            self.sort_binary_heap(index + 1)
+        else:
+            self.reverse()
+
+        #else:
+        #    for i in range(self.n//2):     # Re-Order descending to ascending sorted form
+        #        self.swap(i, self.n - i - 1)
 
     # 11. Counting Sort
     #   - Operates by counting instances of occuring numbers
@@ -373,7 +400,9 @@ def main():
 
     t_cnt = copy.deepcopy(t1)
     t_cnt.sort_counting()
-    print("sort_cnt: ", t_cnt, "\n")
+    #print("sort_cnt: ", t_cnt, "\n")
+
+
 
 if __name__ == "__main__":
     main()
