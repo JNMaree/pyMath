@@ -18,6 +18,9 @@ class NumberArray:
         if isinstance(setup, np.ndarray):
             self.ints = setup
             self.n = setup.size
+        elif isinstance(setup, list):
+            self.ints = np.array(setup)
+            self.n = len(setup)
         elif isinstance(setup, int):
             self.ints = np.arange(setup)
             self.n = setup
@@ -286,26 +289,27 @@ class NumberArray:
     #   - Array is converted to a binary tree format
     #   - Smallest values are positioned furthest from the root
     #   - Root assumes value of maximum array value
-    def sort_binary_heap(self, index=0):
-        ind = self.n - index
-        P = ind             # Parent node index
-        L = 2*P + 1        # Left node index
-        R = 2*P + 2        # Right node index
-
-        # Order P, L, R nodes so P is the largest value, followed by R then L
-        if L < self.n and self.ints[P] < self.ints[L]:
-            P = L
-        if R < self.n and self.ints[P] < self.ints[R]:
-            P = R
-        
-        if P != ind:            
-            self.swap(ind, P)
-            self.sort_binary_heap(P)
-
-        if index < self.n//2 - 1:
-            self.sort_binary_heap(index + 1)
+    def sort_binary_heap(self, index=-1, size=0):
+        if index == -1:
+            for i in range(self.n//2, -1, -1):
+                self.sort_binary_heap(i, self.n)
+            for i in range(self.n - 1, 0, -1):
+                self.swap(0, i)
+                self.sort_binary_heap(0, i)
         else:
-            self.reverse()
+            P = index          # Parent node index
+            L = 2*P + 1        # Left node index
+            R = 2*P + 2        # Right node index
+
+            # Order P, L, R nodes so P is the largest value, followed by R then L       
+            if L < size and self.ints[index] < self.ints[L]:
+                P = L
+            if R < size and self.ints[P] < self.ints[R]:
+                P = R
+            # If larger number detected
+            if P != index:
+                self.swap(P, index)
+                self.sort_binary_heap(P, size)
 
         #else:
         #    for i in range(self.n//2):     # Re-Order descending to ascending sorted form
@@ -320,10 +324,10 @@ class NumberArray:
         maxi = self.maximum()
         count = np.zeros(maxi - mini + 1)
  
-        for i in range(self.n):    # Count the nubmer of unique occurrences
+        for i in range(self.n):         # Count the nubmer of unique occurrences
             count[self.ints[i]] += 1
         #print("count_array: \t\t", count)
-        for i in range(1, count.size):      # Convert count to cumulative sum
+        for i in range(1, count.size):  # Convert count to cumulative sum
             count[i] += count[i - 1]
         #print("cumulative_array: \t", count)
         
@@ -337,18 +341,18 @@ def main():
     # Test Functions
     t1_n = 16
     t1 = NumberArray(t1_n)
-    print(t1)
+    #print(t1)
     t1.shuffle()
-    print(t1)
+    #print(t1)
 
     # Test remove, add & sum methods
     t1_rem = 10
     t1.remove(num=t1_rem)
-    print(f"remove:{t1_rem}, new_series:{t1}") 
-    print(f"expected_sum_of_series:{t1.calculate_expected_sum()}")
-    print(f"actual_sum_of_series:{t1.calculate_actual_sum()}")
+    #print(f"remove:{t1_rem}, new_series:{t1}") 
+    #print(f"expected_sum_of_series:{t1.calculate_expected_sum()}")
+    #print(f"actual_sum_of_series:{t1.calculate_actual_sum()}")
     missing = t1.find_missing_entity()
-    print(f"missing:{missing}")
+    #print(f"missing:{missing}")
     t1.add(missing)
     #print(f"add_missing_entity:{t1}")
 
@@ -394,7 +398,7 @@ def main():
     t_qit.sort_quick_iterative()
     #print("sort_qit: ", t_qit, "\n")
 
-    t_bhp = copy.deepcopy(t1)
+    t_bhp = copy.deepcopy(t1) 
     t_bhp.sort_binary_heap()
     print("sort_bhp: ", t_bhp, "\n")
 
