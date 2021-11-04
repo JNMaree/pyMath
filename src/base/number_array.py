@@ -1,6 +1,6 @@
 import copy
 import numpy as np
-from numpy import minimum, random
+from numpy import True_, minimum, random
 from copy import deepcopy
 
 import numpy
@@ -393,7 +393,24 @@ class NumberArray:
                 self.ints[i] = j
                 i += 1
             
-            
+    # 14. Shell Sort
+    #   - Operates similarly to insert sort by comparing elements and swapping
+    #   - Works with intervals instead by comparing elements an interval apart 
+    def sort_shell(self, interval=0):
+        if interval == 0:
+            interval = self.n//2    # Initial interval size
+        while interval > 0:
+            print("interval:", format(interval), end = "  ")
+            for i in range(interval, self.n):
+                hold = self.ints[i]
+                mov = i
+                while mov >= interval and self.ints[mov - interval] > hold:
+                    self.ints[mov] = self.ints[mov - interval]
+                    mov -= interval 
+                self.ints[mov] = hold
+            interval = interval//2  # Set next interval value
+            print(self.ints)
+
 
 def main():
     # Test Functions
@@ -466,11 +483,15 @@ def main():
 
     t_rad = copy.deepcopy(t)
     t_rad.sort_radix()
-    print("sort_rad: ", t_rad, "\n")
+    #print("sort_rad: ", t_rad, "\n")
 
     t_buc = copy.deepcopy(t)
     t_buc.sort_bucket()
     print("sort_buc: ", t_buc, "\n")
 
+    t_shl = copy.deepcopy(t)
+    t_shl.sort_shell()
+    print("sort_shl: ", t_shl, "\n")
+    
 if __name__ == "__main__":
     main()
