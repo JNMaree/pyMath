@@ -360,6 +360,40 @@ class NumberArray:
                 count[index] -= 1
             self.ints = output
 
+    # 13. Bucket Sort
+    #   - Applies to sorting uniform distributions over a range
+    #   - Capable of handling floats
+    def sort_bucket(self, n_bins=0):
+        if n_bins == 0:
+            n_bins = self.n//4
+        bins = [[] for n in range(n_bins)]      # Set bin/bucket array
+        mini = self.minimum()
+        maxi = self.maximum()
+        interval = (maxi - mini)//(n_bins) + 1  # Set the interval each bin contains
+        
+        for i in range(self.n):     # Arrange the array into bins/buckets
+            mov = mini
+            pos = 0
+            while pos < n_bins and self.ints[i] >= mov:
+                mov += interval
+                pos += 1
+            bins[pos - 1].append(self.ints[i])
+        #print(f"bins:{bins}\n")
+        for b in bins:      # Loop through bins & sort each bin independently
+            for i in range(1, len(b)):     # Insertion Sort
+                comp = b[i]
+                mov = i - 1
+                while mov >= 0 and comp < b[mov]:
+                    b[mov + 1], b[mov] = b[mov], b[mov + 1]
+                    mov -= 1
+                    
+        i = 0
+        for b in bins:      # Extract bins back to array
+            for j in b:
+                self.ints[i] = j
+                i += 1
+            
+            
 
 def main():
     # Test Functions
@@ -428,11 +462,15 @@ def main():
 
     t_cnt = copy.deepcopy(t)
     t_cnt.sort_counting()
-    print("sort_cnt: ", t_cnt, "\n")
+    #print("sort_cnt: ", t_cnt, "\n")
 
     t_rad = copy.deepcopy(t)
     t_rad.sort_radix()
     print("sort_rad: ", t_rad, "\n")
+
+    t_buc = copy.deepcopy(t)
+    t_buc.sort_bucket()
+    print("sort_buc: ", t_buc, "\n")
 
 if __name__ == "__main__":
     main()
