@@ -333,80 +333,144 @@ class NumberArray:
         
         output = np.zeros(self.n, dtype=self.ints.dtype)
         for i in range(self.n):
-            output[int (count[self.ints[i]] - 1)] = self.ints[i]
+            output[int (count[self.ints[i]]) - 1] = self.ints[i]
             count[self.ints[i]] -= 1
         self.ints = output
 
+    # 12. Radix Sort
+    #   - An implementation of counting sort that relies on digit values
+    #   - Numbers are grouped by shared digits in the same place value
+    #   - Digits groups are sorted from least significant to most significant
+    def sort_radix(self):
+        digits = len(format(abs(self.maximum())))   # Get max number of digits
+        for i in range(digits):             # Loop through all digit positions
+            dec = 10**(i+1)         # Set decimal digit place to sort
+            
+            # Implement Counting Sort Algorithm for digit range
+            output = np.zeros(self.n, dtype=self.ints.dtype)
+            count = np.zeros(10, dtype=int)
+
+            for c in range(self.n):     # Count digit occurences
+                count[(self.ints[c] % dec)//(dec//10)] += 1
+            for c in range(1, 10):      # Convert to cumulative sum
+                count[c] += count[c - 1]
+            for j in range(self.n - 1, -1, -1):     # Set Output array
+                index = (self.ints[j] % dec)//(dec//10)
+                output[count[index] - 1] = self.ints[j]
+                count[index] -= 1
+            self.ints = output
+
+    # 13. Bucket Sort
+    #   - Applies to sorting uniform distributions over a range
+    #   - Capable of handling floats
+    def sort_bucket(self, n_bins=0):
+        if n_bins == 0:
+            n_bins = self.n//4
+        bins = [[] for n in range(n_bins)]      # Set bin/bucket array
+        mini = self.minimum()
+        maxi = self.maximum()
+        interval = (maxi - mini)//(n_bins) + 1  # Set the interval each bin contains
+        
+        for i in range(self.n):     # Arrange the array into bins/buckets
+            mov = mini
+            pos = 0
+            while pos < n_bins and self.ints[i] >= mov:
+                mov += interval
+                pos += 1
+            bins[pos - 1].append(self.ints[i])
+        #print(f"bins:{bins}\n")
+        for b in bins:      # Loop through bins & sort each bin independently
+            for i in range(1, len(b)):     # Insertion Sort
+                comp = b[i]
+                mov = i - 1
+                while mov >= 0 and comp < b[mov]:
+                    b[mov + 1], b[mov] = b[mov], b[mov + 1]
+                    mov -= 1
+                    
+        i = 0
+        for b in bins:      # Extract bins back to array
+            for j in b:
+                self.ints[i] = j
+                i += 1
+            
+            
+
 def main():
     # Test Functions
-    t1_n = 16
-    t1 = NumberArray(t1_n)
+    t_n = 16
+    t = NumberArray(t_n)
     #print(t1)
-    t1.shuffle()
+    t.shuffle()
     #print(t1)
 
     # Test remove, add & sum methods
-    t1_rem = 10
-    t1.remove(num=t1_rem)
+    t_rem = 10
+    t.remove(num=t_rem)
     #print(f"remove:{t1_rem}, new_series:{t1}") 
     #print(f"expected_sum_of_series:{t1.calculate_expected_sum()}")
     #print(f"actual_sum_of_series:{t1.calculate_actual_sum()}")
-    missing = t1.find_missing_entity()
+    missing = t.find_missing_entity()
     #print(f"missing:{missing}")
-    t1.add(missing)
+    t.add(missing)
     #print(f"add_missing_entity:{t1}")
 
     # Test Sorting Methods
-    dashes = '-'*(t1.n * 4)
+    dashes = '-'*(t.n * 4)
     print(dashes)
-    print("Unsorted: ", t1)
+    print("Unsorted: ", t)
     print(dashes)
 
-    t_sel = copy.deepcopy(t1)
+    t_sel = copy.deepcopy(t)
     t_sel.sort_selection()
     #print("sort_sel: ", t_sel, "\n")
 
-    t_bub = copy.deepcopy(t1)
+    t_bub = copy.deepcopy(t)
     t_bub.sort_bubble()
     #print("sort_bub: ", t_bub, "\n")
 
-    t_brc = copy.deepcopy(t1)
+    t_brc = copy.deepcopy(t)
     t_brc.sort_bubble_recursive()
     #print("sort_brc: ", t_brc, "\n")
 
-    t_ins = copy.deepcopy(t1)
+    t_ins = copy.deepcopy(t)
     t_ins.sort_insertion()
     #print("sort_ins: ", t_ins, "\n")
 
-    t_irc = copy.deepcopy(t1)
+    t_irc = copy.deepcopy(t)
     t_irc.sort_insertion_recursive()
     #print("sort_irc: ", t_irc, "\n")
 
-    t_mrg = copy.deepcopy(t1)
+    t_mrg = copy.deepcopy(t)
     t_mrg.sort_merge()
     #print("sort_mrg: ", t_mrg, "\n")
 
-    t_mgi = copy.deepcopy(t1)
+    t_mgi = copy.deepcopy(t)
     t_mgi.sort_merge_iterative()
     #print("sort_mgi: ", t_mgi, "\n")
 
-    t_qui = copy.deepcopy(t1)
+    t_qui = copy.deepcopy(t)
     t_qui.sort_quick()
     #print("sort_qui: ", t_qui, "\n")
 
-    t_qit = copy.deepcopy(t1)
+    t_qit = copy.deepcopy(t)
     t_qit.sort_quick_iterative()
     #print("sort_qit: ", t_qit, "\n")
 
-    t_bhp = copy.deepcopy(t1) 
+    t_bhp = copy.deepcopy(t) 
     t_bhp.sort_binary_heap()
-    print("sort_bhp: ", t_bhp, "\n")
+    #print("sort_bhp: ", t_bhp, "\n")
 
-    t_cnt = copy.deepcopy(t1)
+    t_cnt = copy.deepcopy(t)
     t_cnt.sort_counting()
     #print("sort_cnt: ", t_cnt, "\n")
 
+    t_rad = copy.deepcopy(t)
+    t_rad.sort_radix()
+    print("sort_rad: ", t_rad, "\n")
 
+    t_buc = copy.deepcopy(t)
+    t_buc.sort_bucket()
+    print("sort_buc: ", t_buc, "\n")
 
 if __name__ == "__main__":
     main()
