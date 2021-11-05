@@ -223,8 +223,8 @@ class NumberArray:
             #print(f"blocksort:{interval}\tblocks:{blocks}| {self.nums}")
  
             # Merge adjacent blocks (A & B)
-            for b in range(blocks//2):
-                iA = b * 2 * interval       # Start index of block A
+            for i in range(blocks//2):
+                iA = i * 2 * interval       # Start index of block A
                 iB = iA + interval          # Start index of block B
                 for a in range(iA, iB):
                     b = iB
@@ -400,7 +400,7 @@ class NumberArray:
         if interval == 0:
             interval = self.n//2    # Initial interval size
         while interval > 0:
-            print("interval:", format(interval), end = "  ")
+            #print("interval:", format(interval), end = "  ")
             for i in range(interval, self.n):
                 hold = self.ints[i]
                 mov = i
@@ -408,9 +408,74 @@ class NumberArray:
                     self.ints[mov] = self.ints[mov - interval]
                     mov -= interval 
                 self.ints[mov] = hold
+            #print(self.ints)
             interval = interval//2  # Set next interval value
-            print(self.ints)
 
+    # 15. Tim Sort
+    #   - A combination of insertion sort and merge sort algorithms
+    #   - Array divided into 'runs' (smaller arrays)
+    #   - Insertion sort on smaller arrays
+    #   - Merge algorithm from merge sort implemented to combine runs
+    def sort_tim(self):
+        run_size = 4                    # Define run (sub-array) size
+        runs = self.n//run_size
+        
+        # Insertion Sort Function for all runs
+        for r in range(runs):
+            r_start = r * run_size
+            r_end = r_start + run_size
+            if r == (runs - 1) and r_end > self.n:    # Sort remainder
+                r_end = self.n
+            
+            for i in range(r_start, r_end):     #
+                mov = i
+                while mov > r_start and self.ints[mov] < self.ints[mov - 1]:
+                    self.swap(mov, mov - 1)
+                    mov -= 1
+        print("post_run: ", self.ints)
+        
+        # Merge Function
+        interval = run_size
+        n_interval = runs
+        while True:
+            for r in range(n_interval//2):
+                iA = r*2 * interval         # Start index of run A
+                iB = iA + interval          # Start index of run B
+                Amax = iB
+                Bmax = iB + interval
+                if Bmax > self.n:
+                    Bmax = self.n
+                arrTemp = np.zeros(Bmax - iA)     # Resultant sorted array
+                iT = 0
+                print(f"interval:{interval}: \t\t iA:{iA}, iB:{iB}")
+                while iA < Amax and iB < Bmax:
+                    if self.ints[iA] < self.ints[iB]:
+                        arrTemp[iT] = self.ints[iA]
+                        iA += 1
+                    else:
+                        arrTemp[iT] = self.ints[iB]
+                        iB += 1
+                    iT += 1
+                # Catch remaining numbers
+                while iA < Amax:
+                    arrTemp[iT] = self.ints[iA]
+                    iA += 1
+                    iT += 1
+                while iB < Bmax:
+                    arrTemp[iT] = self.ints[iB]
+                    iB += 1
+                    iT += 1
+                # Feed sorted array back into main array
+                for i in range(iA, Bmax):
+                    c = 0
+                    self.ints[i] = arrTemp[c]
+
+            print(f"merged_{interval}:{self.ints}")
+            interval *= 2
+            if interval > self.n:
+                break
+            else:
+                n_interval = self.n//interval
 
 def main():
     # Test Functions
@@ -492,6 +557,10 @@ def main():
     t_shl = copy.deepcopy(t)
     t_shl.sort_shell()
     print("sort_shl: ", t_shl, "\n")
-    
+
+    t_tim = copy.deepcopy(t)
+    t_tim.sort_tim()
+    print("sort_tim: ", t_tim, "\n")
+
 if __name__ == "__main__":
     main()
