@@ -432,22 +432,22 @@ class NumberArray:
                 while mov > r_start and self.ints[mov] < self.ints[mov - 1]:
                     self.swap(mov, mov - 1)
                     mov -= 1
-        print("post_run: ", self.ints)
+        #print("post_run: ", self.ints)
         
-        # Merge Function
+        # Merge Function for all runs
         interval = run_size
         n_interval = runs
         while True:
             for r in range(n_interval//2):
-                iA = r*2 * interval         # Start index of run A
-                iB = iA + interval          # Start index of run B
-                Amax = iB
-                Bmax = iB + interval
-                if Bmax > self.n:
-                    Bmax = self.n
-                arrTemp = np.zeros(Bmax - iA)     # Resultant sorted array
+                A = r*2 * interval         # Start index of run A
+                B = A + interval          # Start index of run B
+                Amax = B
+                Bmax = B + interval
+                arrTemp = np.zeros(Bmax - A)     # Resultant array
                 iT = 0
-                print(f"interval:{interval}: \t\t iA:{iA}, iB:{iB}")
+                iA = A
+                iB = B
+                #print(f"int:{interval}: \t\t A:{A}|Amax:{Amax}-B:{B}|Bmax:{Bmax} \tTempArr[{Bmax - A}]")
                 while iA < Amax and iB < Bmax:
                     if self.ints[iA] < self.ints[iB]:
                         arrTemp[iT] = self.ints[iA]
@@ -466,11 +466,8 @@ class NumberArray:
                     iB += 1
                     iT += 1
                 # Feed sorted array back into main array
-                for i in range(iA, Bmax):
-                    c = 0
-                    self.ints[i] = arrTemp[c]
+                self.ints[A:Bmax] = arrTemp
 
-            print(f"merged_{interval}:{self.ints}")
             interval *= 2
             if interval > self.n:
                 break
