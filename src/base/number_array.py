@@ -89,8 +89,9 @@ class NumberArray:
         for i in range(self.n//2):          # Reverse array
             self.swap(i, self.n - 1 - i)
 
-
-
+    #
+    #
+    #
     # SORTING ALGORITHMS
     #   - implemented to favour ascending order
 
@@ -549,7 +550,7 @@ def main():
 
     t_buc = copy.deepcopy(t)
     t_buc.sort_bucket()
-    print("sort_buc: ", t_buc, "\n")
+    #print("sort_buc: ", t_buc, "\n")
 
     t_shl = copy.deepcopy(t)
     t_shl.sort_shell()

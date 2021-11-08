@@ -7,6 +7,9 @@ class Node:
     # Define values
     val = 0
 
+    # Define if Tree is in BST form
+    BST = False
+
     def __init__(self, val, node_left=None, node_right=None) -> None:
         self.L = node_left
         self.R = node_right
@@ -56,7 +59,8 @@ class Node:
         else:
             parent.R = Node(val)
             return level
-
+        
+    # Search for node in tree, return Value, Level
     def search(self, term, level=0):
         if self.val == term:
             print(f"found: term:{term}, node:[{self}] level:{level}")
@@ -70,7 +74,12 @@ class Node:
                 sR = self.R.search(term, level + 1)
             if sL and sR == None:
                 return None, level
-
+    
+    # Remove node from tree
+    def remove(self, val=None):
+        
+    
+    
     # In-Place Transform to Binary Search Tree
     def to_search_tree(self):
         if self != None:
