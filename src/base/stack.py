@@ -11,6 +11,9 @@ class Stack:
     # Define an internal counter for tracking elements
     __n = 0
 
+    # Define a maximum capacity for stack
+    MAX_CAP = 1024
+
     def __init__(self, array):
         if isinstance(array,(int)):
             self.__elements = np.array((array))
@@ -30,12 +33,15 @@ class Stack:
         rstr.removesuffix(", ")
         rstr += "]"
         return rstr
-        
+    
     # Push:
     #   - add element to stack
     def push(self, value):
-        self.__elements = np.append(self.__elements, value)
-        self.__n += 1
+        if self.__n < self.MAX_CAP:
+            self.__elements = np.append(self.__elements, value)
+            self.__n += 1
+        else:
+            raise OverflowError("Stack MAX_CAP")
 
     # Pop:
     #   - remove and return last element from stack
@@ -46,12 +52,26 @@ class Stack:
             self.__n -= 1
             return rt
 
-    # Check whether or not stack is empty
-    def empty(self) -> bool:
+    # Peek:
+    #   - return last element from stack without removing it
+    def peek(self) -> __elements.dtype:
+        if self.__n > 0:
+            return self.__elements[self.__n - 1]
+
+    # Check whether stack is empty
+    def isEmpty(self) -> bool:
         if self.__n == 0:
             return True
         else:
             return False
+
+    # Check whether stack is full
+    def isFull(self) -> bool:
+        if self.__n == self.MAX_CAP:
+            return True
+        else:
+            return False
+
     
 def main():
     # Stack test functions
@@ -78,7 +98,7 @@ def main():
     print(f"\nstack_ts:{ts}")
 
     print("pop: till empty")
-    while not ts.empty():
+    while not ts.isEmpty():
         print(f"{ts.pop()}, ts:{ts}")
 
 if __name__ == "__main__":
