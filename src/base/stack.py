@@ -3,6 +3,7 @@ import numpy as np
 class Stack:
     """
         Last In, First Out (LIFO) Data Structure
+            - uses a numpy array as a simulated stack
     """
 
     # Define array to hold values
@@ -91,7 +92,7 @@ def main():
     print(f"stack_ts:{ts}")
 
     # Test Pop functions
-    countPop = 4
+    countPop = 5 
     print(f"pop: {countPop} elements:")
     for i in range(countPop):
         print(f"pop:{ts.pop()},", end=" ")
