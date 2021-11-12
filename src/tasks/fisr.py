@@ -41,9 +41,12 @@ def main():
         x_comp[i] = abs(x_def[i] - x_inv[i])
 
     # Printout results
-    print("x\t\tisqrt(x)_calculated\t\tisqrt(x)_approximated\t\tisqrt_difference")
+    print("x\tisqrt(x)_calculated\t\tisqrt(x)_approximated\t\tisqrt_difference")
     for i in range(n):
-        print(f'{ x[i] }\t\t{ x_def[i] }\t\t{ x_inv[i] }\t\t{ x_comp[i] }')
+        print(f"{ x[i] }", end="\t")
+        print(f" { x_def[i] }", end="\t\t")
+        print(f" { x_inv[i] }", end="\t\t")
+        print(f" { x_comp[i] }", end="\n")
 
 if __name__ == "__main__":
     main()
