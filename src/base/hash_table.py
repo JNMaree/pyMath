@@ -32,11 +32,10 @@ class HashTable:
             srt += i + "\n"
         return srt
     
-    # Hashing function to generate indices based on a key
+    # Hashing function
     def hash(self, key):     
-        index = 0
-
-        return index
+        h = 0
+        return h
 
     def search(self, value):
         pass
