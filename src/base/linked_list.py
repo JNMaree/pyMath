@@ -32,7 +32,6 @@ class LinkedList:
     # Define a link to the end node (tail)
     __tail = None
 
-
     def __init__(self, node=None) -> None:
         if node is not None:
             if isinstance(node, (int)): # Initial value
@@ -74,6 +73,9 @@ class LinkedList:
                 else:
                     next_node.nxt = Node(value)
 
+    # Search the linked list for a value or position
+    #   - if value specified, return position
+    #   - if position specified, return value
     def search(self, value=None, pos=None):
         node = self.__head
         if value is not None:       # If value is specified,
@@ -91,7 +93,7 @@ class LinkedList:
             rval = node.val
             return rval
 
-    # Delete a Node by the specified value
+    # Delete a node by the specified value
     #   - cannot delete head node
     def delete(self, value):
         node = self.__head  
@@ -100,9 +102,11 @@ class LinkedList:
                 node.nxt = node.nxt.nxt
             node = node.nxt
 
-    # Reverse the order of the Linked List
+    # Reverse the order of the linked list
     def reverse(self):
-        pass
+        node = self.__tail
+        while node is not self.__head:
+            pass
 
 def main():
     # Test Linked List methods
