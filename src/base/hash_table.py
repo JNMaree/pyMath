@@ -12,7 +12,6 @@ class HashTable:
     # Define an internal counter for the number of elements
     __n = 0
 
-
     def __init__(self, array) -> None:
         if isinstance(array, (int)):
             self.__elements = dict(None * array) # Create an empty dict of spec size

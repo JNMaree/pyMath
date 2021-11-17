@@ -151,6 +151,18 @@ class LinkedList:
         node = self.__head
         while node.nxt is not None and node.val != val: # Traversal loop
             node = node.nxt
+        node.val = new_val 
+
+    # Sort the elements of a linked list
+    #   - uses an implementation of Bubble Sort
+    def sort(self):
+        node = self.__head
+        ctr = 0
+        while node.nxt is not None:
+            if node.nxt.val < node.val:
+                self.swap(ctr, ctr + 1)
+            node = node.nxt
+            ctr += 1
         node.val = new_val
 
     # Reverse the order of the linked list
@@ -158,11 +170,6 @@ class LinkedList:
         node = self.__tail
         while node is not self.__head:
             pass
-
-    # Sort the elements of a linked list
-    #   - uses an implementation of Bubble Sort
-    def sort(self):
-        pass
 
 def main():
     # Test Linked List methods

@@ -77,8 +77,7 @@ class Node:
     
     # Remove node from tree
     def remove(self, val=None):
-        
-    
+       pass
     
     # In-Place Transform to Binary Search Tree
     def to_search_tree(self):
