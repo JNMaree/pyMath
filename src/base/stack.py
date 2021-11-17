@@ -86,6 +86,7 @@ def main():
     i2 = 16
     i3 = 20
     print(f"push: i1:{i1}, i2:{i2}, i3:{i3}")
+    
     ts.push(12)
     ts.push(16)
     ts.push(20)
