@@ -108,80 +108,58 @@ class LinkedList:
                     node.nxt = node.nxt.nxt
                 node = node.nxt
 
-    # Swap two nodes in a linked list
+    # Swap two node values in a linked list
     #   - specified by the position parameters
     def swap(self, posA, posB):
-        if posA != 0 and posB != 0:
-            ctrA = ctrB = 0
-            preA = preB = self.__head
-            while ctrA <  posA and preA.nxt.nxt is not None:
-                preA = preA.nxt
-                ctrA += 1
-            while ctrB < posB and preB.nxt.nxt is not None:
-                preB = preB.nxt
-                ctrB += 1
-            if preA.nxt.nxt is not None and preB.nxt.nxt is not None:
-                # Swap 'next' pointers of A and B
-                preA.nxt.nxt, preB.nxt.nxt = preB.nxt.nxt, preA.nxt.nxt
-                # Swap 'next' pointers of nodes preceding A and B
-                preA.nxt, preB.nxt = preB.nxt, preA.nxt
-            elif preA.nxt.nxt is None:
-                preA.nxt.nxt = preB.nxt.nxt
-                preB.nxt.nxt = None
-            elif preB.nxt.nxt is None:
-                preB.nxt.nxt = preA.nxt.nxt
-                preA.nxt.nxt = None
-        else:
-            pos = 0
-            if posA == 0:   # If A is head
-                pos = posB
-            else:           # If B is head
-                pos = posA
-            ctr = 0
-            pre = self.__head
-            while ctr < pos and pre.nxt is not None:
-                pre = pre.nxt
-                ctr += 1
-            # Swap 'next' pointers of head and (A or B)
-            self.__head.nxt, pre.nxt.nxt = pre.nxt.nxt, self.__head.nxt
-            self.__head = pre.nxt  # Set (A or B) as new head
+        nodeA = self.__head
+        while posA > 0 and nodeA.nxt is not None:
+            nodeA = nodeA.nxt
+            posA -= 1
+        nodeB = self.__head
+        while posB > 0 and nodeB.nxt is not None:
+            nodeB = nodeB.nxt
+            posB -= 1
+        # Swap values of nodes
+        nodeA.val, nodeB.val = nodeB.val, nodeA.val
 
     # Update an existing value in the linked list to a new value
     def update(self, val, new_val):
         node = self.__head
         while node.nxt is not None and node.val != val: # Traversal loop
             node = node.nxt
-<<<<<<< HEAD
         node.val = new_val 
 
     # Sort the elements of a linked list
     #   - uses an implementation of Bubble Sort
     def sort(self):
+        pos = 0
+        changes = 1
         node = self.__head
-        ctr = 0
-        while node.nxt is not None:
-            if node.nxt.val < node.val:
-                self.swap(ctr, ctr + 1)
-            node = node.nxt
-            ctr += 1
-=======
-        node.val = new_val
->>>>>>> 9e4e87390307272a2e1295d5980ba5e8b5e41560
+        while changes != 0:
+            while node.nxt is not None:
+                if node.nxt.val < node.val:
+                    self.swap(pos, pos + 1)
+                    changes += 1
+                node = node.nxt
+                pos += 1
+            if changes > 0:
+                node = self.__head
+                changes = 0
+
 
     # Reverse the order of the linked list
     def reverse(self):
-        node = self.__tail
-        while node is not self.__head:
-            pass
+        pos_start = 0
+        pos_end = 0
+        node_end = self.__head
+        while node_end.nxt is not None:
+            node_end = node_end.nxt
+            pos_end += 1
+        while pos_start < pos_end:
+            self.swap(pos_start, pos_end)
+            pos_start += 1
+            pos_end -= 1
 
-<<<<<<< HEAD
-=======
-    # Sort the elements of a linked list
-    #   - uses an implementation of Bubble Sort
-    def sort(self):
-        pass
-
->>>>>>> 9e4e87390307272a2e1295d5980ba5e8b5e41560
 def main():
     # Test Linked List methods
     ll = LinkedList()   # Create empty list
@@ -223,12 +201,12 @@ def main():
 
     # Test reverse method
     print("rvrs :".format(m), end = " ")
-    #ll.reverse()
+    ll.reverse()
     print(ll)
 
     # Test sort method
     print("sort :".format(m), end = " ")
-    #ll.sort()
+    ll.sort()
     print(ll)
 
 if __name__ == "__main__":
