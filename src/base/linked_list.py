@@ -132,21 +132,17 @@ class LinkedList:
     # Sort the elements of a linked list
     #   - uses an implementation of Bubble Sort
     def sort(self):
-        pos = 0
         changes = 1
         node = self.__head
-<<<<<<< HEAD
         while changes != 0:
+            changes = 0
             while node.nxt is not None:
                 if node.nxt.val < node.val:
-                    self.swap(pos, pos + 1)
+                    node.val, node.nxt.val = node.nxt.val, node.val
                     changes += 1
-                node = node.nxt
-                pos += 1
-            if changes > 0:
-                node = self.__head
-                changes = 0
-
+                else:
+                    node = node.nxt
+            node = self.__head
 
     # Reverse the order of the linked list
     def reverse(self):
@@ -160,21 +156,6 @@ class LinkedList:
             self.swap(pos_start, pos_end)
             pos_start += 1
             pos_end -= 1
-=======
-        ctr = 0
-        while node.nxt is not None:
-            if node.nxt.val < node.val:
-                self.swap(ctr, ctr + 1)
-            node = node.nxt
-            ctr += 1
-        node.val = new_val
-
-    # Reverse the order of the linked list
-    def reverse(self):
-        node = self.__tail
-        while node is not self.__head:
-            pass
->>>>>>> 11f3b08c9f787dacd05d1214787514d08f37e5ef
 
 def main():
     # Test Linked List methods
