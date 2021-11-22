@@ -3,7 +3,7 @@ import numpy as np
 class Stack:
     """
         Last In, First Out (LIFO) Data Structure
-            - uses a numpy array as a simulated stack
+            - uses numpy array as a simulated stack
     """
 
     # Define array to hold values
@@ -25,7 +25,7 @@ class Stack:
         elif isinstance(array, np.ndarray):
             self.__elements = array
             self.__n = array.size
-    # Native string representation
+    
     def __str__(self) -> str:
         rstr = format(self.__n) + ":[ "
         for i in range(self.__n - 1, -1, -1):
@@ -34,7 +34,8 @@ class Stack:
         rstr.removesuffix(", ")
         rstr += "]"
         return rstr
-    
+
+    # Native Stack Operations: 
     # Push:
     #   - add element to stack
     def push(self, value):
@@ -61,17 +62,11 @@ class Stack:
 
     # Check whether stack is empty
     def isEmpty(self) -> bool:
-        if self.__n == 0:
-            return True
-        else:
-            return False
+        return self.__n == 0
 
     # Check whether stack is full
     def isFull(self) -> bool:
-        if self.__n == self.MAX_CAP:
-            return True
-        else:
-            return False
+        return self.__n >= self.MAX_CAP
 
     
 def main():
