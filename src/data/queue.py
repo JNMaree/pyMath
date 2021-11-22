@@ -15,6 +15,12 @@ class Queue:
     # Define a maximum capacity for Queue
     MAX_CAP = 1024
 
+    # Define Front value
+    front = None
+
+    # Define Rear value
+    rear = None
+
     def __init__(self, array) -> None:
         if isinstance(array,(int)):
             self.__elements = np.array((array))
@@ -41,6 +47,8 @@ class Queue:
         if self.__n <= self.MAX_CAP:
             self.__elements = np.append(self.__elements, element)
             self.__n += 1
+            # Set new Rear to newly added last element
+            self.rear = self.__elements[self.__n - 1]
         else:
             print("Overflow error: Queue at MAX_CAP")
 
@@ -50,18 +58,12 @@ class Queue:
             rt = self.__elements[0]
             self.__elements = np.delete(self.__elements, 0)
             self.__n -= 1
+            # Set new Front to first element
+            self.front = self.__elements[0]
             return rt
         else:
             print("Underflow error: Queue empty")
             return None
-
-    # Front: View (peek) first item in Queue
-    def front(self) -> __elements.dtype:
-        return self.__elements[0]               # Start of Array
-    
-    # Rear: View (peek) last item in Queue
-    def rear(self) -> __elements.dtype:
-        return self.__elements[self.__n - 1]    # End of Array
 
     def isEmpty(self) -> bool:
         return self.__n == 0
