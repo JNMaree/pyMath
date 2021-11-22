@@ -82,9 +82,9 @@ def main():
     i3 = 20
     print(f"push: i1:{i1}, i2:{i2}, i3:{i3}")
     
-    ts.push(12)
-    ts.push(16)
-    ts.push(20)
+    ts.push(i1)
+    ts.push(i2)
+    ts.push(i3)
     print(f"stack_ts:{ts}")
 
     # Test Pop functions
