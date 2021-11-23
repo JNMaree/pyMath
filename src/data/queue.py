@@ -33,12 +33,12 @@ class Queue:
             self.__n = array.size
     
     def __str__(self) -> str:
-        rstr = format(self.__n) + ":[ "
+        rstr = format(self.__n) + ":>[ "
         for i in range(self.__n - 1, -1, -1):
             rstr += format(self.__elements[i])
             rstr += ", "
         rstr.removesuffix(", ")
-        rstr += "]"
+        rstr += "]>"
         return rstr
 
     # Native Queue operations
@@ -58,8 +58,11 @@ class Queue:
             rt = self.__elements[0]
             self.__elements = np.delete(self.__elements, 0)
             self.__n -= 1
-            # Set new Front to first element
-            self.front = self.__elements[0]
+            if self.__n > 0:
+                # Set new Front to first element
+                self.front = self.__elements[0]
+            else:
+                self.front = None
             return rt
         else:
             print("Underflow error: Queue empty")
@@ -72,9 +75,33 @@ class Queue:
         return self.__n >= self.MAX_CAP
 
 def main():
-    # Test Queue methods
-    qarr = np.arange(0, 16)
+    # Stack test functions
+    qarr = np.arange(2,10)
+    print(f"Qarr:{qarr}")
     q = Queue(qarr)
+    print(f"Q:{q}")
+
+    # Test Push functions
+    i1 = 12
+    i2 = 16
+    i3 = 20
+    print(f"enQ: i1:{i1}, i2:{i2}, i3:{i3}")
+    
+    q.enqueue(i1)
+    q.enqueue(i2)
+    q.enqueue(i3)
+    print(f"Q:{q}")
+
+    # Test Pop functions
+    countPop = 5 
+    print(f"deQ: {countPop} elements:")
+    for i in range(countPop):
+        print(f"deQ:{q.dequeue()},", end=" ")
+    print(f"\nQ:{q}")
+
+    print("deQ: till empty")
+    while not q.isEmpty():
+        print(f"deQ:{q.dequeue()}, Q:{q}")
 
 if __name__ == "__main__":
     main()
