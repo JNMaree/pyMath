@@ -33,12 +33,12 @@ class Queue:
             self.__n = array.size
     
     def __str__(self) -> str:
-        rstr = format(self.__n) + ":[ "
+        rstr = format(self.__n) + ":>[ "
         for i in range(self.__n - 1, -1, -1):
             rstr += format(self.__elements[i])
             rstr += ", "
         rstr.removesuffix(", ")
-        rstr += "]"
+        rstr += "]>"
         return rstr
 
     # Native Queue operations
@@ -101,7 +101,7 @@ def main():
 
     print("deQ: till empty")
     while not q.isEmpty():
-        print(f"{q.dequeue()}, Q:{q}")
+        print(f"deQ:{q.dequeue()}, Q:{q}")
 
 if __name__ == "__main__":
     main()
