@@ -1,4 +1,6 @@
 import numpy as np
+from numpy.lib.index_tricks import index_exp
+from base.hash import division_knuth
 
 class HashTable:
     """
@@ -32,13 +34,26 @@ class HashTable:
         return srt
     
     # Hashing function
-    def hash(self, key):     
-        h = 0
-        return h
+    def hash_index(self, key, n):
+        return division_knuth(key, n)
 
-    def search(self, value):
-        pass
-    def insert(self):
-        pass
-    def delete(self):
-        pass
+    # Search for a value in a hash table
+    def search(self, value) -> int:
+        index = self.hash_index(value)
+        while self.__elements[index] != value:
+            index += 1
+        return index
+
+    # Insert a value to a hash table
+    def insert(self, value):
+        index = self.hash_index(value)
+        while self.__elements[index] != None:
+            index += 1
+        self.__elements[index] = value
+
+    # Delete a value from a hash table
+    def delete(self, value):
+        index = self.hash_index(value)
+        while self.__elements[index] != value:
+            index += 1
+        self.__elements.pop(index)
