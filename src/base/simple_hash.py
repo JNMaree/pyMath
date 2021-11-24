@@ -48,7 +48,10 @@ def division_knuth(key, n):
 
 # 3. Multiplication Method
 def multiplication(key, n):
-    pass
+    A = 0.5 * (np.sqrt(5) - 1)
+    s = key * A 
+    s = s - np.fix(s)       # s = fraction part of (key * A)
+    return np.fix(n * s)
 
 def main():
     # Create test array
