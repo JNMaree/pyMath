@@ -45,13 +45,14 @@ class HashTable:
         return srt
     
     # Hashing function
+    #   - Returns index for hash table where value is stored
     def get_index(self, key) -> int:
-        # Simple Hashing function
+        # Simple Integer Hashing function
         #   - using Knuth constant on the multiplication method
         s = key * self.random_real_A
         s = s - np.fix(s)   # Get fraction part of s
         s = int(self.TABLE_CAP * s)  # Get whole part of s as index
-        print(f"get_index(key:{key}) -> i:{s}")
+        #print(f"get_index(key:{key}) -> i:{s}")
         return s
 
     # Search for a value in a hash table
@@ -68,6 +69,7 @@ class HashTable:
         while index < self.TABLE_CAP - 1 and not np.isnan(self.__elements[index]):
             index += 1
         self.__elements[index] = value
+        self.__n += 1
 
     # Delete a value from a hash table
     def delete(self, value):
@@ -75,13 +77,35 @@ class HashTable:
         while index < self.TABLE_CAP - 1 and self.__elements[index] != value:
             index += 1
         self.__elements = np.delete(self.__elements, index)
+        self.__n -= 1
 
 def main():
     # Test Hash_Table
-    tarr = np.arange(1, 25)
+    maxi = 16
+    tarr = np.arange(1, maxi)
     ht = HashTable(tarr)
     print("tarr:", tarr)
-    print(ht)
+    #print(ht)
+
+    # Test Search method
+    for i in tarr:
+        print(f"search_for:{i}, result:{ht.search(i)}")
+    print("HashTable_Printout:\n", ht)
+
+    # Test Insert method
+    it = [0, 16, 32, 64]
+    for i in it:
+        ht.insert(i)
+    print("Insert_HashTable_Printout:\n", ht)
+
+    # Test Delete method
+    dt = []
+    for i in range(maxi):
+        if i % 2 != 0:  # Delete odd numbers from ht
+            dt.append(i)
+    for i in dt:
+        ht.delete(i)
+    print("Delete_HashTable_Printout:\n", ht)
 
 if __name__ == "__main__":
     main()
