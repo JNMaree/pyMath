@@ -145,6 +145,7 @@ class LinkedList:
             node = self.__head
 
     # Reverse the order of the linked list
+    #   - works by swapping values
     def reverse(self):
         pos_start = 0
         pos_end = 0
@@ -156,6 +157,15 @@ class LinkedList:
             self.swap(pos_start, pos_end)
             pos_start += 1
             pos_end -= 1
+
+    # Reverse the order of the linked list
+    #   - works by swapping node.nxt's (next pointers)
+    def reverse_next(self):
+        node = self.__head
+        while node.nxt is not None:
+            tmp = node.nxt
+            node.nxt.nxt = node
+            node = tmp
 
 def main():
     # Test Linked List methods
@@ -199,6 +209,11 @@ def main():
     # Test reverse method
     print("rvrs :".format(m), end = " ")
     ll.reverse()
+    print(ll)
+
+    # Test reverse_next method
+    print("rvr2 :".format(m), end = " ")
+    ll.reverse_next()
     print(ll)
 
     # Test sort method
