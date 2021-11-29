@@ -145,7 +145,8 @@ class LinkedList:
             node = self.__head
 
     # Reverse the order of the linked list
-    def reverse(self):
+    #   - works by swapping values
+    def reverse_values(self):
         pos_start = 0
         pos_end = 0
         node_end = self.__head
@@ -156,6 +157,27 @@ class LinkedList:
             self.swap(pos_start, pos_end)
             pos_start += 1
             pos_end -= 1
+
+    # Reverse the linked list (recursively)
+    def reverse_recursive(self, node=None):
+        if node is None:
+            node = self.__head
+        if node.nxt.nxt is not None:
+            self.reverse_recursive(node).nxt = node
+        else:
+            node.nxt.nxt = node
+        return node
+
+    # Reverse the linked list (iteratively)
+    def reverse_iterative(self):
+        prev = self.__head
+        node = prev.nxt
+        self.__head.nxt = None
+        while node.nxt is not None:
+            B = node.nxt
+            node.nxt = prev
+            node = B
+            prev = node
 
 def main():
     # Test Linked List methods
@@ -195,15 +217,25 @@ def main():
     for i in range(i_count//4):
         ll.swap(i_count * 2, i_count - i)
     print(ll)
-
-    # Test reverse method
-    print("rvrs :".format(m), end = " ")
-    ll.reverse()
-    print(ll)
-
+    
     # Test sort method
     print("sort :".format(m), end = " ")
     ll.sort()
+    print(ll)
+    
+    # Test reverse method
+    print("rvVAL:".format(m), end = " ")
+    ll.reverse_values()
+    print(ll)
+
+    # Test recursive pointer reverse method
+    print("rvREC:".format(m), end = " ")
+    #ll.reverse_recursive()
+    print(ll)
+    
+    # Test iterative pointer reverse method
+    print("rvITR:".format(m), end = " ")
+    ll.reverse_iterative()
     print(ll)
 
 if __name__ == "__main__":
