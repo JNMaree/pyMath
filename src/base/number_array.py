@@ -1,9 +1,6 @@
 import copy
 import numpy as np
-from numpy import True_, minimum, random
-from copy import deepcopy
-
-import numpy
+from numpy import random
 
 class NumberArray:
     
@@ -56,7 +53,7 @@ class NumberArray:
     
     # Add element to array
     def add(self, num):
-        if isinstance(num, (list, numpy.ndarray)):
+        if isinstance(num, (list, np.ndarray)):
             for i in num:
                 self.ints.append(i)
                 self.n += 1

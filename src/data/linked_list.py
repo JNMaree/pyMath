@@ -1,4 +1,4 @@
-import numpy as np
+import copy as cp
 
 class Node:
     """
@@ -171,13 +171,15 @@ class LinkedList:
     # Reverse the linked list (iteratively)
     def reverse_iterative(self):
         prev = self.__head
-        node = prev.nxt
+        node = self.__head.nxt
         self.__head.nxt = None
         while node.nxt is not None:
-            B = node.nxt
+            temp = node.nxt
             node.nxt = prev
-            node = B
             prev = node
+            node = temp
+        node.nxt = prev
+        self.__head = node
 
 def main():
     # Test Linked List methods
