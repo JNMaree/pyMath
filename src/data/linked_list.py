@@ -1,4 +1,3 @@
-import copy as cp
 
 class Node:
     """
@@ -157,22 +156,13 @@ class LinkedList:
             self.swap(pos_start, pos_end)
             pos_start += 1
             pos_end -= 1
-
-    # Reverse the linked list (recursively)
-    def reverse_recursive(self, node=None):
-        if node is None:
-            node = self.__head
-        if node.nxt.nxt is not None:
-            self.reverse_recursive(node).nxt = node
-        else:
-            node.nxt.nxt = node
-        return node
-
+    
     # Reverse the linked list (iteratively)
     def reverse_iterative(self):
         prev = self.__head
         node = self.__head.nxt
         self.__head.nxt = None
+        self.__tail = prev
         while node.nxt is not None:
             temp = node.nxt
             node.nxt = prev
@@ -180,6 +170,23 @@ class LinkedList:
             node = temp
         node.nxt = prev
         self.__head = node
+    
+    # Reverse the linked list (recursively)
+    def reverse_recursive(self, node=None):
+        if node is None:
+            node = self.__head
+            self.reverse_recursive(node)
+            self.__tail = node
+            node.nxt = None
+            return
+        if node.nxt is not None:
+            recurr = self.reverse_recursive(node.nxt)
+            recurr.nxt = node
+            return node
+        else:   # Last node in list
+            self.__head = node
+            return node
+    
 
 def main():
     # Test Linked List methods
@@ -229,16 +236,18 @@ def main():
     print("rvVAL:".format(m), end = " ")
     ll.reverse_values()
     print(ll)
-
-    # Test recursive pointer reverse method
-    print("rvREC:".format(m), end = " ")
-    #ll.reverse_recursive()
-    print(ll)
     
     # Test iterative pointer reverse method
     print("rvITR:".format(m), end = " ")
     ll.reverse_iterative()
     print(ll)
+
+    # Test recursive pointer reverse method
+    print("rvREC:".format(m), end = " ")
+    ll.reverse_recursive()
+    print(ll)
+    
+    
 
 if __name__ == "__main__":
     main() 
