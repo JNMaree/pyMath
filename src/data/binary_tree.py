@@ -5,22 +5,32 @@ class Node:
     R = None
 
     # Define values
-    val = 0
-
-    # Define if Tree is in BST form
-    BST = False
+    val = None
 
     def __init__(self, val, node_left=None, node_right=None) -> None:
         self.L = node_left
         self.R = node_right
         self.val = val
+    
+    # Recursive method to generate STR representation of datastruct
     def __str__(self) -> str:
         rstr = f"{self.val}| L:{self.L} <-> R:{self.R}"
         return rstr
-
-    def pre_order_traversal(self, level=0, side=-1):
+    
+    # In-place re-ordering to Binary Search Tree (BST)
+    def to_BST(self):
         if self != None:
-            # setup pyramid
+            if self.L and self.R != None:
+                if self.L.val > self.R.val: # If L>R, swap 
+                    self.L, self.R = self.R, self.L
+                # Recursive Calls
+                self.R.to_BST()
+                self.L.to_BST()
+        else:
+            self.to_BST(self)
+    
+    def traverse_pre(self, level=0, side=-1):
+        if self != None:    # setup pyramid
             if side == 0:
                 rstr = "\t"
             else:
@@ -28,38 +38,13 @@ class Node:
             rstr += format(level) + "|"
             rstr += format(self.val) + " - "
             if self.L != None:
-                rstr += self.L.depth_first(level+1, 0) + "\n"
+                rstr += self.L.transverse_pre(level+1, 0) + "\n"
             if self.R != None:
-                rstr += self.R.depth_first(level+1, 1) + "\n"
+                rstr += self.R.transverse_pre(level+1, 1) + "\n"
             return rstr
         else:
-            return self.depth_first(self)
+            return self.transverse_pre(self)
     
-    # Return the lowest-level parent node that has an open node, as well as the level
-    def find_open(self, level=0):
-        if self.L and self.R != None:
-            tL, iL = self.L.find_open(level + 1)
-            tR, iR = self.R.find_open(level + 1)
-            if iR < iL:
-                print(f"rRIHT|iL:{iL} <-> iR:{iR}")
-                return tR, level
-            else:
-                print(f"rLEFT|iL:{iL} <-> iR:{iR}")
-                return tL, level
-        else:
-            return self, level-1
-    
-    # Insert Node to tree
-    def insert(self, val):
-        parent, level = self.find_open()
-        print(f"parent_val:{parent.val}")
-        if parent.L == None:
-            parent.L = Node(val)
-            return level
-        else:
-            parent.R = Node(val)
-            return level
-        
     # Search for node in tree, return Value, Level
     def search(self, term, level=0):
         if self.val == term:
@@ -75,24 +60,26 @@ class Node:
             if sL and sR == None:
                 return None, level
     
-    # Remove node from tree
+    # Insert Node to tree
+    def insert(self, val):
+        parent, level = self.search(None)   # Find empty node
+        print(f"parent_val:{parent.val}")
+        if parent.L == None:
+            parent.L = Node(val)
+            return level
+        else:
+            parent.R = Node(val)
+            return level
+        
+    # Remove node from tree, 
+    #   attach subsequent nodes back to tree
     def remove(self, val=None):
        pass
-    
-    # In-Place Transform to Binary Search Tree
-    def to_search_tree(self):
-        if self != None:
-            if self.L and self.R != None:
-                # If L>R, swap
-                if self.L.val > self.R.val:
-                    self.L, self.R = self.R, self.L
-                self.R.to_search_tree()
-                self.L.to_search_tree()
-        else:
-            self.to_search_tree(self)
 
 
 def main():
+
+    # Set up tree structure with values
     root = Node(1)
     root.R = Node(2)
     root.L = Node(3)
@@ -105,9 +92,11 @@ def main():
     root.insert(7)
 
     # Print root depth-first string output
-    print(root.pre_order_traversal())
-    root.to_search_tree()
-    print(root.pre_order_traversal())
+    print(root.traverse_pre())
+
+    # Test BST ordering method
+    root.to_BST()
+    print(root.traverse_pre())
 
     # Test Search
     st = 6
