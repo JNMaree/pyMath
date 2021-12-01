@@ -99,3 +99,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Ignore Aavent of code input files
+src/tasks/advent_of_code_21/*.txt
