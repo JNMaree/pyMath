@@ -29,6 +29,7 @@ class Node:
         else:
             self.to_BST(self)
     
+    # Transverse the Binary Tree in Pre-Order
     def traverse_pre(self, level=0, side=-1):
         if self != None:    # setup pyramid
             if side == 0:
@@ -45,6 +46,15 @@ class Node:
         else:
             return self.transverse_pre(self)
     
+    # Calculate Height of Binary tree
+    #   - amount of levels
+    def height(self):
+        pass
+
+    # Count the number of nodes
+    def n(self):
+        pass
+
     # Search for node in tree, return Value, Level
     def search(self, term, level=0):
         if self.val == term:
@@ -64,22 +74,43 @@ class Node:
     def insert(self, val):
         parent, level = self.search(None)   # Find empty node
         print(f"parent_val:{parent.val}")
-        if parent.L == None:
+        if parent.L == None:    # If Left node is open
             parent.L = Node(val)
             return level
-        else:
+        else:                   # Else use Right node
             parent.R = Node(val)
             return level
         
     # Remove node from tree, 
     #   attach subsequent nodes back to tree
-    def remove(self, val=None):
-       pass
+    def remove(self, val):
+        if self.L is not None:
+            if self.L.val == val:
+                tempL = self.L.L
+                self.L
+            else:
+                pass
+        if self.R is not None:
+            if self.R.val == val:
+                pass
+            else:
+                pass
+            
+    # Check Full Binary Tree:
+    #   - every node either 0 or 2 sub-nodes
+    def is_full(self):
+        pass
 
+    # Check Complete Binary Tree:
+    #   - every level except last is full
+    #   - last level values as LEFT as possible
+    def is_complete(self):
+        pass
+    
 
 def main():
 
-    # Set up tree structure with values
+    # Set up initial tree structure with values directly
     root = Node(1)
     root.R = Node(2)
     root.L = Node(3)
@@ -90,6 +121,8 @@ def main():
     # Test Insert Method
     #root.R.L = Node(7)
     root.insert(7)
+    root.insert(8)
+    root.insert(9)
 
     # Print root depth-first string output
     print(root.traverse_pre())
