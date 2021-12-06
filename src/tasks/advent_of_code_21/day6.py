@@ -1,5 +1,5 @@
-from types import new_class
 import numpy as np
+import time
 
 class FishArray:
 
@@ -12,7 +12,7 @@ class FishArray:
     def __init__(self, array) -> None:
         self.n = array.size
         self.capc = 2*self.n
-        self.fish = np.zeros(self.capc, dtype=np.uint8)
+        self.fish = np.zeros(self.capc)
         self.fish[:self.n] = array
 
     def __str__(self) -> str:
@@ -51,10 +51,13 @@ def main():
     
     lanternFish = FishArray(fish)    
 
+    # Setup timing functions
+    t0 = time.perf_counter()
+
     days = 80
     for d in range(days):
         lanternFish.elapse_day()
-        print(f"day {d}| {lanternFish}")
+        print(f"day {d}| {lanternFish.n}")
     print(f"After {days} days, there are {lanternFish.n} fish.")
 
     # Part 2 --------------------------------------------------------
@@ -65,6 +68,11 @@ def main():
         print(f"day {d}| {lanternFish}")
     print(f"After {days} days, there are {lanternFish.n} fish.")   
     """
+
+    # Calculate performance by time elapsed
+    t1 = time.perf_counter()
+    tot = t1 - t0
+    print(f"Total Time Elapsed:{tot}")
 
 if __name__ == "__main__":
     main()
