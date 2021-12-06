@@ -1,4 +1,4 @@
-import numpy as np
+#import numpy as np
 import time
 
 class FishArray:
@@ -10,9 +10,9 @@ class FishArray:
     capc = 0
 
     def __init__(self, array) -> None:
-        self.n = array.size
+        self.n = len(array) 
         self.capc = 2*self.n
-        self.fish = np.zeros(self.capc)
+        self.fish = [0]*self.capc
         self.fish[:self.n] = array
 
     def __str__(self) -> str:
@@ -28,11 +28,11 @@ class FishArray:
             else:
                 self.fish[i] = 6
                 new_fish += 1 
-        additions = np.full(new_fish, 8)
+        additions = [8] * new_fish 
         new_n = self.n + new_fish
         if new_n > self.capc:
             self.capc *= 2
-            new_array = np.zeros(self.capc)
+            new_array = [0]*self.capc 
             new_array[:self.n] = self.fish[:self.n]
             new_array[self.n:new_n] = additions
             self.fish = new_array
@@ -47,9 +47,9 @@ def main():
     
     relative_path = 'src/tasks/advent_of_code_21/day6_input.txt'
     with open(relative_path, 'r') as f:
-        fish = np.array(np.uint8 (f.read().split(',')))
+        fish = [int(x) for x in f.readline().split(',')]
     
-    lanternFish = FishArray(fish)    
+    lanternFish = FishArray(fish)
 
     # Setup timing functions
     t0 = time.perf_counter()
