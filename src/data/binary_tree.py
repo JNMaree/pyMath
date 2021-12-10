@@ -98,8 +98,11 @@ class Node:
             
     # Check Full Binary Tree:
     #   - every node either 0 or 2 sub-nodes
-    def is_full(self):
-        pass
+    def is_full(self, level=0):
+        if self.L is None or self.R is None:
+            return level
+        else:
+            self.is_full(level + 1)
 
     # Check Complete Binary Tree:
     #   - every level except last is full
