@@ -1,7 +1,8 @@
+import numpy as np
 
 class Octopi:
 
-    grid = [[]]
+    grid = []
 
     nX = 0
     nY = 0
@@ -12,71 +13,72 @@ class Octopi:
     # Define grid to store flashes for a step
     flash_grid = []
     def reset_flash_grid(self):
-        self.flash_grid = [[0] * self.nX] * self.nY
+        self.flash_grid = np.zeros_like(self.grid)
 
     def __init__(self, gridlines) -> None:
         self.nX = len(gridlines[0])
         self.nY = len(gridlines)
-        for y in range(self.nY):
-            self.grid.append([])
-            for x in range(self.nX):
-                self.grid[y].append(int (gridlines[y][x]))
-        self.reset_flash_grid()        
+        self.grid = np.empty((self.nX, self.nY), dtype=np.uint8)
+        for x in range(self.nX):
+            for y in range(self.nY):
+                self.grid[x][y] = np.uint8 (gridlines[x][y])
+        self.reset_flash_grid()
 
     def __str__(self) -> str:
         sret = f"X:{self.nX}, Y:{self.nY}\n"
-        for y in range(self.nY):
-            for x in range(self.nX):
-                sret += f"{self.grid[y][x]} "
+        for x in range(self.nX):
+            for y in range(self.nY):
+                sret += f"{self.grid[x][y]} "
             sret += "\n"
         return sret
 
     def step(self):
-        for y in range(self.nY):
-            for x in range(self.nX):
-                self.grid[y][x] += 1 
-                if self.grid[y][x] > 9:
-                    self.flash_center(y, x)
+        self.grid += 1  # Increment all values by one
+        for x in range(self.nX):
+            for y in range(self.nY):
+                if self.grid[x][y] > 9 and self.flash_grid[x][y] == 0:
+                    self.flash(x, y)
         # Post-Flash operations 
         iret = self.zero_flashed()  # Set all flashed indexes to zero
-        self.reset_flash_grid()     # Reset flash tracker for next step
         return iret
 
-    def flash_center(self, y, x): 
-        self.flash_grid[y][x] = 1   # Set flash tracker to avoid flashing same index twice
+    def flash(self, x, y): 
+        self.flash_grid[x][y] = 1   # Set flash tracker to avoid flashing same index twice
         
-        # Set surrounding elements depending on limit boundaries
+        x_adj = [-1, 0, 1]          # Set surrounding elements depending on limit boundaries
+        if x == 0:
+            x_adj.remove(-1)
+        elif x == (self.nX - 1):
+            x_adj.remove(1)
+        
         y_adj = [-1, 0, 1]
         if y == 0:
             y_adj.remove(-1)
         elif y == (self.nY - 1):
             y_adj.remove(1)
-        
-        x_adj = [-1, 0, 1]
-        if x == 0:
-            x_adj.remove(-1)
-        elif x == (self.nX - 1):
-            x_adj.remove(1)
-        print(f"[{x},{y}]: x_range({x_adj}) y_range({y_adj})")
+        #print(f"flash[{x},{y}]: x{x_adj} y{y_adj}")
 
-        for y_inc in y_adj:     # Loop through grid of adjacents
-            for x_inc in x_adj:
-                ty = y + y_inc
+        for x_inc in x_adj:     # Loop through grid of adjacents
+            for y_inc in y_adj:
                 tx = x + x_inc
-                self.grid[ty][tx] += 1
-                if self.grid[ty][tx] > 9 and self.flash_grid[ty][tx] == 0:
-                    self.flash_center(ty, tx)
+                ty = y + y_inc
+                self.grid[tx][ty] += 1
+                if self.grid[tx][ty] > 9 and self.flash_grid[tx][ty] == 0:
+                    self.flash(tx, ty)
 
     # Set flashed back to zero, count the flashes
     def zero_flashed(self) -> int:
         iret = 0
-        for y in range(self.nY):
-            for x in range(self.nX):
-                if self.grid[y][x] > 9:
-                    self.grid[y][x] = 0
+        #print(self.flash_grid)
+        for x in range(self.nX):
+            for y in range(self.nY):
+                if self.flash_grid[x][y] == 1: # Check if flashed
+                    self.grid[x][y] = 0
                     iret += 1
         self.total_flashes += iret
+        self.reset_flash_grid()     # Reset flash tracker for next step
         return iret
+        
 
 def main():
     
@@ -88,7 +90,7 @@ def main():
             gridlines.append(line.strip())
     #print(f"gridlines:\n{gridlines}")
 
-    #"""
+    """
     test = ['5483143223',
             '2745854711',
             '5264556173',
@@ -99,22 +101,28 @@ def main():
             '6882881134',
             '4846848554',
             '5283751526']
-    test = ['11111',
-            '19991',
-            '19191',
-            '19991',
-            '11111']
     octopi = Octopi(test) 
-    #"""
+    """
     
-    #octopi = Octopi(gridlines)
-    print(octopi) 
-    
-    max_steps = 2
+    octopi = Octopi(gridlines)
+    print(octopi)
+
+    # Execute steps 
+    max_steps = 100 
     for i in range(max_steps):
         iflash = octopi.step()
-        print(f"{i}| flashes:{iflash}, total_flashes:{octopi.total_flashes}\n{octopi}")
-    
+        print(f"{i}| flashes:{iflash}, total_flashes:{octopi.total_flashes}")
+
+    # Part 2 ----------------------------------------------------------------
+
+    octopuses = Octopi(gridlines)
+    all_flash = False
+    ct = 0
+    while not all_flash:
+        if octopuses.step() == (octopuses.nX * octopuses.nY):
+            all_flash = True
+        ct += 1
+    print(f"All flash occurs at step:{ct}")
 
 if __name__ == "__main__":
     main()
