@@ -1,83 +1,95 @@
-
-class Cave:
-
-    name = ''
-
-    big = False
-
-    paths = []
-    n_paths = 0
-
-    def __init__(self, name, paths=None) -> None:
-        self.name = name
-        if name.isupper() and name.isalpha():
-            self.big = True
-        if paths is not None:
-            self.add_paths(paths) 
-        
-    def add_paths(self, pl):
-        if isinstance(pl, Cave):
-            for p in pl.paths:
-                if not self.path_exists(p):
-                    self.paths.append(p)
-                    self.n_paths += 1
-        elif isinstance(pl, list):
-            for p in pl:
-                if not self.path_exists(p):
-                    self.paths.append(p)
-                    self.n_paths += 1
-        elif isinstance(pl, str):
-            if not self.path_exists(pl):
-                self.paths.append(pl)
-                self.n_paths += 1
-
-    def path_exists(self, pstr):
-        for p in self.paths:
-            if pstr == p or p == self.name:
-                return True
-        return False
-
-    def __str__(self) -> str:
-        sret = self.name
-        if self.big:
-            sret += "::"
-        else:
-            sret += ":"
-        sret += format(self.paths)
-        return sret
-
 class Graph:
 
+    # List of lists
     caves = []
-    
-    n_caves = 0
+    # Index 0: start
+    # Index 1: end
+    #   - cave index 0: cave name
+    #   - cave index 1 - n: cave paths
+
+    routes = []
 
     def __init__(self, paths) -> None:
+        self.caves.append(['start'])
+        self.caves.append(['end'])
         for p in paths:
             st_en = p.split('-')
-            self.add_cave( Cave(st_en[0], [ st_en[1] ]) )
-            self.add_cave( Cave(st_en[1], [ st_en[0] ]) )
+            self.add_cave(st_en[0], st_en[1])
+            self.add_cave(st_en[1], st_en[0])
 
-    def add_cave(self, addcave):
+    def add_cave(self, name, path):
         cave_exists = -1 
         for c in range(len(self.caves)):
-            if self.caves[c].name == addcave.name:
+            if self.caves[c][0] == name:
                 cave_exists = c
         if cave_exists >= 0:    # Add path to existing cave
-            self.caves[c].add_paths(addcave)
+            self.add_path(name, path)
         else:                   # Add new cave
-            self.caves.append(addcave)
-            self.n_caves += 1
+            self.caves.append([name])
+            self.add_path(name, path)
+
+    def add_path(self, cave_name, path):
+        cave_index = -1
+        for c in range(len(self.caves)):
+            if self.caves[c][0] == cave_name:
+                cave_index = c
+        if cave_index >= 0:
+            add_path = True
+            for p in self.caves[cave_index]:
+                if p == path:
+                    add_path = False
+            if add_path:
+                self.caves[cave_index].append(path)
+        else:
+            raise NameError(f"Add_Path failed!\ncave:{cave_name} not found!\npath:{path}")
 
     def __str__(self) -> str:
-        sret = f"{self.n_caves}\n"
-        for c in range(self.n_caves):
-            sret += f"{c}|{self.caves[c]}\n"
+        sret = f"{len(self.caves)}\n"
+        for c in range(len(self.caves)):
+            sret += f"{c}|{self.caves[c][0]}:{self.caves[c][1:]}\n"
         return sret
 
-    def calc_n_paths(self) -> int:
-        pass
+    def get_paths(self, name):
+        aret = []        
+        for c in range(len(self.caves)):
+            if self.caves[c][0] == name:
+                aret = self.caves[c][1:]
+        return aret
 
+    def is_big(self, name):
+        return name.isupper()
+
+    def calc_routes(self, route=None) -> int:
+        if route is not None:
+            node = route[len(route) - 1]  # end of route
+            print(f"calc_route:{route}, node:{node}")
+            if node == 'end':
+                self.routes.append(route)
+                return
+            
+            available_paths = self.get_paths(node)
+            print(f"{available_paths} available_paths for [{node}]")
+
+            # Loop through next nodes in graph
+            for p in available_paths:
+                available = True
+                for past in route:
+                    if p == past and not self.is_big(p):
+                        available = False
+                if available:
+                    p_route = route
+                    p_route.append(p)
+                    self.calc_routes(p_route)
+                
+        else:
+            self.calc_routes(['start'])   # start all routes at node 'start'
+
+    def get_routes(self):
+        sret = f"{len(self.routes)} routes:\n"
+        for r in self.routes:
+            sret += format(r)
+            sret += '\n'
+        return sret
 
 def main():
 
@@ -88,9 +100,25 @@ def main():
         for line in f:
             routes.append(line.strip())
     #print(routes)
+    #"""
+    routes = ['dc-end',
+        'HN-start',
+        'start-kj',
+        'dc-start',
+        'dc-HN',
+        'LN-dc',
+        'HN-end',
+        'kj-sa',
+        'kj-HN',
+        'kj-dc']
+    #"""
 
     graph = Graph(routes)
     print(graph)
+
+    graph.calc_routes()
+    print(graph.get_routes())
+
 
 if __name__ == "__main__":
     main()
