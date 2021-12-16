@@ -4,24 +4,25 @@ class Origami:
 
     dots = []
 
-    x = 0
-    y = 0
+    x = 0   # Max X value in dots
+    y = 0   # Max Y value in dots
 
     output = []
     def clear_output(self):
         self.output = np.zeros((self.x + 1, self.y + 1)) 
+    def dots_to_output(self):
+        self.clear_output()
+        for i in range(self.dots.shape[0]):
+            self.output[self.dots[i, 0], self.dots[i, 1]] = 1
 
     def __init__(self, coordinates) -> None:
         self.dots = np.array(coordinates, dtype=np.uint16)
         self.x, self.y = np.amax(self.dots, axis=0)
-        self.clear_output()
+        self.dots_to_output()
         print(f"x:{self.x} y:{self.y} n:{self.dots.shape[0]}")
 
-    def __str__(self) -> str:
-        pass
-
-    def printout(self) -> str:
-        sret = f"output_points:{self.count_visible()}"
+    def __str__(self) -> str: 
+        sret = f"output_points:{self.count_visible()}\n"
         for x in range(self.x + 1):
             for y in range(self.y + 1):
                 if self.output[x][y] == 1:
@@ -31,24 +32,24 @@ class Origami:
             sret += '\n'
         return sret
 
-    def execute(self, instruction):
+    def fold(self, instruction):
         self.output_to_dots()       # Create array of new coordinates in output_
         self.clear_output()             # Clear output array
         
         inst = instruction.split()      # Parse instructions
         inst = inst[2].split('=')
-        axis = 0                  # fold axis = x
+        axis = 0                # fold axis = x
         if inst[0] == 'y':      
-            axis = 1              # fold axis = y
+            axis = 1            # fold axis = y
         fold = int (inst[1])
         
         #print(f"exe fold: {xy} = {axis}")
-        for i in range(self.n):
+        for i in range(self.dots.shape[0]):
             if self.dots[i, axis] > fold:
                 if axis == 0:
                     self.output[ 2*fold - self.dots[i, 0], self.dots[i, 1]] = 1
                 elif axis == 1:
-                    self.output[ fold - self.dots[i, 0], 2*fold - self.dots[i, 1]] = 1
+                    self.output[ self.dots[i, 0], 2*fold - self.dots[i, 1]] = 1
             else:
                 self.output[self.dots[i, 0], self.dots[i, 1]] = 1
 
@@ -82,18 +83,18 @@ def main():
                     coordinates.append(line.strip().split(','))
             else:
                 instructions.append(line.strip())
-    #print(f"coordinate_list:{coordinates}\ninstructions:{instructions}")
+    print(f"coordinate_list:{coordinates}\ninstructions:{instructions}")
 
     origami_grid = Origami(coordinates)
 
-    origami_grid.execute(instructions[0])
+    origami_grid.fold(instructions[0])
     print(f"visible_points:{origami_grid.count_visible()}")
-
+    print(origami_grid)
     # Part 2 ---------------------------------------------------------------
     """
-    for i in range(1, len(instructions)):
-        origami_grid.execute(instructions[i])    
-    print(f"{i}|{origami_grid.printout()}")
+    for i in range(len(instructions)):
+        origami_grid.fold(instructions[i])    
+    print(f"{i}|{origami_grid}")
     """
 
 if __name__ == "__main__":
