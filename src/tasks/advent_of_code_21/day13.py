@@ -32,7 +32,7 @@ class Origami:
             sret += '\n'
         return sret
 
-    def execute(self, instruction):
+    def fold(self, instruction):
         self.output_to_dots()       # Create array of new coordinates in output_
         self.clear_output()             # Clear output array
         
@@ -49,7 +49,7 @@ class Origami:
                 if axis == 0:
                     self.output[ 2*fold - self.dots[i, 0], self.dots[i, 1]] = 1
                 elif axis == 1:
-                    self.output[ fold - self.dots[i, 0], 2*fold - self.dots[i, 1]] = 1
+                    self.output[ self.dots[i, 0], 2*fold - self.dots[i, 1]] = 1
             else:
                 self.output[self.dots[i, 0], self.dots[i, 1]] = 1
 
@@ -87,15 +87,15 @@ def main():
 
     origami_grid = Origami(coordinates)
 
-    origami_grid.execute(instructions[0])
+    origami_grid.fold(instructions[0])
     print(f"visible_points:{origami_grid.count_visible()}")
-
+    print(origami_grid)
     # Part 2 ---------------------------------------------------------------
-    
-    for i in range(1, len(instructions)):
-        origami_grid.execute(instructions[i])    
+    """
+    for i in range(len(instructions)):
+        origami_grid.fold(instructions[i])    
     print(f"{i}|{origami_grid}")
-    
+    """
 
 if __name__ == "__main__":
     main()
