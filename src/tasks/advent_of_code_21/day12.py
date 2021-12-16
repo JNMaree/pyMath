@@ -1,6 +1,3 @@
-from os import name
-
-
 class Cave:
     def __init__(self, name, paths=None):
         self.name = name
@@ -26,6 +23,8 @@ class Cave:
 
     def add_path(self, path_str):
         if isinstance(path_str, str):
+            if path_str == self.name:
+                return
             for i in self.paths:
                 if i == path_str:
                     return
@@ -34,31 +33,44 @@ class Cave:
             for p in path_str:
                 exist = False
                 for i in self.paths:
-                    if i == p:
+                    if p == i or p == self.name:
                         exist = True
                 if not exist:
                     self.paths.append(p)
 
 class Route:
-    def __init__(self, cave) -> None:
+    def __init__(self, cave_names) -> None:
         self.hist = []
-        self.hist.append(cave)
-        self.head = cave
+        if isinstance(cave_names, str):
+            self.hist.append(cave_names)
+            self.head = cave_names
+            self.n = 1
+        elif isinstance(cave_names, Route):
+            self.hist = cave_names.hist
+            self.head = cave_names.head
+            self.n = cave_names.n
+        print(f"CReateRoute:{self.hist} h:{self.head}")
 
-    def in_hist(self, cave) -> bool:
+    def __str__(self) -> str:
+        sret = ''
         for i in self.hist:
-            if cave == i:
+            sret += i + ","
+        return sret
+
+    def in_hist(self, cave_name) -> bool:
+        for i in self.hist:
+            if cave_name == i:
                 return True
         return False
     
     def add(self, cave):
         self.hist.append(cave)
         self.head = cave
+        self.n += 1
 
 class Graph:
 
     caves = []
-    routes = []
 
     def __init__(self, path_list):
         self.add_cave(Cave('start'))    # Reserve i=0 for 'start' cave
@@ -86,8 +98,8 @@ class Graph:
 
     def get_routes(self) -> str:
         sret = f"{len(self.routes)}\n"
-        for i in self.routes:
-            sret += f"{i}\n"
+        for i in range(len(self.routes)):
+            sret += f"{i}| {self.routes[i]}\n"
         return sret
 
     def get_paths(self, cave_name) -> list:
@@ -102,27 +114,26 @@ class Graph:
 
     def calc_all_routes(self, route=None):
         if route:
-
+            if route.head == 'end':
+                print(f"AddRoute: {route}")
+                self.routes.append([route])
+                return
             available_paths = self.get_paths(route.head)
-            try:
+
+            if 'start' in available_paths: 
                 available_paths.remove('start')
-                for p in route:
-                    if self.is_small(p):
-                        available_paths.remove(p)
-            except ValueError:
-                pass
+            for p in available_paths:
+                if self.is_small(p) and route.in_hist(p):
+                    available_paths.remove(p) 
 
             for a in available_paths:
-                temp_route = route
+                temp_route = Route(route) 
                 temp_route.add(a)
-                if a == 'end':
-                    self.routes.append(temp_route)
-                else: 
+                if len(route.hist) < len(self.caves)*2: 
                     self.calc_all_routes(temp_route)
         else:
-            self.calc_all_routes(Route('start'))
-
-
+            start_route = Route('start')
+            self.calc_all_routes(start_route)
 
 def main():
 
