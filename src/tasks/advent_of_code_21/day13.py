@@ -9,14 +9,14 @@ class Origami:
 
     output = []
     def clear_output(self):
-        self.output = np.zeros((self.x + 1, self.y + 1)) 
+        self.output = np.zeros((self.y + 1, self.x + 1)) 
     def dots_to_output(self):
         self.clear_output()
         for i in range(self.dots.shape[0]):
-            self.output[self.dots[i, 0], self.dots[i, 1]] = 1
+            self.output[self.dots[i, 1], self.dots[i, 0]] = 1
 
     def __init__(self, coordinates) -> None:
-        self.dots = np.array(coordinates, dtype=np.uint16)
+        self.dots = np.array([i.split(',') for i in coordinates], dtype=np.uint16)
         self.x, self.y = np.amax(self.dots, axis=0)
         self.dots_to_output()
         print(f"x:{self.x} y:{self.y} n:{self.dots.shape[0]}")
@@ -46,10 +46,10 @@ class Origami:
         #print(f"exe fold: {xy} = {axis}")
         for i in range(self.dots.shape[0]):
             if self.dots[i, axis] > fold:
-                if axis == 0:
-                    self.output[ 2*fold - self.dots[i, 0], self.dots[i, 1]] = 1
-                elif axis == 1:
-                    self.output[ self.dots[i, 0], 2*fold - self.dots[i, 1]] = 1
+                if inst[0] == 'x':
+                    self.output[ 2*fold - self.dots[i, 1], self.dots[i, 0]] = 1
+                elif inst[0] == 'y':
+                    self.output[ self.dots[i, 1], 2*fold - self.dots[i, 0]] = 1
             else:
                 self.output[self.dots[i, 0], self.dots[i, 1]] = 1
 
@@ -61,10 +61,10 @@ class Origami:
         for x in range(self.x):
             for y in range(self.y):
                 if self.output[x,y] == 1:
-                    temp_dots.append([x, y])
+                    temp_dots.append([y, x])
         # Set new tracking properties
         self.dots = np.array(temp_dots, dtype=np.uint16)
-        self.x, self.y = np.amax(self.dots, axis=0)
+        self.y, self.x = np.amax(self.dots, axis=0)
 
 
 def main():
@@ -80,16 +80,29 @@ def main():
                 if line == "\n":
                     line_break = True
                 else:
-                    coordinates.append(line.strip().split(','))
+                    coordinates.append(line.strip())
             else:
                 instructions.append(line.strip())
-    print(f"coordinate_list:{coordinates}\ninstructions:{instructions}")
+    #print(f"coordinate_list:{coordinates}\ninstructions:{instructions}")
+    #"""Test
+    coordinates = ['6,10','0,14',
+                    '9,10','0,3',
+                    '10,4','4,11',
+                    '6,0','6,12',
+                    '4,1','0,13',
+                    '10,12','3,4',
+                    '3,0','8,4',
+                    '1,10','2,14',
+                    '8,10','9,0']
 
+    instructions = ['fold along y=7','fold along x=5']
+    #"""
+    
     origami_grid = Origami(coordinates)
-
+    print(origami_grid)
     origami_grid.fold(instructions[0])
     print(f"visible_points:{origami_grid.count_visible()}")
-    print(origami_grid)
+    
     # Part 2 ---------------------------------------------------------------
     """
     for i in range(len(instructions)):
