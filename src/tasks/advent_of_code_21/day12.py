@@ -1,6 +1,6 @@
 class Cave:
     def __init__(self, name, paths=None):
-        self.name = name
+        self.name = name.strip()
         self.big = name.isupper()
         self.paths = []
         if paths is not None:
@@ -18,7 +18,7 @@ class Cave:
             sret += "::"
         else:
             sret += ":"
-        sret += f" {self.paths}"
+        sret += f"{self.paths}"
         return sret
 
     def add_path(self, path_str):
@@ -46,33 +46,49 @@ class Route:
             self.head = cave_names
             self.n = 1
         elif isinstance(cave_names, Route):
-            self.hist = cave_names.hist
+            self.hist = cave_names.hist.copy()
             self.head = cave_names.head
             self.n = cave_names.n
-        print(f"CReateRoute:{self.hist} h:{self.head}")
+        #print(f"CreateRoute:{self.hist} h:{self.head}")
 
     def __str__(self) -> str:
-        sret = ''
-        for i in self.hist:
-            sret += i + ","
+        hist_size = len(self.hist)
+        sret = f'{hist_size}:'
+        for i in range(hist_size):
+            if i == hist_size - 1:
+                sret += f' _{self.hist[i]}'
+            else:
+                sret += f" {self.hist[i]},"
         return sret
 
     def in_hist(self, cave_name) -> bool:
         for i in self.hist:
-            if cave_name == i:
+            if i == cave_name:
                 return True
         return False
     
-    def add(self, cave):
-        self.hist.append(cave)
-        self.head = cave
-        self.n += 1
+    def add(self, cave_name):
+        self.hist.append(cave_name)
+        self.head = cave_name
+        self.n += 1 
+    
+    def count_in_hist(self, cave_name) -> int:
+        ct = 0
+        for i in self.hist:
+            if i == cave_name:
+                ct += 1
+        print(f"[{cave_name}] in {self.hist} ct:{ct}")
+        return ct
+
+    def get_first_small(self) -> str:
+        for i in self.hist:
+            if i.islower() and i != 'start':
+                s = i
+                return s
 
 class Graph:
-
-    caves = []
-
     def __init__(self, path_list):
+        self.caves = []
         self.add_cave(Cave('start'))    # Reserve i=0 for 'start' cave
         self.add_cave(Cave('end'))      # Reserve i=1 for 'end' cave
         for i in path_list:
@@ -85,8 +101,8 @@ class Graph:
 
     def __str__(self) -> str:
         sret = f"{len(self.caves)}\n"
-        for i in self.caves:
-            sret += f"{i.name}: {i.paths}\n"
+        for i in range(len(self.caves)):
+            sret += f"{i}|{self.caves[i]}\n"
         return sret
 
     def add_cave(self, cave):
@@ -105,35 +121,73 @@ class Graph:
     def get_paths(self, cave_name) -> list:
         for i in self.caves:
             if i.name == cave_name:
-                return i.paths
-
-    def is_small(self, cave_name) -> bool:
-        for c in self.caves:
-            if c.name == cave_name:
-                return not c.big
+                tarr = i.paths.copy()
+                #print(f"PathsFor[{i.name}]:{tarr}")
+                return tarr
 
     def calc_all_routes(self, route=None):
-        if route:
+        if route is not None:
             if route.head == 'end':
-                print(f"AddRoute: {route}")
-                self.routes.append([route])
+                #print(f"AddRoute: {route}")
+                self.routes.append(route)
                 return
             available_paths = self.get_paths(route.head)
 
+            # Trim available paths
             if 'start' in available_paths: 
                 available_paths.remove('start')
+            rems = []
             for p in available_paths:
-                if self.is_small(p) and route.in_hist(p):
-                    available_paths.remove(p) 
+                if p.islower() and route.in_hist(p):
+                    #print(f"remove:{p} from {available_paths}")
+                    rems.append(p)
+            for r in rems:
+                available_paths.remove(r)
+            #print(f"{route} -> available:{available_paths}")
 
-            for a in available_paths:
-                temp_route = Route(route) 
-                temp_route.add(a)
-                if len(route.hist) < len(self.caves)*2: 
-                    self.calc_all_routes(temp_route)
+            # Subsequent paths
+            for a in available_paths: 
+                troute = Route(route)
+                troute.add(a)
+                self.calc_all_routes(troute)
         else:
             start_route = Route('start')
             self.calc_all_routes(start_route)
+
+    # Part 2 - Account for a single double visit to a small cave
+    def calc_routes_with_first_small(self, route=None):
+        if route is not None:
+            if route.head == 'end':
+                #print(f"AddRoute: {route}")
+                self.routes.append(route)
+                return
+            available_paths = self.get_paths(route.head)
+
+            # Trim available paths
+            if 'start' in available_paths: 
+                available_paths.remove('start')
+            rems = []
+            for p in available_paths:
+                if p.islower() and route.in_hist(p):
+                    #print(f"remove:{p} from {available_paths}")
+                    fs = route.get_first_small()
+                    if p == fs:
+                        if route.count_in_hist(fs) > 1:
+                            rems.append(p)
+                    else:
+                        rems.append(p)
+            for r in rems:
+                available_paths.remove(r)
+            #print(f"{route} -> available:{available_paths}")
+
+            # Subsequent paths
+            for a in available_paths: 
+                troute = Route(route)
+                troute.add(a)
+                self.calc_routes_with_first_small(troute)
+        else:
+            start_route = Route('start')
+            self.calc_routes_with_first_small(start_route) 
 
 def main():
 
@@ -154,14 +208,40 @@ def main():
             'kj-sa',
             'kj-HN',
             'kj-dc']
-    #"""
-    # Graph instance creation
-    graph = Graph(paths)
-    print(graph)
+    """
+    paths = ['fs-end',
+            'he-DX',
+            'pj-DX',
+            'fs-he',
+            'start-DX',
+            'end-zg',
+            'zg-sl',
+            'zg-pj',
+            'pj-he',
+            'RW-he',
+            'fs-DX',
+            'pj-RW',
+            'zg-RW',
+            'start-pj',
+            'he-WI',
+            'zg-he',
+            'pj-fs',
+            'start-RW']
+    """
     
+    # Graph instance creation
+    #graph = Graph(paths)
+    #print(graph)
     # Calculate and print routes
-    graph.calc_all_routes()   # Calculate possible routes
-    print(graph.get_routes())
+    #graph.calc_all_routes()   # Calculate possible routes
+    #print(graph.get_routes())
+
+    # Part 2 ----------------------------------------------------
+    
+    graph_small = Graph(paths)
+    print(graph_small)
+    graph_small.calc_routes_with_first_small()
+    print(graph_small.get_routes())
 
 
 if __name__ == "__main__":
