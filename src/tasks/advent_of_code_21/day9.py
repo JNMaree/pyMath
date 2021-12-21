@@ -1,5 +1,4 @@
 import numpy as np
-from numpy.core.fromnumeric import sort
 
 class HeightMap:
 
