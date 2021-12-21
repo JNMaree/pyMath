@@ -1,53 +1,59 @@
 class Polymer:
     def __init__(self, template, insertions) -> None:
-        self.template = template
         self.insertion_rules = []
         self.elements = []
         self.quantities = []
+        self.count_pair = {}
+        self.first_char = template[0]
+        
         for i in insertions:
             rule = i.split(' -> ')
             self.insertion_rules.append(rule)
-            self.add_element(rule[1])
-        self.step = 0
-        self.chains = [self.template]
+            if rule[1] not in self.elements:
+                self.elements.append(rule[1])
+                self.quantities.append(0)
+            self.count_pair[rule[0]] = 0
+        # Set template to init pair count
+        for i in range(len(template) - 1):
+            key = f'{template[i]}{template[i+1]}'
+            self.count_pair[key] += 1
+        print(self.count_pair)
+    
     def __str__(self) -> str:
-        sret = f'{self.step}\n'
+        sret = f'{sum(self.quantities)}\n'
         for i in range(len(self.elements)):
             sret += f'{self.elements[i]}:{self.quantities[i]}\n'
+        sret = sret.rstrip()
         return sret
 
-    def add_element(self, char):
-        if char not in self.elements:
-            self.elements.append(char)
-            self.quantities.append(0)
-
-    def step_through(self) -> str:
-        poly_chain = self.chains[self.step]
-        new_chain = poly_chain[0]
-        self.quantities = [0 for i in range(len(self.elements))]
-        for i in range(len(poly_chain) - 1):
-            pair = poly_chain[i] + poly_chain[i + 1]
-            self.quantities[self.elements.index(poly_chain[i])] += 1
-            
-            rule = self.get_rule(pair)
-            if rule is not None:
-                new_chain += f'{rule}{poly_chain[i+1]}'
-                self.quantities[self.elements.index(rule)] += 1
-            else:
-                new_chain += f'{pair}'
-        self.quantities[self.elements.index(poly_chain[len(poly_chain)-1])] += 1
-        self.chains.append(new_chain)
-        self.step += 1
-        return f'{len(new_chain)}\n{new_chain}'
-
-    def get_rule(self, pair) -> str:
+    def get_rule(self, key) -> str:
         for i in self.insertion_rules:
-            if i[0] == pair:
+            if i[0] == key:
                 return i[1]
-        return None
+        raise ProcessLookupError(f'Unknown Key:{key}')
+
+    def step(self):
+        count = self.count_pair.copy()
+        for key in count:
+            rule_char = self.get_rule(key)
+            key_l = f'{key[0]}{rule_char}'  # left key
+            key_r = f'{rule_char}{key[1]}'  # right key
+            self.count_pair[key_l] += count[key]
+            self.count_pair[key_r] += count[key]
+            self.count_pair[key] -= count[key]
+            #print(f'{key} -> {key_l}:{key_r}')
+        self.set_quantities()
+        print(self.count_pair)
+
+    def set_quantities(self):
+        self.quantities.clear()
+        self.quantities = [0 for i in range(len(self.elements))]
+        for key in self.count_pair:
+            self.quantities[self.elements.index(key[1])] += self.count_pair[key]
+        self.quantities[self.elements.index(self.first_char)] += 1
 
     def get_sorted_quantities(self) -> list:
-        return sorted(self.quantities) 
+        return sorted(self.quantities)
         
 
 def main():
@@ -67,35 +73,42 @@ def main():
             else:
                 insertions.append(line.strip())
     #print(f"template:{template}\npair_insertion_rules:\n{insertions}")
-    #"""
+    """
     template = 'NNCB'
-    insertions = ['CH -> B',
-                'HH -> N',
-                'CB -> H',
-                'NH -> C',
-                'HB -> C',
-                'HC -> B',
-                'HN -> C',
-                'NN -> C',
-                'BH -> H',
-                'NC -> B',
-                'NB -> B',
-                'BN -> B',
-                'BB -> N',
-                'BC -> B',
-                'CC -> N',
-                'CN -> C']
+    insertions =   ['CH -> B',  # 6x B rules
+                    'HH -> N',  # 3x N rules
+                    'CB -> H',  # 2x H rules
+                    'NH -> C',  # 5x C rules
+                    'HB -> C',
+                    'HC -> B',
+                    'HN -> C',
+                    'NN -> C',
+                    'BH -> H',
+                    'NC -> B',
+                    'NB -> B',
+                    'BN -> B',
+                    'BB -> N',
+                    'BC -> B',
+                    'CC -> N',
+                    'CN -> C']
     #"""
     poly = Polymer(template, insertions)
 
     for i in range(1,11):
-        print(f'step:{i}|{poly.step_through()}')
-    print(poly)
+        poly.step()
+        print(f'>> step:{i}\n{poly}\n')
     q = poly.get_sorted_quantities()
     mc_minus_lc = q[len(q) - 1] - q[0]
-    print(f"MostCommon - LeastCommon:{mc_minus_lc}")
+    print(f"\tM_Common - L_Common:{mc_minus_lc}\n")
     
     # Part 2 -----------------------------------------------
+    
+    for i in range(11,41):
+        poly.step()
+        print(f'>> step:{i}\n{poly}\n')
+    q = poly.get_sorted_quantities()
+    mc_minus_lc = q[len(q) - 1] - q[0]
+    print(f"\tM_Common - L_Common:{mc_minus_lc}\n")
 
 if __name__ == "__main__":
     main()
