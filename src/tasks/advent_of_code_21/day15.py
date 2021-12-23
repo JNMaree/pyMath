@@ -55,12 +55,13 @@ class Risk:
                 self.grid[x][y] = risks[x][y]
         #print(self.grid)
 
+    def get_shortest_path(self):
+
+
     # Map possible routes between start and end nodes
-    def map(self, path :Path = None) -> Path:
-        if path is None:
-            pt = Path(self.start)
-            self.map(pt)
-        if path.head == self.end:
+    #   - brute force all posssible routes
+    def map_to(self, to_coords, path :Path) -> Path:
+        if path.head == to_coords:
             return path
 
         adj = self.get_adjacent_nodes(path.head, path.prev)
@@ -69,7 +70,7 @@ class Risk:
             t_path = Path(path)
             if not t_path.in_hist(a):
                 t_path.add(a, self.get_risk(a))
-                t_path = self.map(t_path)
+                t_path = self.map_to(to_coords, t_path)
                 if t_path is not None:
                     adj_paths.append(t_path)
                 
@@ -144,8 +145,8 @@ def main():
     #"""
     
     risk = Risk(risks)
-    riskmap = risk.map()
-    print(riskmap)
+    least_risky_path = risk.get_shortest_path()
+    print(least_risky_path)
 
 
 
