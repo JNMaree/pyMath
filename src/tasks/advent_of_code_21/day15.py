@@ -43,12 +43,21 @@ class Path:
                 sret += ' '*lstr + self.risks[i]
         return sret
 
+class Priority:
+    def __init__(self) -> None:
+        self.Q = []
+    def add(self, coords, risk):
+        self.Q.append([coords[0], coords[1], risk])
+    
+
 class Risk:
     def __init__(self, risks) -> None:
         self.y = len(risks[0].strip())
         self.x = len(risks)
         self.start = [0,0]
         self.end = [self.x-1, self.y-1]
+        self.priority = Priority
+
         self.grid = np.empty((self.x, self.y), dtype=np.uint8)
         for x in range(self.x):
             for y in range(self.y):
