@@ -44,11 +44,33 @@ class Path:
         return sret
 
 class Priority:
-    def __init__(self) -> None:
+    # Define scale factors for heuristic rating
+    #   - lower factors mean higher priority
+    risk_scale_factor = 2
+    dist_scale_factor = 1
+    def __init__(self, end_coords) -> None:
         self.Q = []
+        self.end = end_coords
+    def __str__(self) -> str:
+        sret = f'{len(self.Q)}'
+        for i in self.Q:
+            sret += f'{i[1]},{i[1]}:{i[3]}\n'
+        return sret
+
     def add(self, coords, risk):
-        self.Q.append([coords[0], coords[1], risk])
-    
+        h = risk * self.risk_scale_factor
+        d = self.get_distance(coords)
+        h += d * self.dist_scale_factor
+        h = int(h)
+        for i in range(len(self.Q)):
+            if self.Q[i][2] > h:
+                self.Q.insert(i, [coords[0], coords[1], h])
+
+    def get_distance(self, coords) -> int:
+        dx = self.end[0] - coords[0]
+        dy = self.end[1] - coords[1]
+        return abs(dx - dy)
+
 
 class Risk:
     def __init__(self, risks) -> None:
@@ -56,16 +78,17 @@ class Risk:
         self.x = len(risks)
         self.start = [0,0]
         self.end = [self.x-1, self.y-1]
-        self.priority = Priority
+        self.priority = Priority(self.end)
 
         self.grid = np.empty((self.x, self.y), dtype=np.uint8)
         for x in range(self.x):
             for y in range(self.y):
                 self.grid[x][y] = risks[x][y]
+                self.priority.add([x, y], self.get_risk([x, y]))
         #print(self.grid)
 
     def get_shortest_path(self):
-
+        pass
 
     # Map possible routes between start and end nodes
     #   - brute force all posssible routes
@@ -135,7 +158,7 @@ def main():
 
     risks = []
 
-    relative_path = 'src/tasks/advent_of_code_21/day9_input.txt'
+    relative_path = 'src/tasks/advent_of_code_21/day15_input.txt'
     with open(relative_path, 'r') as f:
         for line in f:
             risks.append(line.strip())
