@@ -158,7 +158,7 @@ def main():
 
     risks = []
 
-    relative_path = 'src/tasks/advent_of_code_21/day9_input.txt'
+    relative_path = 'src/tasks/advent_of_code_21/day15_input.txt'
     with open(relative_path, 'r') as f:
         for line in f:
             risks.append(line.strip())
