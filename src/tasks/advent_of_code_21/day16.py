@@ -34,6 +34,7 @@ class Packet:
                     self.t4_literal += bit
                     self.t4_pos += 1
 
+
     def bin_to_int(self, binchars) -> int:
         return int(binchars, 2)
 
