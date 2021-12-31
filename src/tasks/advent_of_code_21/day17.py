@@ -36,7 +36,7 @@ def main():
     relative_path = 'src/tasks/advent_of_code_21/day17_input.txt'
     with open(relative_path, 'r') as f:
         targets = f.readline().strip()
-    print(f'target:{targets}')
+    #print(f'target:{targets}')
 
     probe = Probe(targets)
     
