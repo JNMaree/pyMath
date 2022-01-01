@@ -1,55 +1,90 @@
 class Pair:
-    def __init__(self, pstr, depth=0) -> None:
+    def __init__(self, pstr: str =None, depth=0) -> None:
         self.d = depth
-        self.xy = []
-        self.regular = False
-        if pstr.isnumeric():
-            self.regular = True
-            self.xy.append(int (pstr))
-        else:
-            pstr_cut = self.trim_brackets(pstr)        
-            for i in range(2):
-                if pstr_cut[0] == '[':
-                    new_pstr = pstr_cut[1:pstr_cut.rfind(']', -1)]
-                    self.xy.append( Pair(new_pstr, depth+1) )
-                    pstr_cut = pstr_cut.replace(new_pstr, '')
-                else:
-                    self.xy.append( Pair(pstr_cut[0], depth) )
-                    pstr_cut = pstr_cut.replace(f'{self.xy[i]}', '')
+        self.x = None       # Default x type is Pair type, otherwise int
+        self.y = None       # Default y type is Pair type, otherwise int
+        self.is_reduced = False
+
+        if pstr is not None:
+            pstr_cut = ''
+            # Add x value of pair
+            if pstr[1] == '[':
+                bracketed = self.get_bracketed_substr(pstr[1:])
+                self.x = Pair(bracketed, depth + 1)
+                pstr_cut = pstr.replace(f'[{bracketed}', '', 1)
+            else:
+                self.x = int (pstr[1])
+                pstr_cut = pstr.replace(f'[{self.x}', '', 1)
+            # Add y value of pair
+            if pstr_cut[1] == '[':
+                bracketed = self.get_bracketed_substr(pstr_cut[1:])
+                self.y = Pair(bracketed, depth + 1)
+            else:
+                self.y = int(pstr_cut[1])
 
     def __str__(self) -> str:
-        sret = ''
-        if self.regular:
-            sret += '-' * self.d
-            sret += f'{self.xy[0]}' 
-        else:
-            sret += f'{self.xy[0]},'
-            sret += f'{self.xy[1]}'
+        sret = f'[{self.x},{self.y}]'
         return sret
 
-    # Remove outer brackets
-    def trim_brackets(self, pstr) -> str:
-        pstr_cut = pstr.removeprefix('[')
-        pstr_cut = pstr_cut.removesuffix(']')
-        return pstr_cut
+    # Overload addition operator
+    def __add__(self, other):
+        new_pair = Pair()
+        new_pair.x = self
+        new_pair.y = other
+        new_pair.to_reduced()
+        return new_pair
+
+    # Return a substring enclosed by the first bracket
+    def get_bracketed_substr(self, pstr) -> str:
+        bret = []
+        open_brackets = 0
+        for s in pstr:
+            bret.append(s)
+            if s == '[':
+                open_brackets += 1
+            elif s == ']':
+                open_brackets -= 1
+                if open_brackets == 0:
+                    sret = ''.join(bret)
+                    #print(f'get_bracketed_of {pstr}  ->  {sret}')
+                    return sret
+        raise LookupError(f'Str:{pstr} has unclosed brackets')
 
     def to_reduced(self):
-        pass
+        while not self.is_reduced:
+            if isinstance(self.x, Pair):
+                if not self.x.is_reduced:
+                    self.x.to_reduced()
+            else:
+                pass
+            if isinstance(self.y, Pair):
+                if not self.y.is_reduced:
+                    self.y.to_reduced()
+            else:
+                pass
+
+            
 
     def get_magnitude(self) -> int:
-        for xy in self.xy:
-            if self.regular:
-                return self.xy[0]
-            else:
-                return xy.get_magnitude()
+        xm = 0
+        if isinstance(self.x, Pair):
+            xm = self.x.get_magnitude()
+        else:
+            xm = self.x
+        ym = 0
+        if isinstance(self.y, Pair):
+            ym = self.y.get_magnitude()
+        else:
+            ym = self.y
+        return (3*xm) + (2*ym)
 
 class PairList:
     def __init__(self, numbers) -> None:
         self.pairs = []
-        for n in numbers:
-            pair_n = Pair(n)
+        for n in range(len(numbers)):
+            pair_n = Pair(numbers[n])
             self.pairs.append(pair_n)
-
+            print(f'{n}: {pair_n}')
 
 def main():
     
