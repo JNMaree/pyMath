@@ -1,26 +1,30 @@
 class Pair:
-    def __init__(self, pstr: str =None, depth=0) -> None:
+    def __init__(self, pstr: str, depth=0, parent=None) -> None:
         self.d = depth
         self.x = None       # Default x type is Pair type, otherwise int
         self.y = None       # Default y type is Pair type, otherwise int
         self.is_reduced = False
+        self.pairent = parent
 
-        if pstr is not None:
-            pstr_cut = ''
-            # Add x value of pair
-            if pstr[1] == '[':
-                bracketed = self.get_bracketed_substr(pstr[1:])
-                self.x = Pair(bracketed, depth + 1)
-                pstr_cut = pstr.replace(f'[{bracketed}', '', 1)
-            else:
-                self.x = int (pstr[1])
-                pstr_cut = pstr.replace(f'[{self.x}', '', 1)
-            # Add y value of pair
-            if pstr_cut[1] == '[':
-                bracketed = self.get_bracketed_substr(pstr_cut[1:])
-                self.y = Pair(bracketed, depth + 1)
-            else:
-                self.y = int(pstr_cut[1])
+        pstr_cut = ''
+        # Add x value of pair
+        if pstr[1] == '[':
+            bracketed = self.get_bracketed_substr(pstr[1:])
+            self.x = Pair(bracketed, depth + 1, self)
+            pstr_cut = pstr.replace(f'[{bracketed}', '', 1)
+        else:
+            self.x = int (pstr[1])
+            pstr_cut = pstr.replace(f'[{self.x}', '', 1)
+        # Add y value of pair
+        if pstr_cut[1] == '[':
+            bracketed = self.get_bracketed_substr(pstr_cut[1:])
+            self.y = Pair(bracketed, depth + 1, self)
+        else:
+            self.y = int(pstr_cut[1])
+        if isinstance(self.x, int) and isinstance(self.y, int):
+            self.is_reduced = True
+        else:
+            self.to_reduced()
 
     def __str__(self) -> str:
         sret = f'[{self.x},{self.y}]'
@@ -28,10 +32,8 @@ class Pair:
 
     # Overload addition operator
     def __add__(self, other):
-        new_pair = Pair()
-        new_pair.x = self
-        new_pair.y = other
-        new_pair.to_reduced()
+        pstr = f'[{self.__str__()},{other}]'
+        new_pair = Pair(pstr)
         return new_pair
 
     # Return a substring enclosed by the first bracket
@@ -51,19 +53,46 @@ class Pair:
         raise LookupError(f'Str:{pstr} has unclosed brackets')
 
     def to_reduced(self):
-        while not self.is_reduced:
-            if isinstance(self.x, Pair):
-                if not self.x.is_reduced:
-                    self.x.to_reduced()
-            else:
-                pass
-            if isinstance(self.y, Pair):
-                if not self.y.is_reduced:
-                    self.y.to_reduced()
-            else:
-                pass
+        if not self.is_reduced:
+            op = False
+            # X reduction
+            if isinstance(self.x, Pair):    # x explode            
+                self.x.to_reduced()
+                if self.d >= 3:
+                    op = True
 
+                    
+            else:                           # x split
+                if self.x > 9:
+                    op = True
+                    x = self.x
+                    self.x = Pair(f'[{x//2},{int(x/2 + x%2)}]')
             
+            # Y reduction
+            if isinstance(self.y, Pair) and not op:    # y explode
+                self.y.to_reduced()
+                if self.d >= 3:
+                    op = True
+                    
+
+            else:                           # y split
+                if self.y > 9:
+                    op = True
+                    y = self.y
+                    self.y = Pair(f'[{y//2},{int(y/2 + y%2)}]')
+            
+            if op:      # Track if operation executed
+                self.to_reduced()
+            else:
+                self.is_reduced = True
+
+    def addLR(self, XorY):
+        if self == self.pairent.x:
+        
+        elif self == self.pairent.y:
+            
+        else:
+            raise RecursionError('addLR comparison did NOT work')
 
     def get_magnitude(self) -> int:
         xm = 0
@@ -96,6 +125,19 @@ def main():
             numbers.append(line.strip())
     #print(f'{numbers}')
 
+    #""" Test Cases
+
+    numbers = ['[[[[[9,8],1],2],3],4]',
+            '[7,[6,[5,[4,[3,2]]]]]',
+            '[[6,[5,[4,[3,2]]]],1]',
+            '[[3,[2,[1,[7,3]]]],[6,[5,[4,[3,2]]]]]',
+            '[[3,[2,[8,0]]],[9,[5,[4,[3,2]]]]]']
+    
+    for n in numbers:
+        pair_n = Pair(n)
+        print(pair_n)
+
+    """
     numbers = ['[[[0,[5,8]],[[1,7],[9,6]]],[[4,[1,2]],[[1,4],2]]]',
             '[[[5,[2,8]],4],[5,[[9,9],0]]]',
             '[6,[[[6,2],[5,6]],[[7,6],[4,7]]]]',
@@ -108,8 +150,12 @@ def main():
             '[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]']
 
     plist = PairList(numbers)
-    
 
+    psum = plist[0]
+    for p in plist[1:]:
+        psum += p
+    print(f'{psum} mag:{psum.get_magnitude()}')
+    """
 
 if __name__ == '__main__':
     main()
