@@ -32,9 +32,23 @@ class Pair:
 
     # Overload addition operator
     def __add__(self, other):
-        pstr = f'[{self.__str__()},{other}]'
-        new_pair = Pair(pstr)
-        return new_pair
+        if isinstance(other, Pair):
+            pstr = f'[{self.__str__()},{other}]'
+            new_pair = Pair(pstr)
+            return new_pair
+        elif isinstance(other, list):
+            if other[0] == 0:   # y specified
+                if isinstance(self.y, int):
+                    self.y += other[1]
+                else:
+                    self.y += other
+            elif other[1] == 0: # x specified
+                if isinstance(self.x, int):
+                    self.x += other[0]
+                else:
+                    self.x += other
+        else:
+            raise TypeError(f'{other} not a recognized type to add to Pair-object')
 
     # Return a substring enclosed by the first bracket
     def get_bracketed_substr(self, pstr) -> str:
@@ -61,7 +75,6 @@ class Pair:
                 if self.d >= 3:
                     op = True
 
-                    
             else:                           # x split
                 if self.x > 9:
                     op = True
@@ -73,7 +86,6 @@ class Pair:
                 self.y.to_reduced()
                 if self.d >= 3:
                     op = True
-                    
 
             else:                           # y split
                 if self.y > 9:
@@ -86,13 +98,28 @@ class Pair:
             else:
                 self.is_reduced = True
 
-    def addLR(self, XorY):
+    def add_to_first_regular(self, val, fromXorY):
         if self == self.pairent.x:
-        
+            if fromXorY == 0:   # from x
+                if self.d > 0:
+                    self.pairent.add_to_first_regular(fromXorY, val)
+            elif fromXorY == 1: # from y
+                if isinstance(self.y, Pair):
+                    self.y.x += val
+                else:
+                    self.y += val
         elif self == self.pairent.y:
-            
+            if fromXorY == 0:   # from x
+                if isinstance(self.x, Pair):
+                    self.x.y += val
+                else:
+                    self.y += val
+            elif fromXorY == 1: # from y
+                if self.d > 0:
+                    self.pairent.add_to_first_regular(fromXorY, val)
+
         else:
-            raise RecursionError('addLR comparison did NOT work')
+            raise RecursionError('add L_or_R comparison did NOT work')
 
     def get_magnitude(self) -> int:
         xm = 0
