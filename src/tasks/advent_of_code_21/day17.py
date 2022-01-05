@@ -1,16 +1,16 @@
 class Probe:
     drag = 1    # X velocity step decrease
     grav = 1    # Y velocity step decrease
-    def __init__(self, mov=None) -> None:
+    def __init__(self, velocities=None) -> None:
         self.pos = [0,0]    # Position Vector
         self.trajectory = [self.pos]
 
-        if mov is not None:
-            self.x_move = mov[0]
-            self.y_move = mov[1]
+        if velocities is not None:
+            self.x_vel = velocities[0]
+            self.y_vel = velocities[1]
         else:
-            self.x_move = 0     # Axis movement coefficients
-            self.y_move = 0
+            self.x_vel = 0     # Axis movement coefficients
+            self.y_vel = 0
 
         self.success = False
     
@@ -22,11 +22,15 @@ class Probe:
         return sret
 
     def step(self):
-        self.pos[0] += self.x_move
-        self.pos[1] += self.y_move
+        self.pos[0] += self.x_vel
+        self.pos[1] += self.y_vel
 
-        self.x_move -= self.drag
-        self.y_move -= self.grav
+        if self.x_vel > 0:
+            self.x_vel -= self.drag
+        elif self.x_vel < 0:
+            self.x_vel += self.drag
+
+        self.y_vel -= self.grav
 
         self.trajectory.append(self.pos)
 
@@ -82,14 +86,16 @@ class Launcher:
         while not overshoot:
             highest_probe = self.launch(xv, yv)
             if highest_probe.success:  # Successful launch
-                self.yv += 1
+                xv = 1
+                yv += 1
             else:
+                # Check if overshoot
                 second_last_x_pos = highest_probe.trajectory[len(highest_probe.trajectory - 2)][0]
                 last_x_pos = highest_probe.trajectory[len(highest_probe.trajectory - 1)][0]
                 if (last_x_pos - second_last_x_pos) > (self.x_max - self.x_min):
                     overshoot = True
                 else:
-                    self.xv += 1
+                    xv += 1
         return highest_probe
 
 
